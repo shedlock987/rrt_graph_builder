@@ -29,15 +29,15 @@
  * @version 1.0
  */
 
-#include "linked_list/linked_list.h"
+#include "linked_list.h"
 
 namespace rrt
 {
-    Linked_List::Linked_List();
+    Linked_List::Linked_List(){};
 
 
-    Linked_List::~Linked_List();
+    Linked_List::~Linked_List(){};
 
 
-    void Linked_List::AddNode();
+    void Linked_List::AddNode(){};
 }

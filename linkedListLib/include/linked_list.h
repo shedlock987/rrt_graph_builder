@@ -64,7 +64,7 @@ namespace rrt
             
             private:
             Node *head;
-        }
-};
+        };
+}
 
 #endif /* LINKED_LIST_H_ */
