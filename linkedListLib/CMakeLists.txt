@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.22)
 
 add_library(linkedListLib src/linked_list.cpp)
 message("linkedListLib current source dir = ${CMAKE_CURRENT_SOURCE_DIR}")
