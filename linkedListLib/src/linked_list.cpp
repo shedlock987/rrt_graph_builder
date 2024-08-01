@@ -30,14 +30,47 @@
  */
 
 #include "linked_list.h"
+#define WARN 0
 
 namespace rrt
 {
-    Linked_List::Linked_List(){};
+    Node::Node(std::uint8_t _edge_count) 
+    {    
+        if(_edge_count <= 16)
+        {
+            edge_count_ = _edge_count;
+        }
+        else if (_edge_count <= 0)
+        {
+            edge_count_ = 1;
+
+            #ifdef WARN
+            std::cout << "Edge count zero, reverting to size 1" << std::endl;
+            #endif
+        }
+        else 
+        {
+            edge_count_ = 16;
+
+            #ifdef WARN
+            std::cout << "Edge count exceeds range, reverting to size 16" << std::endl;
+            #endif
+        } 
+    }
+
+    Node::~Node() {}
+
+    Node Node::*GetEdge(std::uint8_t _index) {}
+
+    Linked_List::Linked_List(){}
 
 
     Linked_List::~Linked_List(){};
 
 
-    void Linked_List::AddNode(){};
+    void Linked_List::AddNode()
+    {
+        //check edge count to make sure its not exceeded
+        
+    };
 }

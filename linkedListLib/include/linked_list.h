@@ -33,6 +33,8 @@
 
 #include <stddef.h>
 #include <string.h>
+#include <cstdint>
+#include <iostream>
 
 namespace rrt
 {
@@ -40,7 +42,34 @@ namespace rrt
      * @brief      Structure defining a node in the linked list
      *
      */
-    struct Node;
+    class Node
+        {
+            public:
+
+            /**
+             * @brief      Creates a storage class with the desired number of edges
+             *
+             */
+            Node(std::uint8_t _edge_count);
+
+            /**
+             * @brief      Destroys the object.
+             */
+            ~Node();
+
+            /**
+             * @brief      Destroys the object.
+             */
+            Node *GetEdge(std::uint8_t _index);
+            
+            double x_;
+            double y_;
+            double z_;
+
+            private:
+            std::uint8_t edge_count_;
+            Node *forward_edge_[16];
+        };
 
     class Linked_List
         {
