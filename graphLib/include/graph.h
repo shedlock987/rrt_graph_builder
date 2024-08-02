@@ -35,6 +35,7 @@
 #include <string.h>
 #include <cstdint>
 #include <iostream>
+#include <vector>
 
 namespace rrt
 {
@@ -45,7 +46,11 @@ namespace rrt
     class Node
         {
             public:
-
+            /**
+            * Typedef for eculidian point
+            */
+            typedef std::vector<double> eculidianPoint_t;
+            
             /**
              * @brief      Creates a storage class with the desired number of edges
              *
@@ -62,9 +67,7 @@ namespace rrt
              */
             Node *GetEdge(std::uint8_t _index);
             
-            double x_;
-            double y_;
-            double z_;
+            eculidianPoint_t point_;
 
             private:
             std::uint8_t edge_count_;
@@ -89,7 +92,7 @@ namespace rrt
             /**
              * @brief      Adds a Node
              */
-            void AddNode();
+            void AddNode(Node *_cnnctn, std::uint8_t _edge_count, double _x, double _y, double _z);
             
             private:
             Node *head;

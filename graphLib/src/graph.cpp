@@ -39,6 +39,10 @@ namespace rrt
         if(_edge_count <= 16)
         {
             edge_count_ = _edge_count;
+            for(int i=0; i< _edge_count; i++)
+            {
+                forward_edge_[i] = NULL;
+            }
         }
         else if (_edge_count <= 0)
         {
@@ -68,9 +72,15 @@ namespace rrt
     Graph::~Graph(){};
 
 
-    void Graph::AddNode()
+    void Graph::AddNode(Node *_cnnctn, std::uint8_t _edge_count, double _x, double _y, double _z)
     {
         //check edge count to make sure its not exceeded
+
+        Node *n = new Node(_edge_count);   // create new Node
+        n->point_(0) = _x;                 // set value
+        n->point_(1) = _y;                 // set value
+        n->point_(2) = _z;                 // set value
+
 
     };
 }
