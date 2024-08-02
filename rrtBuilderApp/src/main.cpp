@@ -1,7 +1,7 @@
-#include "linked_list.h"
+#include "graph.h"
 #include <iostream>
 
 int main() {
-rrt::Linked_List testList;
+rrt::Graph testGraph;
 std::cout << "Test";
 }

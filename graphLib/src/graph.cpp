@@ -23,13 +23,13 @@
  */
 
 /**
- * @file linked_list.cpp
+ * @file graph.cpp
  * @brief Linked list to be used in an RRT Graph
  * @author Ryan Shedlock <rmshedlock@gmail.com>
  * @version 1.0
  */
 
-#include "linked_list.h"
+#include "graph.h"
 #define WARN 0
 
 namespace rrt
@@ -62,15 +62,15 @@ namespace rrt
 
     Node Node::*GetEdge(std::uint8_t _index) {}
 
-    Linked_List::Linked_List(){}
+    Graph::Graph(){}
 
 
-    Linked_List::~Linked_List(){};
+    Graph::~Graph(){};
 
 
-    void Linked_List::AddNode()
+    void Graph::AddNode()
     {
         //check edge count to make sure its not exceeded
-        
+
     };
 }

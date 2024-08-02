@@ -23,13 +23,13 @@
  */
 
 /**
- * @file linked_list.h
+ * @file graph.h
  * @brief Linked list to be used in an RRT Graph
  * @author Ryan Shedlock <rmshedlock@gmail.com>
  * @version 1.0
  */
-#ifndef LINKED_LIST_H_
-#define LINKED_LIST_H_
+#ifndef Graph_H_
+#define Graph_H_
 
 #include <stddef.h>
 #include <string.h>
@@ -71,7 +71,7 @@ namespace rrt
             Node *forward_edge_[16];
         };
 
-    class Linked_List
+    class Graph
         {
             public:
 
@@ -79,12 +79,12 @@ namespace rrt
              * @brief      Constructs a new instance.
              *
              */
-            Linked_List();
+            Graph();
 
             /**
              * @brief      Destroys the object.
              */
-            ~Linked_List();
+            ~Graph();
 
             /**
              * @brief      Adds a Node
@@ -96,4 +96,4 @@ namespace rrt
         };
 }
 
-#endif /* LINKED_LIST_H_ */
+#endif /* Graph_H_ */
