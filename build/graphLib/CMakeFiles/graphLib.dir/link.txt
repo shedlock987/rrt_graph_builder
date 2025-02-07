@@ -1,2 +1,2 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libgraphLib.a CMakeFiles/graphLib.dir/src/graph.cpp.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libgraphLib.a
+/usr/bin/ar qc libgraphLib.a CMakeFiles/graphLib.dir/src/graph.cpp.o
+/usr/bin/ranlib libgraphLib.a

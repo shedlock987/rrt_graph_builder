@@ -77,9 +77,9 @@ namespace rrt
         //check edge count to make sure its not exceeded
 
         Node *n = new Node(_edge_count);   // create new Node
-        n->point_(0) = _x;                 // set value
-        n->point_(1) = _y;                 // set value
-        n->point_(2) = _z;                 // set value
+        //n->point_(0) = _x;                 // set value
+        //n->point_(1) = _y;                 // set value
+        //n->point_(2) = _z;                 // set value
 
 
     };

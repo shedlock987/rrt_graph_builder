@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/home/shedlock/projects/rrt_graph_builder/build/graphLib",
+  "command": "/usr/bin/g++  -I/home/shedlock/projects/rrt_graph_builder/graphLib/include -g -o CMakeFiles/graphLib.dir/src/graph.cpp.o -c /home/shedlock/projects/rrt_graph_builder/graphLib/src/graph.cpp",
+  "file": "/home/shedlock/projects/rrt_graph_builder/graphLib/src/graph.cpp",
+  "output": "graphLib/CMakeFiles/graphLib.dir/src/graph.cpp.o"
+},
+{
+  "directory": "/home/shedlock/projects/rrt_graph_builder/build/rrtBuilderApp",
+  "command": "/usr/bin/g++  -I/home/shedlock/projects/rrt_graph_builder/graphLib/include -g -o CMakeFiles/rrtBuilderApp.dir/src/main.cpp.o -c /home/shedlock/projects/rrt_graph_builder/rrtBuilderApp/src/main.cpp",
+  "file": "/home/shedlock/projects/rrt_graph_builder/rrtBuilderApp/src/main.cpp",
+  "output": "rrtBuilderApp/CMakeFiles/rrtBuilderApp.dir/src/main.cpp.o"
+}
+]

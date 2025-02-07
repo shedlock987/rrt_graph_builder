@@ -3,5 +3,5 @@
 
 int main() {
 rrt::Graph testGraph;
-std::cout << "Test";
+std::cout << "I'm Alive !!!!! \n";
 }
