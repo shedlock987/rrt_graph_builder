@@ -4,10 +4,6 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; cd .. ; pwd -P)
 echo Building RRT graph for linux target
 cd "$parent_path"
 
-#clean
-echo Cleaning build directory
-rm -rf build/
-
 #cmake
 echo Running Cmake
 cmake /build .
