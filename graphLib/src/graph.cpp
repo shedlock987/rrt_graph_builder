@@ -31,56 +31,120 @@
 
 #include "graph.h"
 #define WARN 0
+#define LINKED_LIST 0
 
 namespace rrt
 {
-    Node::Node(std::uint8_t _edge_count) 
-    {    
-        if(_edge_count <= 16)
+    Node::Node(std::vector<double> _crdnts, double _back_edge_weight, Node * _back_node)
+    {
+        //Check coordinate size
+        if(_crdnts.size() > 4)
         {
-            edge_count_ = _edge_count;
-            for(int i=0; i< _edge_count; i++)
-            {
-                forward_edge_[i] = NULL;
-            }
-        }
-        else if (_edge_count <= 0)
-        {
-            edge_count_ = 1;
-
+            this->dimension_ = 4;
             #ifdef WARN
-            std::cout << "Edge count zero, reverting to size 1" << std::endl;
+                std::cout << "Dimension too large, saturating at size=4 \n";
             #endif
         }
-        else 
-        {
-            edge_count_ = 16;
 
+        //Set coordinates
+        for(auto i=0; i<this->dimension_; i++)
+        {
+            crdnts_.push_back(_crdnts[i]); 
+        }
+
+        //Assign Edge Weight
+        if(_back_edge_weight < 0)
+        {
             #ifdef WARN
-            std::cout << "Edge count exceeds range, reverting to size 16" << std::endl;
+                std::cout << "Edge Weight cannot be negative, defaulting to zero \n";
             #endif
-        } 
+            this->back_edge_weight_ = 0;
+        }
+        else{
+            this->back_edge_weight_ = _back_edge_weight;
+        }
+
+        //Back-Link the linked list
+        if( _back_node == nullptr)
+        {
+            #ifdef WARN
+                std::cout << "Invalid Entry, Linked List backwards pointer is NULL \n";
+            #endif
+        }
+        this->back_node_ = _back_node;
+
+        
     }
 
-    Node::~Node() {}
-
-    Node Node::*GetEdge(std::uint8_t _index) {}
-
-    Graph::Graph(){}
-
-
-    Graph::~Graph(){};
-
-
-    void Graph::AddNode(Node *_cnnctn, std::uint8_t _edge_count, double _x, double _y, double _z)
+    Graph::Graph()
     {
-        //check edge count to make sure its not exceeded
 
-        Node *n = new Node(_edge_count);   // create new Node
-        //n->point_(0) = _x;                 // set value
-        //n->point_(1) = _y;                 // set value
-        //n->point_(2) = _z;                 // set value
+        #ifndef LINKED_LIST
+            _adjList.resize(1);
+        #endif
 
+        #ifdef LINKED_LIST
+            _linkedList.resize(1);
 
-    };
+            //_linkedList.emplace_back({0,0,0,0},0,nullptr);
+        #endif
+
+    }
+
+    void Graph::addNodes(int _cnt)
+    {
+        #ifndef LINKED_LIST
+            if (_cnt > 0)
+            {
+                size_ = size_ + _cnt;
+            }
+            _adjList.resize(size_);
+        #endif
+
+        #ifdef LINKED_LIST
+
+        #endif
+    }
+    
+    Graph::~Graph(){}
+
+    // Function to add an edge to the graph
+    // Parameters: src - source vertex
+    // dest - destination vertex
+    void Graph::addEdge(int _src, int _dest)
+    {
+        #ifndef LINKED_LIST
+            // Add the destination to the adjacency list of the
+            // source
+            _adjList[_src].push_back(_dest);
+        #endif
+
+        #ifdef LINKED_LIST
+
+        #endif
+    }
+
+    // Function to print the adjacency list of the graph
+    void Graph::printGraph()
+    {
+        #ifndef LINKED_LIST
+            // Iterate through each vertex
+            for (int i = 0; i < _adjList.size(); ++i) {
+                // Print the vertex
+                std::cout << i << ": ";
+                // Iterate through the adjacency list of the
+                // vertex
+                for (int j = 0; j < _adjList[i].size(); ++j) {
+                    // Print each adjacent vertex
+                    std::cout << _adjList[i][j] << " -> ";
+                }
+                // Indicate the end of the adjacency list
+                std::cout << "NULL" << std::endl;
+            }
+        #endif
+
+        #ifdef LINKED_LIST
+
+        #endif
+    }
 }

@@ -45,58 +45,50 @@ namespace rrt
      */
     class Node
         {
-            public:
-            /**
-            * Typedef for eculidian point
-            */
-            typedef std::vector<double> eculidianPoint_t;
-            
-            /**
-             * @brief      Creates a storage class with the desired number of edges
-             *
-             */
-            Node(std::uint8_t _edge_count);
-
-            /**
-             * @brief      Destroys the object.
-             */
-            ~Node();
-
-            /**
-             * @brief      Destroys the object.
-             */
-            Node *GetEdge(std::uint8_t _index);
-            
-            eculidianPoint_t point_;
-
             private:
-            std::uint8_t edge_count_;
-            Node *forward_edge_[16];
+                double back_edge_weight_;
+                int dimension_;
+                //x,y,z,t
+                std::vector<double> crdnts_; 
+            public:                
+                std::vector<Node *> fwd_node_;
+                Node * back_node_;
+
+                Node(std::vector<double> _crdnts, double _back_edge_weight, Node * _back_node);
         };
 
-    class Graph
-        {
-            public:
+class Graph {
+    private:
+        // Adjacency list to represent the graph
+        std::vector<std::vector<int> > _adjList;
+        int size_;
 
-            /**
-             * @brief      Constructs a new instance.
-             *
-             */
-            Graph();
+        // Linked List to represent the graph
+        std::vector<Node *> _linkedList;
+    
+    public:
+        // Constructor to initialize the graph
+        // Parameters: vertices - number of vertices in the
+        // graph
+        //  directed - flag to indicate if the graph is directed
+        //  (default is false)
+        Graph();
 
-            /**
-             * @brief      Destroys the object.
-             */
-            ~Graph();
+        /**
+         * @brief      Destroys the object.
+         */
+        ~Graph();
 
-            /**
-             * @brief      Adds a Node
-             */
-            void AddNode(Node *_cnnctn, std::uint8_t _edge_count, double _x, double _y, double _z);
-            
-            private:
-            Node *head;
-        };
+        void addNodes(int _cnt);
+    
+        // Function to add an edge to the graph
+        // Parameters: src - source vertex
+        // dest - destination vertex
+        void addEdge(int _src, int _dest);
+    
+        // Function to print the adjacency list of the graph
+        void printGraph();
+    };
 }
 
 #endif /* Graph_H_ */
