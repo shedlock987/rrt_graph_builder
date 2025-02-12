@@ -39,22 +39,34 @@
 
 namespace rrt
 {
-    /**
-     * @brief      Structure defining a node in the linked list
-     *
-     */
+
+    class coordinate_t
+    {
+        public:
+            double x_;
+            double y_;
+            double z_;
+
+            coordinate_t(int _dim, double _x, double _y, double _z);
+        private:
+            int dim_;
+
+
+    };
+
     class Node
         {
             private:
                 double back_edge_weight_;
                 int dimension_;
-                //x,y,z,t
-                std::vector<double> crdnts_; 
-            public:                
+            public: 
+
+                typedef std::vector<double> coordinate_t;      
+                coordinate_t crdnts_;  //x,y,z,t       
                 std::vector<Node *> fwd_node_;
                 Node * back_node_;
 
-                Node(std::vector<double> _crdnts, double _back_edge_weight, Node * _back_node);
+                Node(coordinate_t _crdnts, double _back_edge_weight, Node * _back_node);
         };
 
 class Graph {
@@ -79,7 +91,9 @@ class Graph {
          */
         ~Graph();
 
-        void addNodes(int _cnt);
+        void addNodes(coordinate_t _crdnts, double _back_edge_weight);
+
+        //Node findNearest();
     
         // Function to add an edge to the graph
         // Parameters: src - source vertex

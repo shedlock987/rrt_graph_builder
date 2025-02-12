@@ -35,7 +35,33 @@
 
 namespace rrt
 {
-    Node::Node(std::vector<double> _crdnts, double _back_edge_weight, Node * _back_node)
+    coordinate_t::coordinate_t(int _dim, double _x, double _y, double _z)
+    {
+        if(_dim < 2)
+        {
+            this->dim_ = 2;
+            #ifdef WARN
+                std::cout << "Dimension too small, defaulting to 2D \n";
+            #endif
+        }
+        else if(_dim > 3)
+        {
+            this->dim_ = 3;
+            #ifdef WARN
+                std::cout << "Dimension too large, limiting to 3D \n";
+            #endif            
+        }
+        else
+        {
+            this->dim_ =_dim;
+        }
+        
+        this->x_ = _x;
+        this->y_ = _y;
+        this->z_ = _z;
+    }
+    
+    Node::Node(coordinate_t _crdnts, double _back_edge_weight, Node * _back_node)
     {
         //Check coordinate size
         if(_crdnts.size() > 4)
@@ -91,7 +117,7 @@ namespace rrt
 
     }
 
-    void Graph::addNodes(int _cnt)
+    void Graph::addNodes(coordinate_t _crdnts, double _back_edge_weight)
     {
         #ifndef LINKED_LIST
             if (_cnt > 0)
@@ -102,10 +128,30 @@ namespace rrt
         #endif
 
         #ifdef LINKED_LIST
+            // Check if this is a new graph
+            if(_linkedList.size() <= 1)
+            {
+                // Initialize first back pointer
+                _linkedList.resize(2);
+                _linkedList[_linkedList.size()-1]->back_node_ = _linkedList[0];
+                #ifdef WARN
+                    std::cout << "Initializing new RRT graph \n";
+                #endif
+            }
+            else
+            {
 
+            }
         #endif
     }
-    
+/* HERE
+    Node Graph::findNearest()
+    {
+        coordinate_t _point(2,0,0,0);
+
+        return _linkedList[0]->back_node_;
+    }
+*/    
     Graph::~Graph(){}
 
     // Function to add an edge to the graph
