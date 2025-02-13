@@ -47,7 +47,8 @@ namespace rrt
             double y_;
             double z_;
 
-            coordinate_t(int _dim, double _x, double _y, double _z);
+            coordinate_t(int _dim, double _x, double _y, double _z) ;
+            int getDimension();
         private:
             int dim_;
 
@@ -60,25 +61,25 @@ namespace rrt
                 double back_edge_weight_;
                 int dimension_;
             public: 
-
-                typedef std::vector<double> coordinate_t;      
+   
                 coordinate_t crdnts_;  //x,y,z,t       
                 std::vector<Node *> fwd_node_;
                 Node * back_node_;
-
-                Node(coordinate_t _crdnts, double _back_edge_weight, Node * _back_node);
+                Node(coordinate_t * _crdnts);
         };
 
 class Graph {
     private:
         // Adjacency list to represent the graph
-        std::vector<std::vector<int> > _adjList;
+        //std::vector<std::vector<int> > _adjList;
         int size_;
 
         // Linked List to represent the graph
-        std::vector<Node *> _linkedList;
+        //std::vector<Node *> _linkedList;
     
     public:
+        std::vector<Node *> _linkedList; //move this to private after debug
+
         // Constructor to initialize the graph
         // Parameters: vertices - number of vertices in the
         // graph
@@ -91,7 +92,7 @@ class Graph {
          */
         ~Graph();
 
-        void addNodes(coordinate_t _crdnts, double _back_edge_weight);
+        void addNodes(coordinate_t * _crdnts, double _back_edge_weight);
 
         //Node findNearest();
     

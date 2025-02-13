@@ -31,118 +31,51 @@
 
 #include "graph.h"
 #define WARN 0
-#define LINKED_LIST 0
 
 namespace rrt
 {
-    coordinate_t::coordinate_t(int _dim, double _x, double _y, double _z)
+    coordinate_t::coordinate_t() : dim_(3), x_(0.0F), y_(0.0F), z_(0.0F)
     {
-        if(_dim < 2)
-        {
-            this->dim_ = 2;
-            #ifdef WARN
-                std::cout << "Dimension too small, defaulting to 2D \n";
-            #endif
-        }
-        else if(_dim > 3)
-        {
-            this->dim_ = 3;
-            #ifdef WARN
-                std::cout << "Dimension too large, limiting to 3D \n";
-            #endif            
-        }
-        else
-        {
-            this->dim_ =_dim;
-        }
-        
-        this->x_ = _x;
-        this->y_ = _y;
-        this->z_ = _z;
+    }
+    coordinate_t::coordinate_t(double _x, double _y) : dim_(2), x_(_x), y_(_y), z_(0.0F)
+    {
+    }
+    coordinate_t::coordinate_t(double _x, double _y, double _z) : dim_(3), x_(_x), y_(_y), z_(0.0F)
+    {
+    }
+
+    int coordinate_t::getDimension()
+    {
+        return this->dim_;
     }
     
-    Node::Node(coordinate_t _crdnts, double _back_edge_weight, Node * _back_node)
+    Node::Node(coordinate_t * _crdnts) : crdnts_(_crdnts)
     {
-        //Check coordinate size
-        if(_crdnts.size() > 4)
-        {
-            this->dimension_ = 4;
-            #ifdef WARN
-                std::cout << "Dimension too large, saturating at size=4 \n";
-            #endif
-        }
-
-        //Set coordinates
-        for(auto i=0; i<this->dimension_; i++)
-        {
-            crdnts_.push_back(_crdnts[i]); 
-        }
-
-        //Assign Edge Weight
-        if(_back_edge_weight < 0)
-        {
-            #ifdef WARN
-                std::cout << "Edge Weight cannot be negative, defaulting to zero \n";
-            #endif
-            this->back_edge_weight_ = 0;
-        }
-        else{
-            this->back_edge_weight_ = _back_edge_weight;
-        }
-
-        //Back-Link the linked list
-        if( _back_node == nullptr)
-        {
-            #ifdef WARN
-                std::cout << "Invalid Entry, Linked List backwards pointer is NULL \n";
-            #endif
-        }
-        this->back_node_ = _back_node;
-
-        
     }
 
     Graph::Graph()
     {
+        _linkedList.resize(1);
 
-        #ifndef LINKED_LIST
-            _adjList.resize(1);
-        #endif
-
-        #ifdef LINKED_LIST
-            _linkedList.resize(1);
-
-            //_linkedList.emplace_back({0,0,0,0},0,nullptr);
-        #endif
+        //_linkedList.emplace_back({0,0,0,0},0,nullptr);
 
     }
 
-    void Graph::addNodes(coordinate_t _crdnts, double _back_edge_weight)
+    void Graph::addNodes(coordinate_t * _crdnts, double _back_edge_weight)
     {
-        #ifndef LINKED_LIST
-            if (_cnt > 0)
-            {
-                size_ = size_ + _cnt;
-            }
-            _adjList.resize(size_);
-        #endif
+        // Check if this is a new graph
+        if(_linkedList.size() < 1)
+        {
+            _linkedList.resize(1);
+            #ifdef WARN
+                std::cout << "Initializing new RRT graph \n";
+            #endif
+        }
+        else
+        {
+            _linkedList.resize(_linkedList.size() + 1);
+        }
 
-        #ifdef LINKED_LIST
-            // Check if this is a new graph
-            if(_linkedList.size() <= 1)
-            {
-                // Initialize first back pointer
-                _linkedList.resize(2);
-                _linkedList[_linkedList.size()-1]->back_node_ = _linkedList[0];
-                #ifdef WARN
-                    std::cout << "Initializing new RRT graph \n";
-                #endif
-            }
-            else
-            {
-
-            }
-        #endif
     }
 /* HERE
     Node Graph::findNearest()
@@ -159,38 +92,32 @@ namespace rrt
     // dest - destination vertex
     void Graph::addEdge(int _src, int _dest)
     {
-        #ifndef LINKED_LIST
-            // Add the destination to the adjacency list of the
-            // source
-            _adjList[_src].push_back(_dest);
-        #endif
 
-        #ifdef LINKED_LIST
+        // Add the destination to the adjacency list of the
+        // source
+       // _adjList[_src].push_back(_dest);
 
-        #endif
+
     }
 
     // Function to print the adjacency list of the graph
     void Graph::printGraph()
     {
-        #ifndef LINKED_LIST
-            // Iterate through each vertex
-            for (int i = 0; i < _adjList.size(); ++i) {
-                // Print the vertex
-                std::cout << i << ": ";
-                // Iterate through the adjacency list of the
-                // vertex
-                for (int j = 0; j < _adjList[i].size(); ++j) {
-                    // Print each adjacent vertex
-                    std::cout << _adjList[i][j] << " -> ";
-                }
-                // Indicate the end of the adjacency list
-                std::cout << "NULL" << std::endl;
+/*
+        // Iterate through each vertex
+        for (int i = 0; i < _adjList.size(); ++i) {
+            // Print the vertex
+            std::cout << i << ": ";
+            // Iterate through the adjacency list of the
+            // vertex
+            for (int j = 0; j < _adjList[i].size(); ++j) {
+                // Print each adjacent vertex
+                std::cout << _adjList[i][j] << " -> ";
             }
-        #endif
-
-        #ifdef LINKED_LIST
-
-        #endif
+            // Indicate the end of the adjacency list
+            std::cout << "NULL" << std::endl;
+        }
+            */
     }
+
 }
