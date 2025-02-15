@@ -36,12 +36,15 @@ namespace rrt
 {
     coordinate_t::coordinate_t() : x_(0.0F), y_(0.0F), time_(0.0F)
     {
+        this->dim_ = 2;
     }
     coordinate_t::coordinate_t(double _x, double _y) : x_(_x), y_(_y), time_(0.0F)
     {
+        this->dim_ = 2;
     }
     coordinate_t::coordinate_t(double _x, double _y, double _time) : x_(_x), y_(_y), time_(0.0F)
     {
+        this->dim_ = 3;
     }
 
     int coordinate_t::getDimension()
@@ -51,11 +54,17 @@ namespace rrt
     
     Node::Node(coordinate_t * _crdnts)
     {
+        this->back_edge_weight_ = 0;
+        this->fwd_node_.resize(1); 
+        this->fwd_node_[this->fwd_node_.size()]= nullptr;
     }
 
     Graph::Graph()
     {
         _linkedList.resize(1);
+        //_linkedList[1]->fwd_node_.resize(1);
+        //_linkedList[1]->fwd_node_[1] = nullptr;
+        //_linkedList[1]->back_node_ = nullptr;
 
         //_linkedList.emplace_back({0,0,0,0},0,nullptr);
 
@@ -76,6 +85,10 @@ namespace rrt
             _linkedList.resize(_linkedList.size() + 1);
         }
 
+        // Connect to previous
+        // Increase Forward node connection count
+        //auto fwd_size = _linkedList[_linkedList.size() - 1]->fwd_node_.size();
+       // _linkedList[_linkedList.size() - 1]->fwd_node_.resize(1);
     }
 /* HERE
     Node Graph::findNearest()
