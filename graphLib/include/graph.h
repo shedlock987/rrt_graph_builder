@@ -45,9 +45,10 @@ namespace rrt
         public:
             double x_;
             double y_;
-            double z_;
-
-            coordinate_t(int _dim, double _x, double _y, double _z) ;
+            double time_;
+            coordinate_t();
+            coordinate_t(double _x, double _y);
+            coordinate_t(double _x, double _y, double _time);
             int getDimension();
         private:
             int dim_;

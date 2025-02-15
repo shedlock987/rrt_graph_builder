@@ -34,13 +34,13 @@
 
 namespace rrt
 {
-    coordinate_t::coordinate_t() : dim_(3), x_(0.0F), y_(0.0F), z_(0.0F)
+    coordinate_t::coordinate_t() : x_(0.0F), y_(0.0F), time_(0.0F)
     {
     }
-    coordinate_t::coordinate_t(double _x, double _y) : dim_(2), x_(_x), y_(_y), z_(0.0F)
+    coordinate_t::coordinate_t(double _x, double _y) : x_(_x), y_(_y), time_(0.0F)
     {
     }
-    coordinate_t::coordinate_t(double _x, double _y, double _z) : dim_(3), x_(_x), y_(_y), z_(0.0F)
+    coordinate_t::coordinate_t(double _x, double _y, double _time) : x_(_x), y_(_y), time_(0.0F)
     {
     }
 
@@ -49,7 +49,7 @@ namespace rrt
         return this->dim_;
     }
     
-    Node::Node(coordinate_t * _crdnts) : crdnts_(_crdnts)
+    Node::Node(coordinate_t * _crdnts)
     {
     }
 
