@@ -115,6 +115,11 @@ namespace rrt
         this->_linkedList.emplace_back(&tempNode);
         _link->addFwdNode(this->_linkedList.back());
     }
+
+    coordinate_t Graph::getCoordinate(Node * _handle)
+    {
+
+    }
   
     Graph::~Graph()
     {

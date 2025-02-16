@@ -93,6 +93,7 @@ class Graph {
 
         void addNode(coordinate_t * _crdnts, double _back_edge_weight);
         void addNode(Node * _link, coordinate_t * _crdnts, double _back_edge_weight);
+        coordinate_t getCoordinate(Node * _handle);
 
         //Node findNearest();
     

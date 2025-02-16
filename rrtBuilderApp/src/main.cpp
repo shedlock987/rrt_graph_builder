@@ -2,13 +2,30 @@
 #include <iostream>
 
 int main() {
-rrt::coordinate_t origin(2.0F,2.0F, 2.0F);
+rrt::coordinate_t origin(2.0F,2.0F);
+rrt::coordinate_t pt1(4.0F, 5.0F);
+rrt::coordinate_t pt2(8.0F, 10.0F);
 rrt::Graph testGraph;
 std::cout << "size: " << testGraph._linkedList.size() << "\n";
-//std::cout << "size: " << testGraph._linkedList.crdnts[1]. << "\n";
 testGraph.addNode(&origin, 1.0F);
 std::cout << "size: " << testGraph._linkedList.size() << "\n";
-testGraph.addNode(&origin, 2.2F);
+testGraph.addNode(&pt1, 2.2F);
 std::cout << "size: " << testGraph._linkedList.size() << "\n";
-std::cout << "\n I'm Alive !!!!! \n";
+
+
+//testGraph.addNode(testGraph._linkedList.front(), &pt2, 3.3F);
+//std::cout << "size: " << testGraph._linkedList.size() << "\n";
+
+//rrt::Node test = &testGraph._linkedList[2];
+//rrt::coordinate_t display = testGraph.getCoordinate(test);
+
+////std::cout << "Coordnates of tail: x:" << display.x_ << "  y:" << display.y_ << std::endl;
+
+//rrt::Node * test2 = testGraph._linkedList[2];
+//auto display2 = testGraph.getCoordinate(test2);
+//std::cout << "Coordnates of tail: x:" << display2.x_ << "  y:" << display2.y_ << std::endl;
+
+//std::cout << "Coordnates of pt1: x:" << pt1.x_ << "  y:" << pt1.y_ << std::endl;
+
+//std::cout << "\n I'm Alive !!!!! \n";
 }
