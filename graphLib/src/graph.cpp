@@ -113,28 +113,11 @@ namespace rrt
         Node tempNode(_crdnts, _back_edge_weight);
 
         this->_linkedList.emplace_back(&tempNode);
-        //_link->addFwdNod(this->_linkedList.end);
+        _link->addFwdNode(this->_linkedList.back());
     }
-
-
-
-
-        // Connect to previous
-        // Increase Forward node connection count
-        //auto fwd_size = _linkedList[_linkedList.size() - 1]->fwd_node_.size();
-       // _linkedList[_linkedList.size() - 1]->fwd_node_.resize(1);
-
-/* HERE
-    Node Graph::findNearest()
-    {
-        coordinate_t _point(2,0,0,0);
-
-        return _linkedList[0]->back_node_;
-    }
-*/    
+  
     Graph::~Graph()
     {
-
     }
 
     // Function to add an edge to the graph
