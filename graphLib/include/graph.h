@@ -66,17 +66,15 @@ namespace rrt
                 coordinate_t crdnts_;  //x,y,z,t       
                 std::vector<Node *> fwd_node_;
                 Node * back_node_;
+                Node();
                 Node(coordinate_t * _crdnts);
+                Node(coordinate_t * _crdnts, double _back_edge_weight);
+                void addFwdNode(Node * _cnnctn);
         };
 
 class Graph {
     private:
-        // Adjacency list to represent the graph
-        //std::vector<std::vector<int> > _adjList;
-        int size_;
 
-        // Linked List to represent the graph
-        //std::vector<Node *> _linkedList;
     
     public:
         std::vector<Node *> _linkedList; //move this to private after debug
@@ -93,7 +91,8 @@ class Graph {
          */
         ~Graph();
 
-        void addNodes(coordinate_t * _crdnts, double _back_edge_weight);
+        void addNode(coordinate_t * _crdnts, double _back_edge_weight);
+        void addNode(Node * _link, coordinate_t * _crdnts, double _back_edge_weight);
 
         //Node findNearest();
     

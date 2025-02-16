@@ -52,6 +52,13 @@ namespace rrt
         return this->dim_;
     }
     
+    Node::Node() 
+    {
+        this->back_edge_weight_ = 0;
+        this->fwd_node_.resize(1); 
+        this->fwd_node_[this->fwd_node_.size()]= nullptr;
+    }
+
     Node::Node(coordinate_t * _crdnts)
     {
         this->back_edge_weight_ = 0;
@@ -59,37 +66,64 @@ namespace rrt
         this->fwd_node_[this->fwd_node_.size()]= nullptr;
     }
 
-    Graph::Graph()
+    Node::Node(coordinate_t * _crdnts, double _back_edge_weight)
     {
-        _linkedList.resize(1);
-        //_linkedList[1]->fwd_node_.resize(1);
-        //_linkedList[1]->fwd_node_[1] = nullptr;
-        //_linkedList[1]->back_node_ = nullptr;
-
-        //_linkedList.emplace_back({0,0,0,0},0,nullptr);
-
+        this->back_edge_weight_ = _back_edge_weight;
+        this->fwd_node_.resize(1); 
+        this->fwd_node_[this->fwd_node_.size()]= nullptr;
     }
 
-    void Graph::addNodes(coordinate_t * _crdnts, double _back_edge_weight)
+    void Node::addFwdNode(Node * _cnnctn)
     {
+        this->fwd_node_.emplace_back(_cnnctn);
+    }
+
+    Graph::Graph()
+    {
+        this->_linkedList.resize(1);
+    }
+
+    void Graph::addNode(coordinate_t * _crdnts, double _back_edge_weight)
+    {
+        Node tempNode(_crdnts, _back_edge_weight);
+        static int size = this->_linkedList.size();
+
         // Check if this is a new graph
-        if(_linkedList.size() < 1)
+        if(size < 1)
         {
-            _linkedList.resize(1);
+            this->_linkedList.resize(1);
             #ifdef WARN
                 std::cout << "Initializing new RRT graph \n";
             #endif
         }
         else
         {
-            _linkedList.resize(_linkedList.size() + 1);
+            // Make Node Connection
+            size++;
+            this->_linkedList.emplace_back(&tempNode);
+            this->_linkedList[size - 1]->addFwdNode(this->_linkedList[size]);
+            #ifdef WARN
+                std::cout << "No connection Node specified, connecting to tail \n";
+            #endif
         }
+    }
+
+    void Graph::addNode(Node * _link, coordinate_t * _crdnts, double _back_edge_weight)
+    {
+        Node tempNode(_crdnts, _back_edge_weight);
+
+        this->_linkedList.emplace_back(&tempNode);
+        //_link->addFwdNod(this->_linkedList.end);
+    }
+
+
+
 
         // Connect to previous
         // Increase Forward node connection count
         //auto fwd_size = _linkedList[_linkedList.size() - 1]->fwd_node_.size();
        // _linkedList[_linkedList.size() - 1]->fwd_node_.resize(1);
-    }
+
 /* HERE
     Node Graph::findNearest()
     {
@@ -98,7 +132,10 @@ namespace rrt
         return _linkedList[0]->back_node_;
     }
 */    
-    Graph::~Graph(){}
+    Graph::~Graph()
+    {
+
+    }
 
     // Function to add an edge to the graph
     // Parameters: src - source vertex

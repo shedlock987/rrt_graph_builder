@@ -4,7 +4,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; cd .. ; pwd -P)
 echo Cleaning Build Files
 cd "$parent_path"
 
-rm -rf /build
+rm -rf build
 
 rm -rf CMakeFiles
 rm -rf cmake_install.cmake

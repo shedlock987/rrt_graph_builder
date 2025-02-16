@@ -1,1 +1,0 @@
-/usr/bin/g++ -g CMakeFiles/rrtBuilderApp.dir/src/main.cpp.o -o rrtBuilderApp  ../graphLib/libgraphLib.a 
