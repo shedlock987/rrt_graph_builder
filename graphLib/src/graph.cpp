@@ -61,9 +61,13 @@ namespace rrt
 
     Node::Node(coordinate_t * _crdnts)
     {
-        this->back_edge_weight_ = 0;
+        this->back_edge_weight_ = 0.001F;
         this->fwd_node_.resize(1); 
         this->fwd_node_[this->fwd_node_.size()]= nullptr;
+        this->crdnts_.x_ = _crdnts->x_;
+        this->crdnts_.y_ = _crdnts->y_;
+        this->crdnts_.time_ = _crdnts->time_;
+
     }
 
     Node::Node(coordinate_t * _crdnts, double _back_edge_weight)
@@ -71,6 +75,9 @@ namespace rrt
         this->back_edge_weight_ = _back_edge_weight;
         this->fwd_node_.resize(1); 
         this->fwd_node_[this->fwd_node_.size()]= nullptr;
+        this->crdnts_.x_ = _crdnts->x_;
+        this->crdnts_.y_ = _crdnts->y_;
+        this->crdnts_.time_ = _crdnts->time_;
     }
 
     void Node::addFwdNode(Node * _cnnctn)
@@ -87,6 +94,9 @@ namespace rrt
     {
         Node tempNode(_crdnts, _back_edge_weight);
         static int size = this->_linkedList.size();
+
+        std::cout << "tempNode internal coordinates: " << tempNode.crdnts_.x_ << " " << tempNode.crdnts_.y_ << " backedgeweight: " << tempNode.back_edge_weight_ << std::endl;
+        std::cout << "addNode internal coordinates: " << _crdnts->x_ << " " << _crdnts->y_ << " backedgeweight: " << _back_edge_weight << std::endl;
 
         // Check if this is a new graph
         if(size < 1)

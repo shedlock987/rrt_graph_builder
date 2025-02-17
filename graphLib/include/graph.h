@@ -59,10 +59,9 @@ namespace rrt
     class Node
         {
             private:
-                double back_edge_weight_;
                 int dimension_;
             public: 
-   
+                double back_edge_weight_;
                 coordinate_t crdnts_;  //x,y,z,t       
                 std::vector<Node *> fwd_node_;
                 Node * back_node_;
