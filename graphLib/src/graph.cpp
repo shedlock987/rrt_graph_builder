@@ -87,21 +87,18 @@ namespace rrt
 
     Graph::Graph()
     {
-        this->_linkedList.resize(1);
+        this->_adjacencyList.resize(1);
     }
 
     void Graph::addNode(coordinate_t * _crdnts, double _back_edge_weight)
     {
         Node tempNode(_crdnts, _back_edge_weight);
-        static int size = this->_linkedList.size();
-
-        std::cout << "tempNode internal coordinates: " << tempNode.crdnts_.x_ << " " << tempNode.crdnts_.y_ << " backedgeweight: " << tempNode.back_edge_weight_ << std::endl;
-        std::cout << "addNode internal coordinates: " << _crdnts->x_ << " " << _crdnts->y_ << " backedgeweight: " << _back_edge_weight << std::endl;
+        int size = this->_adjacencyList.size();
 
         // Check if this is a new graph
         if(size < 1)
         {
-            this->_linkedList.resize(1);
+            this->_adjacencyList.resize(1);
             #ifdef WARN
                 std::cout << "Initializing new RRT graph \n";
             #endif
@@ -110,8 +107,8 @@ namespace rrt
         {
             // Make Node Connection
             size++;
-            this->_linkedList.emplace_back(&tempNode);
-            this->_linkedList[size - 1]->addFwdNode(this->_linkedList[size]);
+            this->_adjacencyList.emplace_back(&tempNode);
+            this->_adjacencyList[size - 1]->addFwdNode(this->_adjacencyList[size]);
             #ifdef WARN
                 std::cout << "No connection Node specified, connecting to tail \n";
             #endif
@@ -122,13 +119,19 @@ namespace rrt
     {
         Node tempNode(_crdnts, _back_edge_weight);
 
-        this->_linkedList.emplace_back(&tempNode);
-        _link->addFwdNode(this->_linkedList.back());
+        this->_adjacencyList.emplace_back(&tempNode);
+        _link->addFwdNode(this->_adjacencyList.back());
+    }
+
+    void Graph::deleteNode(Node * _handle)
+    {
+
     }
 
     coordinate_t Graph::getCoordinate(Node * _handle)
     {
-
+        coordinate_t temp(_handle->crdnts_.x_, _handle->crdnts_.y_, _handle->crdnts_.time_);
+        return temp;
     }
   
     Graph::~Graph()
@@ -151,21 +154,22 @@ namespace rrt
     // Function to print the adjacency list of the graph
     void Graph::printGraph()
     {
-/*
-        // Iterate through each vertex
-        for (int i = 0; i < _adjList.size(); ++i) {
-            // Print the vertex
-            std::cout << i << ": ";
-            // Iterate through the adjacency list of the
-            // vertex
-            for (int j = 0; j < _adjList[i].size(); ++j) {
-                // Print each adjacent vertex
-                std::cout << _adjList[i][j] << " -> ";
+        int cnt = 0;
+        double x,y,z;
+
+        for(Node * iter : this->_adjacencyList)
+        {
+            if (iter != nullptr) {
+            //    std::cout << "Coordinates" << iter->crdnts_.x_ << "," << iter->crdnts_.y_ << "," << iter->crdnts_.time_
+            } else {
+                std::cout << "Coordinates: nullptr \n";
             }
-            // Indicate the end of the adjacency list
-            std::cout << "NULL" << std::endl;
+            //std::cout << "Iter_" << cnt << " x:" << iter->crdnts_->x_ << std::endl;
+            cnt++;
+            //std::cout << "Coordinates" << iter->crdnts_.x_ << "," << iter->crdnts_.y_ << "," << iter->crdnts_.time_ <<
+            //    " Back_Edge_Weight: " << iter->back_edge_weight_ << std::endl;
         }
-            */
+        
     }
 
 }

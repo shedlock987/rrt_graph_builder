@@ -76,7 +76,7 @@ class Graph {
 
     
     public:
-        std::vector<Node *> _linkedList; //move this to private after debug
+        std::vector<Node *> _adjacencyList; //move this to private after debug
 
         // Constructor to initialize the graph
         // Parameters: vertices - number of vertices in the
@@ -92,6 +92,7 @@ class Graph {
 
         void addNode(coordinate_t * _crdnts, double _back_edge_weight);
         void addNode(Node * _link, coordinate_t * _crdnts, double _back_edge_weight);
+        void deleteNode(Node * _handle);
         coordinate_t getCoordinate(Node * _handle);
 
         //Node findNearest();
