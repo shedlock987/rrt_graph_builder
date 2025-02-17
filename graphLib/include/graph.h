@@ -36,6 +36,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 namespace rrt
 {
@@ -64,10 +65,11 @@ namespace rrt
                 double back_edge_weight_;
                 coordinate_t crdnts_;  //x,y,z,t       
                 std::vector<Node *> fwd_node_;
-                Node * back_node_;
+                Node* back_node_;
                 Node();
                 Node(coordinate_t * _crdnts);
                 Node(coordinate_t * _crdnts, double _back_edge_weight);
+                coordinate_t getCoordinate();
                 void addFwdNode(Node * _cnnctn);
         };
 
@@ -77,30 +79,15 @@ class Graph {
     
     public:
         std::vector<Node *> _adjacencyList; //move this to private after debug
-
-        // Constructor to initialize the graph
-        // Parameters: vertices - number of vertices in the
-        // graph
-        //  directed - flag to indicate if the graph is directed
-        //  (default is false)
         Graph();
-
-        /**
-         * @brief      Destroys the object.
-         */
         ~Graph();
 
-        void addNode(coordinate_t * _crdnts, double _back_edge_weight);
-        void addNode(Node * _link, coordinate_t * _crdnts, double _back_edge_weight);
-        void deleteNode(Node * _handle);
-        coordinate_t getCoordinate(Node * _handle);
-
-        //Node findNearest();
-    
-        // Function to add an edge to the graph
-        // Parameters: src - source vertex
-        // dest - destination vertex
-        void addEdge(int _src, int _dest);
+        void addNode(coordinate_t* _crdnts, double _back_edge_weight);
+        void addNode(Node* _link, coordinate_t* _crdnts, double _back_edge_weight);
+        void deleteNode(Node* _handle);
+        int getIndex(Node* _handle);
+        coordinate_t getCoordinate(Node* _handle);
+        void addEdge(Node* _src, Node* _dest);
     
         // Function to print the adjacency list of the graph
         void printGraph();

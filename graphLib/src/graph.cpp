@@ -80,9 +80,22 @@ namespace rrt
         this->crdnts_.time_ = _crdnts->time_;
     }
 
+    coordinate_t Node::getCoordinate()
+    {
+        coordinate_t temp;
+        if(this != nullptr)
+        {
+            temp = this->crdnts_;
+        }
+        return temp;
+    }
+
     void Node::addFwdNode(Node * _cnnctn)
     {
-        this->fwd_node_.emplace_back(_cnnctn);
+        if(_cnnctn != nullptr)
+        {
+            this->fwd_node_.emplace_back(_cnnctn);
+        }
     }
 
     Graph::Graph()
@@ -94,24 +107,26 @@ namespace rrt
     {
         Node tempNode(_crdnts, _back_edge_weight);
         int size = this->_adjacencyList.size();
-
-        // Check if this is a new graph
-        if(size < 1)
+        if(_crdnts != nullptr)
         {
-            this->_adjacencyList.resize(1);
-            #ifdef WARN
-                std::cout << "Initializing new RRT graph \n";
-            #endif
-        }
-        else
-        {
-            // Make Node Connection
-            size++;
-            this->_adjacencyList.emplace_back(&tempNode);
-            this->_adjacencyList[size - 1]->addFwdNode(this->_adjacencyList[size]);
-            #ifdef WARN
-                std::cout << "No connection Node specified, connecting to tail \n";
-            #endif
+            // Check if this is a new graph
+            if(size < 1)
+            {
+                this->_adjacencyList.resize(1);
+                #ifdef WARN
+                    std::cout << "Initializing new RRT graph \n";
+                #endif
+            }
+            else
+            {
+                // Make Node Connection
+                size++;
+                this->_adjacencyList.emplace_back(&tempNode);
+                this->_adjacencyList[size - 1]->addFwdNode(this->_adjacencyList[size]);
+                #ifdef WARN
+                    std::cout << "No connection Node specified, connecting to tail \n";
+                #endif
+            }
         }
     }
 
@@ -119,8 +134,11 @@ namespace rrt
     {
         Node tempNode(_crdnts, _back_edge_weight);
 
-        this->_adjacencyList.emplace_back(&tempNode);
-        _link->addFwdNode(this->_adjacencyList.back());
+        if(_link != nullptr && _crdnts != nullptr)
+        {
+            this->_adjacencyList.emplace_back(&tempNode);
+            _link->addFwdNode(this->_adjacencyList.back());
+        }
     }
 
     void Graph::deleteNode(Node * _handle)
@@ -128,10 +146,29 @@ namespace rrt
 
     }
 
+    int Graph::getIndex(Node* _handle)
+    {
+        coordinate_t crdnts;
+        int idx = 0;
+        if(_handle != nullptr)
+        {
+            auto temp = std::find(this->_adjacencyList.begin(), this->_adjacencyList.end(), _handle);
+            idx = std::distance(this->_adjacencyList.begin(), temp);
+        }
+        return idx;
+    }
+
     coordinate_t Graph::getCoordinate(Node * _handle)
     {
-        coordinate_t temp(_handle->crdnts_.x_, _handle->crdnts_.y_, _handle->crdnts_.time_);
-        return temp;
+        int idx = 0;
+        coordinate_t crdnts;
+
+        if(_handle != nullptr)
+        {
+            idx = this->getIndex(_handle);
+            crdnts = this->_adjacencyList[idx]->crdnts_;
+        }
+        return crdnts;
     }
   
     Graph::~Graph()
@@ -141,7 +178,7 @@ namespace rrt
     // Function to add an edge to the graph
     // Parameters: src - source vertex
     // dest - destination vertex
-    void Graph::addEdge(int _src, int _dest)
+    void Graph::addEdge(Node* _src, Node* _dest)
     {
 
         // Add the destination to the adjacency list of the
@@ -155,21 +192,16 @@ namespace rrt
     void Graph::printGraph()
     {
         int cnt = 0;
-        double x,y,z;
+        coordinate_t crdnt;
 
-        for(Node * iter : this->_adjacencyList)
+
+        for(const auto &iter : this->_adjacencyList)
         {
-            if (iter != nullptr) {
-            //    std::cout << "Coordinates" << iter->crdnts_.x_ << "," << iter->crdnts_.y_ << "," << iter->crdnts_.time_
-            } else {
-                std::cout << "Coordinates: nullptr \n";
-            }
-            //std::cout << "Iter_" << cnt << " x:" << iter->crdnts_->x_ << std::endl;
+            crdnt = iter->getCoordinate();
+            std::cout << cnt << ":   x:" << crdnt.x_ << " y:" << crdnt.y_ << " time:" << crdnt.time_ << std::endl;
             cnt++;
-            //std::cout << "Coordinates" << iter->crdnts_.x_ << "," << iter->crdnts_.y_ << "," << iter->crdnts_.time_ <<
-            //    " Back_Edge_Weight: " << iter->back_edge_weight_ << std::endl;
         }
-        
+
     }
 
 }
