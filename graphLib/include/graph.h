@@ -69,8 +69,14 @@ namespace rrt
                 Node();
                 Node(coordinate_t * _crdnts);
                 Node(coordinate_t * _crdnts, double _back_edge_weight);
+                Node(double _x, double _y, double _time, double _back_edge_weight);
+                Node(double _x, double _y, double _back_edge_weight);
                 coordinate_t getCoordinate();
                 void addFwdNode(Node * _cnnctn);
+                void updateData(double _x, double _y, double _back_edge_weight);
+                void updateData(double _x, double _y, double _time, double _back_edge_weight);
+                void updateCoordinate(double _x, double _y);
+                void updateCoordinate(double _x, double _y, double _time);
         };
 
 class Graph {
@@ -82,8 +88,8 @@ class Graph {
         Graph();
         ~Graph();
 
-        void addNode(coordinate_t* _crdnts, double _back_edge_weight);
-        void addNode(Node* _link, coordinate_t* _crdnts, double _back_edge_weight);
+        void addNode(double _x, double _y, double _time, double _back_edge_weight);
+        void addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight);
         void deleteNode(Node* _handle);
         int getIndex(Node* _handle);
         coordinate_t getCoordinate(Node* _handle);

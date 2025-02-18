@@ -54,14 +54,17 @@ namespace rrt
     
     Node::Node() 
     {
-        this->back_edge_weight_ = 0;
+        this->back_edge_weight_ = 0.0F;
         this->fwd_node_.resize(1); 
         this->fwd_node_[this->fwd_node_.size()]= nullptr;
+        this->crdnts_.x_ = 0.0F;
+        this->crdnts_.y_ = 0.0F;
+        this->crdnts_.time_ = 0.0F;
     }
 
     Node::Node(coordinate_t * _crdnts)
     {
-        this->back_edge_weight_ = 0.001F;
+        this->back_edge_weight_ = 0.0F;
         this->fwd_node_.resize(1); 
         this->fwd_node_[this->fwd_node_.size()]= nullptr;
         this->crdnts_.x_ = _crdnts->x_;
@@ -80,12 +83,39 @@ namespace rrt
         this->crdnts_.time_ = _crdnts->time_;
     }
 
+    Node::Node(double _x, double _y, double _time, double _back_edge_weight) 
+    {
+        this->back_edge_weight_ = _back_edge_weight;
+        this->fwd_node_.resize(1); 
+        this->fwd_node_.front()= nullptr;
+        this->crdnts_.x_ = _x;
+        this->crdnts_.y_ = _y;
+        this->crdnts_.time_ = _time;
+        this->dimension_ = 3;
+    }
+
+    Node::Node(double _x, double _y, double _back_edge_weight)
+    {
+        this->back_edge_weight_ = _back_edge_weight;
+        this->fwd_node_.resize(1); 
+        this->fwd_node_.front()= nullptr;
+        this->crdnts_.x_ = _x;
+        this->crdnts_.y_ = _y;
+        this->crdnts_.time_ = 0.0F;
+        this->dimension_ = 2;
+    }
+
     coordinate_t Node::getCoordinate()
     {
         coordinate_t temp;
         if(this != nullptr)
         {
             temp = this->crdnts_;
+            std::cout << "Node->GetCoordinate x:" << temp.x_ << " y:" << temp.y_ << " time:" << temp.time_ << std::endl;
+        }
+        else
+        {
+            std::cout << "Node->GetCoordinate nullptr!!!" << std::endl;
         }
         return temp;
     }
@@ -94,7 +124,7 @@ namespace rrt
     {
         if(_cnnctn != nullptr)
         {
-            this->fwd_node_.emplace_back(_cnnctn);
+            this->fwd_node_.push_back(_cnnctn);
         }
     }
 
@@ -103,41 +133,45 @@ namespace rrt
         this->_adjacencyList.resize(1);
     }
 
-    void Graph::addNode(coordinate_t * _crdnts, double _back_edge_weight)
+    void Graph::addNode(double _x, double _y, double _time, double _back_edge_weight)
     {
-        Node tempNode(_crdnts, _back_edge_weight);
-        int size = this->_adjacencyList.size();
-        if(_crdnts != nullptr)
+        int size;
+        this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
+        size = this->_adjacencyList.size();
+
+        if(size > 1)
         {
-            // Check if this is a new graph
-            if(size < 1)
-            {
-                this->_adjacencyList.resize(1);
-                #ifdef WARN
-                    std::cout << "Initializing new RRT graph \n";
-                #endif
-            }
-            else
-            {
-                // Make Node Connection
-                size++;
-                this->_adjacencyList.emplace_back(&tempNode);
-                this->_adjacencyList[size - 1]->addFwdNode(this->_adjacencyList[size]);
-                #ifdef WARN
-                    std::cout << "No connection Node specified, connecting to tail \n";
-                #endif
-            }
+            this->_adjacencyList[size - 1]->addFwdNode(this->_adjacencyList.back());
+            #ifdef WARN
+                std::cout << "No connection Node specified, connecting to tail \n";
+            #endif
+        }
+        else 
+        {
+            #ifdef WARN
+            std::cout << "Something went wrong, Adjacentcy List Range Error\n";
+            #endif
         }
     }
 
-    void Graph::addNode(Node * _link, coordinate_t * _crdnts, double _back_edge_weight)
+    void Graph::addNode(Node * _link, double _x, double _y, double _time, double _back_edge_weight)
     {
-        Node tempNode(_crdnts, _back_edge_weight);
+        int size;
+        this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
+        size = this->_adjacencyList.size();
 
-        if(_link != nullptr && _crdnts != nullptr)
+        if(_link != nullptr)
         {
-            this->_adjacencyList.emplace_back(&tempNode);
-            _link->addFwdNode(this->_adjacencyList.back());
+            this->addEdge(_link, this->_adjacencyList.back());
+            #ifdef WARN
+                std::cout << "No connection Node specified, connecting to tail \n";
+            #endif
+        }
+        else 
+        {
+            #ifdef WARN
+            std::cout << "Something went wrong, Invalid Connection Specified\n";
+            #endif
         }
     }
 
@@ -180,12 +214,7 @@ namespace rrt
     // dest - destination vertex
     void Graph::addEdge(Node* _src, Node* _dest)
     {
-
-        // Add the destination to the adjacency list of the
-        // source
-       // _adjList[_src].push_back(_dest);
-
-
+        _src->addFwdNode(_dest);
     }
 
     // Function to print the adjacency list of the graph
@@ -193,12 +222,18 @@ namespace rrt
     {
         int cnt = 0;
         coordinate_t crdnt;
-
-
-        for(const auto &iter : this->_adjacencyList)
+        /*
+        for(const auto iter : this->_adjacencyList)
         {
             crdnt = iter->getCoordinate();
             std::cout << cnt << ":   x:" << crdnt.x_ << " y:" << crdnt.y_ << " time:" << crdnt.time_ << std::endl;
+            cnt++;
+        }
+            */
+        for(auto i=0; i<this->_adjacencyList.size(); i++)
+        {
+            //crdnt = this->_adjacencyList[i]->crdnts_.x_;
+            std::cout << cnt << ":   x:" << this->_adjacencyList[i]->crdnts_.x_ << " y:" << this->_adjacencyList[i]->crdnts_.y_ << " time:" << this->_adjacencyList[i]->crdnts_.time_ << std::endl;
             cnt++;
         }
 
