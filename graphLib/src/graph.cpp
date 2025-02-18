@@ -120,18 +120,22 @@ namespace rrt
         return temp;
     }
 
-    void Node::addFwdNode(Node * _cnnctn)
+    void Node::addFwdNode(Node* _cnnctn)
     {
-        if(_cnnctn != nullptr)
+        this->fwd_node_.push_back(_cnnctn);
+    }
+
+    void Node::printNode()
+    {
+        std::cout << "Node ID:" << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
+        std::cout << "Back Connection/Weight:" << this->back_node_ << "/" << this->back_edge_weight_ << std:: endl;
+        std::cout << "Forward Connection \n" << std::endl;
+        for(const Node* iter : this->fwd_node_)
         {
-            this->fwd_node_.push_back(_cnnctn);
+            std::cout << "   |\n   ---> ";
+            std::cout << "Fwd Connection ID:" << iter << std::endl;
         }
-        else 
-        {
-            #ifdef WARN
-            std::cout << "Something went wrong, Adjacentcy List Range Error\n";
-            #endif
-        }
+        std::cout << std::endl;
     }
 
     Graph::Graph()
@@ -201,7 +205,7 @@ namespace rrt
         return idx;
     }
 
-    coordinate_t Graph::getCoordinate(Node * _handle)
+    coordinate_t Graph::getCoordinate(Node* _handle)
     {
         int idx = 0;
         coordinate_t crdnts;
@@ -228,23 +232,10 @@ namespace rrt
     // Function to print the adjacency list of the graph
     void Graph::printGraph()
     {
-        int cnt = 0;
-        coordinate_t crdnt;
-        /*
-        for(const auto iter : this->_adjacencyList)
+        for(const auto &iter : this->_adjacencyList)
         {
-            crdnt = iter->getCoordinate();
-            std::cout << cnt << ":   x:" << crdnt.x_ << " y:" << crdnt.y_ << " time:" << crdnt.time_ << std::endl;
-            cnt++;
+            iter->printNode();
         }
-            */
-        for(auto i=0; i<this->_adjacencyList.size(); i++)
-        {
-            //crdnt = this->_adjacencyList[i]->crdnts_.x_;
-            std::cout << cnt << ":   x:" << this->_adjacencyList[i]->crdnts_.x_ << " y:" << this->_adjacencyList[i]->crdnts_.y_ << " time:" << this->_adjacencyList[i]->crdnts_.time_ << std::endl;
-            cnt++;
-        }
-
     }
 
 }

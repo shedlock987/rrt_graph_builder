@@ -24,4 +24,6 @@ std::cout   << "MAIN   size:" << testGraph._adjacencyList.size() << "    "
             << testGraph._adjacencyList.at(3)->crdnts_.y_ << " "
             << testGraph._adjacencyList.at(3)->crdnts_.time_ << std::endl; 
 
+testGraph.printGraph();
+
 }

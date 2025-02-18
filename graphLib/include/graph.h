@@ -73,15 +73,12 @@ namespace rrt
                 Node(double _x, double _y, double _back_edge_weight);
                 coordinate_t getCoordinate();
                 void addFwdNode(Node * _cnnctn);
-                void updateData(double _x, double _y, double _back_edge_weight);
-                void updateData(double _x, double _y, double _time, double _back_edge_weight);
-                void updateCoordinate(double _x, double _y);
-                void updateCoordinate(double _x, double _y, double _time);
+                void printNode();
         };
 
 class Graph {
     private:
-
+        
     
     public:
         std::vector<Node *> _adjacencyList; //move this to private after debug
