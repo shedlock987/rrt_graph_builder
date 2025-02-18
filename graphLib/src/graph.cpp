@@ -126,6 +126,12 @@ namespace rrt
         {
             this->fwd_node_.push_back(_cnnctn);
         }
+        else 
+        {
+            #ifdef WARN
+            std::cout << "Something went wrong, Adjacentcy List Range Error\n";
+            #endif
+        }
     }
 
     Graph::Graph()
@@ -154,35 +160,38 @@ namespace rrt
         }
     }
 
-    void Graph::addNode(Node * _link, double _x, double _y, double _time, double _back_edge_weight)
+    void Graph::addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight)
     {
-        int size;
         this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
-        size = this->_adjacencyList.size();
+        std::cout << "AddNode Link/src ptr: " <<_link << std::endl;
+        this->addEdge(_link, this->_adjacencyList.back());
 
-        if(_link != nullptr)
-        {
-            this->addEdge(_link, this->_adjacencyList.back());
-            #ifdef WARN
-                std::cout << "No connection Node specified, connecting to tail \n";
-            #endif
-        }
-        else 
-        {
-            #ifdef WARN
-            std::cout << "Something went wrong, Invalid Connection Specified\n";
-            #endif
-        }
     }
 
-    void Graph::deleteNode(Node * _handle)
+    void Graph::deleteNode(Node* _handle)
     {
+        int idx = this->getIndex(_handle);
+        Node* back_link = this->_adjacencyList[idx]->back_node_;
 
+        // Migrate Deleted Node's Forward Links to the new back link
+        for(const auto &iter_b : this->_adjacencyList[idx]->fwd_node_)
+        {
+            back_link->fwd_node_.push_back(iter_b);
+        }
+
+        // Update Back Links for all the forward connections
+        // aka do double linked list house keeping
+        for(const auto &iter_f : back_link->fwd_node_)
+        {
+            iter_f->back_node_ = back_link;
+        }
+        
+        // Delete the node from adjacency list
+        this->_adjacencyList.erase(this->_adjacencyList.begin() + idx);
     }
 
     int Graph::getIndex(Node* _handle)
     {
-        coordinate_t crdnts;
         int idx = 0;
         if(_handle != nullptr)
         {
@@ -197,11 +206,9 @@ namespace rrt
         int idx = 0;
         coordinate_t crdnts;
 
-        if(_handle != nullptr)
-        {
-            idx = this->getIndex(_handle);
-            crdnts = this->_adjacencyList[idx]->crdnts_;
-        }
+        idx = this->getIndex(_handle);
+        crdnts = this->_adjacencyList[idx]->crdnts_;
+        
         return crdnts;
     }
   
@@ -209,12 +216,13 @@ namespace rrt
     {
     }
 
-    // Function to add an edge to the graph
+    // Method to add an edge to the graph
     // Parameters: src - source vertex
     // dest - destination vertex
     void Graph::addEdge(Node* _src, Node* _dest)
     {
         _src->addFwdNode(_dest);
+        _dest->back_node_ = _src;
     }
 
     // Function to print the adjacency list of the graph
