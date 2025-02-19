@@ -63,17 +63,20 @@ namespace rrt
                 int dimension_;
             public: 
                 double back_edge_weight_;
-                coordinate_t crdnts_;  //x,y,z,t       
+                coordinate_t crdnts_;       
                 std::vector<Node *> fwd_node_;
                 Node* back_node_;
                 Node();
                 Node(coordinate_t * _crdnts);
                 Node(coordinate_t * _crdnts, double _back_edge_weight);
+                //Need to add copy constructors
                 Node(double _x, double _y, double _time, double _back_edge_weight);
                 Node(double _x, double _y, double _back_edge_weight);
                 coordinate_t getCoordinate();
                 void addFwdNode(Node * _cnnctn);
                 void printNode();
+
+                friend class Graph;
         };
 
 class Graph {

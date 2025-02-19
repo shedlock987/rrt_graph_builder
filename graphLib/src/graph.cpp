@@ -56,7 +56,8 @@ namespace rrt
     {
         this->back_edge_weight_ = 0.0F;
         this->fwd_node_.resize(1); 
-        this->fwd_node_[this->fwd_node_.size()]= nullptr;
+        this->fwd_node_[this->fwd_node_.size()] = nullptr;
+        this->back_node_ = nullptr;
         this->crdnts_.x_ = 0.0F;
         this->crdnts_.y_ = 0.0F;
         this->crdnts_.time_ = 0.0F;
@@ -66,7 +67,8 @@ namespace rrt
     {
         this->back_edge_weight_ = 0.0F;
         this->fwd_node_.resize(1); 
-        this->fwd_node_[this->fwd_node_.size()]= nullptr;
+        this->fwd_node_[this->fwd_node_.size()] = nullptr;
+        this->back_node_ = nullptr;
         this->crdnts_.x_ = _crdnts->x_;
         this->crdnts_.y_ = _crdnts->y_;
         this->crdnts_.time_ = _crdnts->time_;
@@ -77,7 +79,8 @@ namespace rrt
     {
         this->back_edge_weight_ = _back_edge_weight;
         this->fwd_node_.resize(1); 
-        this->fwd_node_[this->fwd_node_.size()]= nullptr;
+        this->fwd_node_[this->fwd_node_.size()] = nullptr;
+        this->back_node_ = nullptr;
         this->crdnts_.x_ = _crdnts->x_;
         this->crdnts_.y_ = _crdnts->y_;
         this->crdnts_.time_ = _crdnts->time_;
@@ -127,15 +130,28 @@ namespace rrt
 
     void Node::printNode()
     {
-        std::cout << "Node ID:" << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
-        std::cout << "Back Connection/Weight:" << this->back_node_ << "/" << this->back_edge_weight_ << std:: endl;
-        std::cout << "Forward Connection \n" << std::endl;
-        for(const Node* iter : this->fwd_node_)
+        //If Head
+        if(this->back_node_ == nullptr)
         {
+            std::cout << "Node ID:HEAD" << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
+            std::cout << "Back Connection/Weight:NULL/" << this->back_edge_weight_ << std:: endl;
+            std::cout << "Forward Connection \n" << std::endl;
             std::cout << "   |\n   ---> ";
-            std::cout << "Fwd Connection ID:" << iter << std::endl;
+            std::cout << "Fwd Connection ID:NULL" << std::endl;
         }
-        std::cout << std::endl;
+        else
+        {
+            std::cout << "Node ID:" << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
+            std::cout << "Back Connection/Weight:" << this->back_node_ << "/" << this->back_edge_weight_ << std:: endl;
+            std::cout << "Forward Connection \n" << std::endl;
+
+            for(const Node* iter : this->fwd_node_)
+            {
+                std::cout << "   |\n   ---> ";
+                std::cout << "Fwd Connection ID:" << iter << std::endl;
+            }
+            std::cout << std::endl;
+        }
     }
 
     Graph::Graph()
@@ -149,17 +165,17 @@ namespace rrt
         this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
         size = this->_adjacencyList.size();
 
-        if(size > 1)
+        if(size <= 1)
         {
-            this->_adjacencyList[size - 1]->addFwdNode(this->_adjacencyList.back());
             #ifdef WARN
-                std::cout << "No connection Node specified, connecting to tail \n";
+            std::cout << "Something went wrong, Adjacentcy List Range Error\n";
             #endif
         }
         else 
         {
+            this->addEdge(this->_adjacencyList[size-1], this->_adjacencyList.back());
             #ifdef WARN
-            std::cout << "Something went wrong, Adjacentcy List Range Error\n";
+                std::cout << "No connection Node specified, connecting to tail \n";
             #endif
         }
     }
@@ -167,9 +183,7 @@ namespace rrt
     void Graph::addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight)
     {
         this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
-        std::cout << "AddNode Link/src ptr: " <<_link << std::endl;
         this->addEdge(_link, this->_adjacencyList.back());
-
     }
 
     void Graph::deleteNode(Node* _handle)
