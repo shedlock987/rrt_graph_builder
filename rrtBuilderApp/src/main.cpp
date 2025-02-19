@@ -5,8 +5,10 @@ int main() {
 rrt::coordinate_t origin(2.0F,2.5F);
 rrt::coordinate_t pt1(4.1F, 5.0F);
 rrt::coordinate_t pt2(8.0F, 10.0F);
-rrt::Graph testGraph;
+rrt::Graph testGraph(3.0F,3.0F);
+
 testGraph.addNode(origin.x_,origin.y_, origin.time_, 1.0F);
+//testGraph._adjacencyList.back()->printNode();
 std::cout   << "MAIN   size:" << testGraph._adjacencyList.size() << "    "
             << testGraph._adjacencyList.back()->crdnts_.x_ << " "
             << testGraph._adjacencyList.back()->crdnts_.y_ << " "
@@ -24,11 +26,8 @@ std::cout   << "MAIN   size:" << testGraph._adjacencyList.size() << "    "
             << testGraph._adjacencyList.at(3)->crdnts_.y_ << " "
             << testGraph._adjacencyList.at(3)->crdnts_.time_ << std::endl; 
 
-//testGraph.printGraph();
+testGraph.printGraph();
 //testGraph._adjacencyList.at(0)->printNode();
-testGraph._adjacencyList.at(1)->printNode();
-testGraph._adjacencyList.at(2)->printNode();
-testGraph._adjacencyList.at(3)->printNode();
 
 
 }

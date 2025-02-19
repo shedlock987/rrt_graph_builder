@@ -81,11 +81,12 @@ namespace rrt
 
 class Graph {
     private:
-        
+        bool _initCmplt = false;
     
     public:
         std::vector<Node *> _adjacencyList; //move this to private after debug
         Graph();
+        Graph(double _xHead, double _yHead);
         ~Graph();
 
         void addNode(double _x, double _y, double _time, double _back_edge_weight);

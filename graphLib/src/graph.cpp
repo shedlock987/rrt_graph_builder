@@ -55,8 +55,6 @@ namespace rrt
     Node::Node() 
     {
         this->back_edge_weight_ = 0.0F;
-        this->fwd_node_.resize(1); 
-        this->fwd_node_[this->fwd_node_.size()] = nullptr;
         this->back_node_ = nullptr;
         this->crdnts_.x_ = 0.0F;
         this->crdnts_.y_ = 0.0F;
@@ -66,8 +64,6 @@ namespace rrt
     Node::Node(coordinate_t * _crdnts)
     {
         this->back_edge_weight_ = 0.0F;
-        this->fwd_node_.resize(1); 
-        this->fwd_node_[this->fwd_node_.size()] = nullptr;
         this->back_node_ = nullptr;
         this->crdnts_.x_ = _crdnts->x_;
         this->crdnts_.y_ = _crdnts->y_;
@@ -78,8 +74,6 @@ namespace rrt
     Node::Node(coordinate_t * _crdnts, double _back_edge_weight)
     {
         this->back_edge_weight_ = _back_edge_weight;
-        this->fwd_node_.resize(1); 
-        this->fwd_node_[this->fwd_node_.size()] = nullptr;
         this->back_node_ = nullptr;
         this->crdnts_.x_ = _crdnts->x_;
         this->crdnts_.y_ = _crdnts->y_;
@@ -89,8 +83,6 @@ namespace rrt
     Node::Node(double _x, double _y, double _time, double _back_edge_weight) 
     {
         this->back_edge_weight_ = _back_edge_weight;
-        this->fwd_node_.resize(1); 
-        this->fwd_node_.front()= nullptr;
         this->crdnts_.x_ = _x;
         this->crdnts_.y_ = _y;
         this->crdnts_.time_ = _time;
@@ -111,15 +103,8 @@ namespace rrt
     coordinate_t Node::getCoordinate()
     {
         coordinate_t temp;
-        if(this != nullptr)
-        {
-            temp = this->crdnts_;
-            std::cout << "Node->GetCoordinate x:" << temp.x_ << " y:" << temp.y_ << " time:" << temp.time_ << std::endl;
-        }
-        else
-        {
-            std::cout << "Node->GetCoordinate nullptr!!!" << std::endl;
-        }
+        temp = this->crdnts_;
+        std::cout << "Node->GetCoordinate x:" << temp.x_ << " y:" << temp.y_ << " time:" << temp.time_ << std::endl;
         return temp;
     }
 
@@ -130,60 +115,58 @@ namespace rrt
 
     void Node::printNode()
     {
-        //If Head
-        if(this->back_node_ == nullptr)
-        {
-            std::cout << "Node ID:HEAD" << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
-            std::cout << "Back Connection/Weight:NULL/" << this->back_edge_weight_ << std:: endl;
-            std::cout << "Forward Connection \n" << std::endl;
-            std::cout << "   |\n   ---> ";
-            std::cout << "Fwd Connection ID:NULL" << std::endl;
-        }
-        else
-        {
-            std::cout << "Node ID:" << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
-            std::cout << "Back Connection/Weight:" << this->back_node_ << "/" << this->back_edge_weight_ << std:: endl;
-            std::cout << "Forward Connection \n" << std::endl;
+        std::cout << "Back Connection/Weight:" << this->back_node_ << " / " << this->back_edge_weight_ << std:: endl;
+        std::cout << "Node ID:" << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
+        std::cout << "Forward Connection \n" << std::endl;
 
-            for(const Node* iter : this->fwd_node_)
-            {
-                std::cout << "   |\n   ---> ";
-                std::cout << "Fwd Connection ID:" << iter << std::endl;
-            }
-            std::cout << std::endl;
+        for(const auto &iter : this->fwd_node_)
+        {
+            std::cout << "   |\n   ---> ";
+            std::cout << "Fwd Connection ID:" << iter << std::endl;
         }
+        std::cout << std::endl;
     }
 
     Graph::Graph()
+    {      
+        this->addNode(0.0F, 0.0F, 0.0F, 0.0F);
+        //Loop Back and Initialize Back Node
+        //this->_adjacencyList.front()->back_node_ = this->_adjacencyList.front();
+        //this->_adjacencyList.front()->fwd_node_.push_back(this->_adjacencyList.front()->back_node_);
+        _initCmplt = true;
+    }
+    
+    Graph::Graph(double _xHead, double _yHead)
     {
-        this->_adjacencyList.resize(1);
+        this->addNode(_xHead, _yHead, 0.0F, 0.0F);
+        //Loop Back and Initialize Back Node
+        //this->_adjacencyList.front()->back_node_ = this->_adjacencyList.front();
+        //this->_adjacencyList.front()->fwd_node_.push_back(this->_adjacencyList.front()->back_node_);
+        _initCmplt = true;
     }
 
     void Graph::addNode(double _x, double _y, double _time, double _back_edge_weight)
     {
         int size;
-        this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
         size = this->_adjacencyList.size();
 
-        if(size <= 1)
+        this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
+        if(this->_initCmplt)
         {
-            #ifdef WARN
-            std::cout << "Something went wrong, Adjacentcy List Range Error\n";
-            #endif
-        }
-        else 
-        {
+            size++;
             this->addEdge(this->_adjacencyList[size-1], this->_adjacencyList.back());
-            #ifdef WARN
-                std::cout << "No connection Node specified, connecting to tail \n";
-            #endif
         }
+        
+
     }
 
     void Graph::addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight)
     {
-        this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
-        this->addEdge(_link, this->_adjacencyList.back());
+        if(this->_initCmplt)
+        {
+            this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
+            this->addEdge(_link, this->_adjacencyList.back());
+        }
     }
 
     void Graph::deleteNode(Node* _handle)
@@ -239,7 +222,7 @@ namespace rrt
     // dest - destination vertex
     void Graph::addEdge(Node* _src, Node* _dest)
     {
-        _src->addFwdNode(_dest);
+        _src->fwd_node_.push_back(_dest);
         _dest->back_node_ = _src;
     }
 
