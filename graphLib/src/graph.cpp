@@ -130,18 +130,12 @@ namespace rrt
     Graph::Graph()
     {      
         this->addNode(0.0F, 0.0F, 0.0F, 0.0F);
-        //Loop Back and Initialize Back Node
-        //this->_adjacencyList.front()->back_node_ = this->_adjacencyList.front();
-        //this->_adjacencyList.front()->fwd_node_.push_back(this->_adjacencyList.front()->back_node_);
         _initCmplt = true;
     }
     
     Graph::Graph(double _xHead, double _yHead)
     {
         this->addNode(_xHead, _yHead, 0.0F, 0.0F);
-        //Loop Back and Initialize Back Node
-        //this->_adjacencyList.front()->back_node_ = this->_adjacencyList.front();
-        //this->_adjacencyList.front()->fwd_node_.push_back(this->_adjacencyList.front()->back_node_);
         _initCmplt = true;
     }
 
@@ -151,10 +145,15 @@ namespace rrt
         size = this->_adjacencyList.size();
 
         this->_adjacencyList.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
-        if(this->_initCmplt)
+        if(this->_initCmplt && size >= 1)
         {
             size++;
-            this->addEdge(this->_adjacencyList[size-1], this->_adjacencyList.back());
+            std::cout << "Source:" << this->_adjacencyList[size-1] << " Dest:" << this->_adjacencyList.back() << std::endl;
+            this->addEdge(this->_adjacencyList[size - 2], this->_adjacencyList.back());
+        }
+        else
+        {
+            _initCmplt = true;
         }
         
 
