@@ -48,6 +48,7 @@ namespace rrt
             double y_;
             double time_;
             coordinate_t();
+            coordinate_t(const coordinate_t &_copy);
             coordinate_t(double _x, double _y);
             coordinate_t(double _x, double _y, double _time);
             int getDimension();
@@ -69,7 +70,7 @@ namespace rrt
                 Node();
                 Node(coordinate_t * _crdnts);
                 Node(coordinate_t * _crdnts, double _back_edge_weight);
-                //Need to add copy constructors
+                Node(const Node &_copy);
                 Node(double _x, double _y, double _time, double _back_edge_weight);
                 Node(double _x, double _y, double _back_edge_weight);
                 coordinate_t getCoordinate();

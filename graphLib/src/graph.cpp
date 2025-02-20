@@ -38,6 +38,9 @@ namespace rrt
     {
         this->dim_ = 2;
     }
+    coordinate_t::coordinate_t(const coordinate_t &_copy) : x_(_copy.x_), y_(_copy.y_), time_(_copy.time_)
+    {
+    }
     coordinate_t::coordinate_t(double _x, double _y) : x_(_x), y_(_y), time_(0.0F)
     {
         this->dim_ = 2;
@@ -100,6 +103,11 @@ namespace rrt
         this->dimension_ = 2;
     }
 
+    Node::Node(const Node &_copy) : back_edge_weight_(_copy.back_edge_weight_), back_node_(_copy.back_node_),
+                                    crdnts_(_copy.crdnts_), fwd_node_(_copy.fwd_node_)
+    {
+    }
+
     coordinate_t Node::getCoordinate()
     {
         coordinate_t temp;
@@ -115,14 +123,45 @@ namespace rrt
 
     void Node::printNode()
     {
-        std::cout << "Back Connection/Weight:" << this->back_node_ << " / " << this->back_edge_weight_ << std:: endl;
-        std::cout << "Node ID:" << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << std:: endl;
-        std::cout << "Forward Connection \n" << std::endl;
+        bool init = false;
+
+        std::cout << std::endl;
+
+        std::cout << this << " X:" << this->crdnts_.x_ << " Y:" << this->crdnts_.y_ << " time:" << this->crdnts_.time_ 
+                  << " Back Weight:" << this->back_edge_weight_ << std::endl;
+        std::cout << "Connections:" << std::endl << std::endl;
+
+        if(this->back_node_ == nullptr)
+        {
+            std::cout << "        Back Connection ID:";
+            std::cout << this->back_node_;
+            std::cout << " <--- O";
+            std::cout << " ---> Fwd Connection ID:" << this->fwd_node_.front() << std::endl;
+        }
+        else
+        {
+            std::cout << "Back Connection ID:";
+            std::cout << this->back_node_;
+            std::cout << " <--- O";
+            if(this->fwd_node_.size() > 0)
+            {
+                std::cout << " ---> Fwd Connection ID:" << this->fwd_node_.front() << std::endl;
+            }
+        }
+
 
         for(const auto &iter : this->fwd_node_)
         {
-            std::cout << "   |\n   ---> ";
-            std::cout << "Fwd Connection ID:" << iter << std::endl;
+            if(init == false)
+            {
+                init = true;
+            }
+            else
+            {
+                std::cout << "                                    |\n";
+                std::cout << "                                    O ---> "; 
+                std::cout << "Fwd Connection ID:" << iter << std::endl;    
+            }  
         }
         std::cout << std::endl;
     }
@@ -148,7 +187,6 @@ namespace rrt
         if(this->_initCmplt && size >= 1)
         {
             size++;
-            std::cout << "Source:" << this->_adjacencyList[size-1] << " Dest:" << this->_adjacencyList.back() << std::endl;
             this->addEdge(this->_adjacencyList[size - 2], this->_adjacencyList.back());
         }
         else
