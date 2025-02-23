@@ -31,3 +31,6 @@ rm -rf Makefile
 rm -rf graphTest
 rm -rf CMakeCache.txt
 cd ..
+
+
+rm -rf _deps
