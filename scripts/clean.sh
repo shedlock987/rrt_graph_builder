@@ -23,3 +23,11 @@ rm -rf cmake_install.cmake
 rm -rf Makefile
 rm -rf rrtBuilderApp
 cd ..
+
+cd test
+rm -rf CMakeFiles
+rm -rf cmake_install.cmake
+rm -rf Makefile
+rm -rf graphTest
+rm -rf CMakeCache.txt
+cd ..
