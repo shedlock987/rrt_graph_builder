@@ -13,10 +13,11 @@ echo Building App
 make
 
 #Done
-echo Don
+echo Done
+
 #Running App
-echo Running App
+echo Running tests
 cd test
-echo enter here
+./graphTest
 echo Complete
 

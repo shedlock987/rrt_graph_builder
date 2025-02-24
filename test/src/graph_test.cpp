@@ -5,20 +5,51 @@
 
 namespace rrt
 {
+    /*
     class Node_test : public ::testing::Test
     {
         protected:
-        Node* under_test_;
+        Node* under_test_(10.0F, 10.0F, 1.0F);
+        std::shared_ptr<Node*> alt_node_;
+        std::shared_ptr<Node> value_node_;
+
+        virtual void SetUp()
+        {
+
+        }
+
+        virtual void TearDown()
+        {
+        }
     };
+    */
 
     class Graph_test : public ::testing::Test
     {
+        protected:
+        std::shared_ptr<Graph> underTest_;
+        virtual void SetUp()
+        {
 
+        }
+
+        virtual void TearDown()
+        {
+        }
     };
+
+    TEST_F(Graph_test, COPY_CONSTRUCTOR_TEST)
+    {
+        
+        EXPECT_FALSE(true);
+    }
 };
 
+
+
 int main(int argc, char **argv) {
-    return 0;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
 
 /*
