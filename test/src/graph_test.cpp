@@ -28,9 +28,10 @@ namespace rrt
     {
         protected:
         std::shared_ptr<Graph> underTest_;
+
         virtual void SetUp()
         {
-
+            underTest_ = std::make_shared<Graph>();
         }
 
         virtual void TearDown()
@@ -38,10 +39,30 @@ namespace rrt
         }
     };
 
-    TEST_F(Graph_test, COPY_CONSTRUCTOR_TEST)
+    TEST_F(Graph_test, ADDNODE_CREATE_WITH_BASE_CONSTRUCTOR_TEST)
     {
-        
-        EXPECT_FALSE(true);
+        underTest_->addNode(4.1, 5, 0, 2.2F);
+        EXPECT_EQ(underTest_->_adjacencyList.size(), 2);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.x_,0);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.y_,0);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.time_,0);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->back_edge_weight_,0);
+
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.x_,4.1F, 0.00001F);
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.y_,5.0F,0.00001F);
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.time_,0.0F,0.00001F);
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,2.2F,0.00001F);
+    }
+
+    TEST_F(Graph_test, ADDNODE_LINK_WITH_BASE_CONSTRUCTOR_TEST)
+    {
+        underTest_->addNode(4.1, 5, 0, 2.2F);
+        underTest_->addNode(underTest_->_adjacencyList.back(), 8.2F, 10.0F ,1.0F, 4.4F);
+
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.x_,8.2F, 0.00001F);
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.y_,10.0F,0.00001F);
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.time_,1.0F,0.00001F);
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,4.4F,0.00001F);
     }
 };
 
