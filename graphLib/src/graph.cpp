@@ -121,7 +121,7 @@ namespace rrt
         this->fwd_node_.push_back(_cnnctn);
     }
 
-    void Node::printNode()
+    void Node::debugPrintNode()
     {
         bool init = false;
 
@@ -158,8 +158,8 @@ namespace rrt
             }
             else
             {
-                std::cout << "                                    |\n";
-                std::cout << "                                    O ---> "; 
+                std::cout << "                                       |\n";
+                std::cout << "                                       O ---> "; 
                 std::cout << "Fwd Connection ID:" << iter << std::endl;    
             }  
         }
@@ -268,7 +268,7 @@ namespace rrt
     {
         for(const auto &iter : this->_adjacencyList)
         {
-            iter->printNode();
+            iter->debugPrintNode();
         }
     }
 

@@ -75,7 +75,7 @@ namespace rrt
                 Node(double _x, double _y, double _back_edge_weight);
                 coordinate_t getCoordinate();
                 void addFwdNode(Node * _cnnctn);
-                void printNode();
+                void debugPrintNode();
 
                 friend class Graph;
         };
