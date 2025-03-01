@@ -187,7 +187,7 @@ namespace rrt
         if(this->_initCmplt && size >= 1)
         {
             size++;
-            this->addEdge(this->_adjacencyList[size - 2], this->_adjacencyList.back());
+            this->addEdge(this->_adjacencyList.at(size - 2), this->_adjacencyList.back());
         }
         else
         {
@@ -209,31 +209,28 @@ namespace rrt
     void Graph::deleteNode(Node* _handle)
     {
         int idx = this->getIndex(_handle);
-        std::cout << "Node to Delete: " << this->_adjacencyList[idx] << std::endl;
 
         /* Check that this is an actual graph */
         if(this->_adjacencyList.size() > 1)
         {
             /* Check if youre deleting the HEAD */
-            if(this->_adjacencyList[idx]->back_node_ == nullptr)
+            if(this->_adjacencyList.at(idx)->back_node_ == nullptr)
             {
-                std::cout << "Deleting Head:  " << this->_adjacencyList[idx] << std::endl;
                 /* Find the Foward Edge with the smallest Weight
                     This will be the new Head */
 
                 std::vector<double> list;
-                for (const auto& i : this->_adjacencyList[idx]->fwd_node_)
+                for (const auto& i : this->_adjacencyList.at(idx)->fwd_node_)
                 {
                     list.push_back(i->back_edge_weight_);
                 }
 
                 auto temp = std::min_element(list.begin(), list.end());
                 auto min_idx = std::distance(list.begin(), temp);
-                auto new_head = this->_adjacencyList[idx]->fwd_node_[min_idx];
-                std::cout << "This is the new Head:" << new_head << " has backweight of: " << new_head->back_edge_weight_ << std::endl;
+                auto new_head = this->_adjacencyList.at(idx)->fwd_node_.at(min_idx);
 
                 /* Add Old-HEAD's Fwd Connections to New-HEAD */
-                for(const auto &iter : this->_adjacencyList[idx]->fwd_node_)
+                for(const auto &iter : this->_adjacencyList.at(idx)->fwd_node_)
                 {
                     if(iter != new_head)
                     {
@@ -248,29 +245,29 @@ namespace rrt
                 
                 /* Housekeeping: Make sure New-HEAD is index 0 */
                 int temp_head_idx = this->getIndex(new_head);
-                Node* cpy = this->_adjacencyList[temp_head_idx];
+                Node* cpy = this->_adjacencyList.at(temp_head_idx);
                 this->_adjacencyList.erase(this->_adjacencyList.begin() + temp_head_idx);
                 this->_adjacencyList.insert(this->_adjacencyList.begin(), cpy);
 
                 /* Delete Old-HEAD */
                 temp_head_idx = this->getIndex(_handle);
-                //std::cout << "Old Head Index: " << temp_head_idx << " Old Head: " << this->_adjacencyList[temp_head_idx] << std::endl;
+                //std::cout << "Old Head Index: " << temp_head_idx << " Old Head: " << this->_adjacencyList.at(temp_head_idx] << std::endl;
                 //this->_adjacencyList.erase(this->_adjacencyList.begin() + temp_head_idx + 1); 
             }
             else 
             {
                 /* Migrate Deleted Node's Forward Links to the new back link */
-                this->_adjacencyList[idx] = this->_adjacencyList[idx]->back_node_;
-                for(const auto &iter_b : this->_adjacencyList[idx]->fwd_node_)
+                this->_adjacencyList.at(idx) = this->_adjacencyList.at(idx)->back_node_;
+                for(const auto &iter_b : this->_adjacencyList.at(idx)->fwd_node_)
                 {
-                    this->_adjacencyList[idx]->fwd_node_.push_back(iter_b);
+                    this->_adjacencyList.at(idx)->fwd_node_.push_back(iter_b);
                 }
 
                 /* Update Back Links for all the forward connections
                 / aka do double linked list house keeping */
-                for(const auto &iter_f : this->_adjacencyList[idx]->fwd_node_)
+                for(const auto &iter_f : this->_adjacencyList.at(idx)->fwd_node_)
                 {
-                    iter_f->back_node_ = this->_adjacencyList[idx];
+                    iter_f->back_node_ = this->_adjacencyList.at(idx);
                 }
                 
                 /* Delete the node from adjacency list */
@@ -296,7 +293,7 @@ namespace rrt
         coordinate_t crdnts;
 
         idx = this->getIndex(_handle);
-        crdnts = this->_adjacencyList[idx]->crdnts_;
+        crdnts = this->_adjacencyList.at(idx)->crdnts_;
         
         return crdnts;
     }

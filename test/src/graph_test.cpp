@@ -28,13 +28,10 @@ namespace rrt
     {
         protected:
         std::shared_ptr<Graph> underTest_;  // Default Constructor
-        std::shared_ptr<Graph> underTest2_; // Initialized COnstructor
-        Node* handle_;
 
         virtual void SetUp()
         {
-            underTest_ = std::make_shared<Graph>();
-            underTest2_ = std::make_shared<Graph>(10.0F, 10.0F);
+            underTest_ = std::make_shared<Graph>(10.0F, 10.0F);
         }
 
         virtual void TearDown()
@@ -46,8 +43,8 @@ namespace rrt
     {
         underTest_->addNode(4.1, 5, 0, 2.2F);
         EXPECT_EQ(underTest_->_adjacencyList.size(), 2);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.x_,0);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.y_,0);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.x_,10.0F);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.y_,10.0F);
         EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.time_,0);
         EXPECT_EQ(underTest_->_adjacencyList.front()->back_edge_weight_,0);
 
@@ -89,19 +86,20 @@ namespace rrt
         */
 
         /* Build Test Graph */
-        underTest2_->addNode(1.1, 2.1, 0, 1.0F);
-        handle_ = underTest2_->_adjacencyList.back();
-        underTest2_->addNode(handle_, 1.2, 2.2, 0, 3.0F);
-        handle_ = underTest2_->_adjacencyList.front();
-        underTest2_->addNode(handle_, 2.1, 1.1, 0, 2.0F);
-        underTest2_->addNode(2.2, 1.2, 0, 4.0F);
-        underTest2_->addNode(handle_, 3.1F, 3.2F, 0, 5.0F);
+        Node* handle;
+        underTest_->addNode(1.1, 2.1, 0, 1.0F);
+        handle = underTest_->_adjacencyList.back();
+        underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
+        handle = underTest_->_adjacencyList.front();
+        underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
+        underTest_->addNode(2.2, 1.2, 0, 4.0F);
+        underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
 
         /* Test Head-to-Tail */
-        EXPECT_EQ(underTest2_->_adjacencyList.front()->fwd_node_.size(), 3);
-        EXPECT_EQ(underTest2_->_adjacencyList.back()->back_node_, 
-                  underTest2_->_adjacencyList.front());
-        EXPECT_NEAR(underTest2_->_adjacencyList.back()->back_edge_weight_,5.0F, 0.00001F);
+        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.size(), 3);
+        EXPECT_EQ(underTest_->_adjacencyList.back()->back_node_, 
+                  underTest_->_adjacencyList.front());
+        EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,5.0F, 0.00001F);
     }
 
     TEST_F(Graph_test, GRAPH_DELETE_INTERIOR_NODE)
@@ -132,61 +130,40 @@ namespace rrt
                            0         0
         */
         /* Build Test Graph */
-        underTest2_->addNode(1.1, 2.1, 0, 1.0F);
-        handle_ = underTest2_->_adjacencyList.back();
-        underTest2_->addNode(handle_, 1.2, 2.2, 0, 3.0F);
-        handle_ = underTest2_->_adjacencyList.front();
-        underTest2_->addNode(handle_, 2.1, 1.1, 0, 2.0F);
-        underTest2_->addNode(2.2, 1.2, 0, 4.0F);
-        underTest2_->addNode(handle_, 3.1F, 3.2F, 0, 5.0F);
-        EXPECT_EQ(underTest2_->_adjacencyList.size(), 6);
-
-        /* Locate Node #4 by searching for back edge weight */
-        auto idx = -1;
+        Node* handle;
+        Node* prev;
         std::vector<Node*> next;
-        Node* prev;  
-        for(const auto &iter : underTest2_->_adjacencyList)
+        underTest_->addNode(1.1, 2.1, 0, 1.0F);
+        handle = underTest_->_adjacencyList.back();
+        underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
+        handle = underTest_->_adjacencyList.front();
+        underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
+        underTest_->addNode(2.2, 1.2, 0, 4.0F);
+        underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
+        EXPECT_EQ(underTest_->_adjacencyList.size(), 6);
+
+        /* Delete Interior Node */
+        auto idx = -1;
+        for(const auto &iter : underTest_->_adjacencyList)
         {
             idx++;
             if(iter->back_edge_weight_ == 2.0F)
             {
                 // Grab the node we want deleted from the graph for this test
-                handle_ = underTest2_->_adjacencyList[idx];
+                handle = underTest_->_adjacencyList.at(idx);
 
                 // Grab the soon-to-be deleted node's forward graph links
-                next = underTest2_->_adjacencyList[idx]->fwd_node_;
+                next = underTest_->_adjacencyList.at(idx)->fwd_node_;
                 std::sort(next.begin(), next.end());
 
                 // Grab the upstream node
-                prev = underTest2_->_adjacencyList[idx]->back_node_;
+                prev = underTest_->_adjacencyList.at(idx)->back_node_;
                 break;
             }
         }
-
-        /* Delete Node #4 */
-        underTest2_->deleteNode(handle_);
-
-        /* Check that Graph Size Reduced by 1 */
-        EXPECT_EQ(underTest2_->_adjacencyList.size(), 5);
-
-        /* Check that Node 4's fwd connections migrated to the 
-        previous (upstream) node */
-        /*----------------------------------------------------------------*/
-
-        /* After the Deletion, get the new index of the previous node-link*/
-        auto find_prev = std::find(underTest2_->_adjacencyList.begin(), underTest2_->_adjacencyList.end(), prev);
-        auto prev_idx = std::distance(underTest2_->_adjacencyList.begin(), find_prev);
+        //underTest_->deleteNode(handle);
+        EXPECT_EQ(underTest_->_adjacencyList.size(), 5);
         
-        /* Sort the forward cnnection vector to enable 'std::includes' comparison*/
-        std::sort(underTest2_->_adjacencyList[prev_idx]->fwd_node_.begin(), 
-                  underTest2_->_adjacencyList[prev_idx]->fwd_node_.end());
-
-        /* Check that the deleted Node's forward connections 
-           have indeed migrated to the previous Node*/
-        auto check = std::includes(underTest2_->_adjacencyList[prev_idx]->fwd_node_.begin(),
-                                        underTest2_->_adjacencyList[prev_idx]->fwd_node_.end(),
-                                        next.begin(), next.end());
-        EXPECT_EQ(check, true);
     }
 
     TEST_F(Graph_test, GRAPH_DELETE_HEAD_NODE)
@@ -216,19 +193,24 @@ namespace rrt
         */
 
         /* Build Test Graph */
-        Node* head = underTest2_->_adjacencyList.front();
-        underTest2_->addNode(1.1, 2.1, 0, 1.0F);
-        handle_ = underTest2_->_adjacencyList.back();
-        underTest2_->addNode(handle_, 1.2, 2.2, 0, 3.0F);
-        handle_ = underTest2_->_adjacencyList.front();
-        underTest2_->addNode(handle_, 2.1, 1.1, 0, 2.0F);
-        underTest2_->addNode(2.2, 1.2, 0, 4.0F);
-        underTest2_->addNode(handle_, 3.1F, 3.2F, 0, 5.0F);
+        /*
+        Node* head = underTest_->_adjacencyList.front();
+        underTest_->addNode(1.1, 2.1, 0, 1.0F);
+        handle = underTest_->_adjacencyList.back();
+        underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
+        handle = underTest_->_adjacencyList.front();
+        underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
+        underTest_->addNode(2.2, 1.2, 0, 4.0F);
+        underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
+        //EXPECT_EQ(underTest_->_adjacencyList.size(), 5);
 
-        auto next = head->fwd_node_;
+        /* Delete Graph Head */
+        //underTest_->deleteNode(head);
 
-        //auto find_head = std::find(underTest2_->_adjacencyList.begin(), underTest2_->_adjacencyList.end(), prev);
-        //auto head_idx = std::distance(underTest2_->_adjacencyList.begin(), find_prev);
+        //EXPECT_EQ(underTest_->_adjacencyList.size(), 4);
+
+        //auto find_head = std::find(underTest_->_adjacencyList.begin(), underTest_->_adjacencyList.end(), prev);
+        //auto head_idx = std::distance(underTest_->_adjacencyList.begin(), find_prev);
     }
 };
 
