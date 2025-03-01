@@ -129,10 +129,9 @@ namespace rrt
                       6.0F |        \|
                            0         0
         */
+
         /* Build Test Graph */
-        Node* handle;
-        Node* prev;
-        std::vector<Node*> next;
+        Node *handle, *prev, *next;
         underTest_->addNode(1.1, 2.1, 0, 1.0F);
         handle = underTest_->_adjacencyList.back();
         underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
@@ -140,29 +139,27 @@ namespace rrt
         underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
         underTest_->addNode(2.2, 1.2, 0, 4.0F);
         underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 6);
+        handle = underTest_->_adjacencyList.at(3);
+        underTest_->addNode(handle, 2.3F, 1.3F, 0, 6.0F);
+        next = underTest_->_adjacencyList.back();
+        prev = handle->back_node_;
+        next = handle->fwd_node_.back();
+
+        /* Sanity Check Test Graph */
+        EXPECT_EQ(underTest_->_adjacencyList.size(), 7);
+        EXPECT_NEAR(handle->back_edge_weight_, 2.0F,0.00001F);
+
 
         /* Delete Interior Node */
-        auto idx = -1;
-        for(const auto &iter : underTest_->_adjacencyList)
-        {
-            idx++;
-            if(iter->back_edge_weight_ == 2.0F)
-            {
-                // Grab the node we want deleted from the graph for this test
-                handle = underTest_->_adjacencyList.at(idx);
+        underTest_->deleteNode(handle);
 
-                // Grab the soon-to-be deleted node's forward graph links
-                next = underTest_->_adjacencyList.at(idx)->fwd_node_;
-                std::sort(next.begin(), next.end());
+        /* Verify Deletion */
+        handle = underTest_->_adjacencyList.at(3);
+        EXPECT_EQ(underTest_->_adjacencyList.size(), 6);
+        EXPECT_NEAR(handle->back_edge_weight_, 4.0F,0.00001F);
 
-                // Grab the upstream node
-                prev = underTest_->_adjacencyList.at(idx)->back_node_;
-                break;
-            }
-        }
-        //underTest_->deleteNode(handle);
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 5);
+        /* Verify forward connection Propagation */
+        EXPECT_EQ(next, prev->fwd_node_.back());
         
     }
 
