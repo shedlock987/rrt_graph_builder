@@ -43,14 +43,14 @@ namespace rrt
     {
         underTest_->addNode(4.1, 5, 0, 2.2F);
         EXPECT_EQ(underTest_->_adjacencyList.size(), 2);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.x_,10.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.y_,10.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->crdnts_.time_,0);
+        EXPECT_EQ(std::get<0>(underTest_->_adjacencyList.front()->crdnts_),10.0F);
+        EXPECT_EQ(std::get<1>(underTest_->_adjacencyList.front()->crdnts_),10.0F);
+        EXPECT_EQ(std::get<2>(underTest_->_adjacencyList.front()->crdnts_),0);
         EXPECT_EQ(underTest_->_adjacencyList.front()->back_edge_weight_,0);
 
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.x_,4.1F, 0.00001F);
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.y_,5.0F,0.00001F);
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.time_,0.0F,0.00001F);
+        EXPECT_NEAR(std::get<0>(underTest_->_adjacencyList.back()->crdnts_),4.1F, 0.00001F);
+        EXPECT_NEAR(std::get<1>(underTest_->_adjacencyList.back()->crdnts_),5.0F,0.00001F);
+        EXPECT_NEAR(std::get<2>(underTest_->_adjacencyList.back()->crdnts_),0.0F,0.00001F);
         EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,2.2F,0.00001F);
     }
 
@@ -60,9 +60,9 @@ namespace rrt
         underTest_->addNode(underTest_->_adjacencyList.back(), 8.2F, 10.0F ,1.0F, 4.4F);
 
         //Ensure proper assignment
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.x_,8.2F, 0.00001F);
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.y_,10.0F,0.00001F);
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->crdnts_.time_,1.0F,0.00001F);
+        EXPECT_NEAR(std::get<0>(underTest_->_adjacencyList.back()->crdnts_),8.2F, 0.00001F);
+        EXPECT_NEAR(std::get<1>(underTest_->_adjacencyList.back()->crdnts_),10.0F,0.00001F);
+        EXPECT_NEAR(std::get<2>(underTest_->_adjacencyList.back()->crdnts_),1.0F,0.00001F);
         EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,4.4F,0.00001F);
 
         //Ensure proper adjacency list conections

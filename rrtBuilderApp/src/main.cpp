@@ -2,15 +2,15 @@
 #include <iostream>
 
 int main() {
-rrt::coordinate_t origin(2.0F,2.5F);
-rrt::coordinate_t pt1(4.1F, 5.0F);
-rrt::coordinate_t pt2(8.0F, 10.0F);
+rrt::Node::coordinate_t origin(2.0F,2.5F,0.0F);
+rrt::Node::coordinate_t pt1(4.1F, 5.0F, 0.0F);
+rrt::Node::coordinate_t pt2(8.0F, 10.0F, 0.0F);
 rrt::Graph testGraph(3.0F,3.0F);
 
 rrt::Node* handle = testGraph._adjacencyList.front();
 
-testGraph.addNode(origin.x_,origin.y_, origin.time_, 2.0F);
-testGraph.addNode(handle, origin.x_,3.0F, origin.time_, 1.5F);
+testGraph.addNode(2.0F,2.5F, 0.0F, 2.0F);
+testGraph.addNode(handle, 2.0F,3.0F, 0.0F, 1.5F);
 testGraph.printGraph();
 testGraph.deleteNode(handle);
 testGraph.printGraph();

@@ -37,6 +37,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <tuple>
 
 namespace rrt
 {
@@ -64,16 +65,16 @@ namespace rrt
                 int dimension_;
             public: 
                 double back_edge_weight_;
+                typedef std::tuple<double, double, double> coordinate_t;
                 coordinate_t crdnts_;       
                 std::vector<Node *> fwd_node_;
                 Node* back_node_;
                 Node();
-                Node(coordinate_t * _crdnts);
-                Node(coordinate_t * _crdnts, double _back_edge_weight);
+                Node(coordinate_t _crdnts);
+                Node(coordinate_t _crdnts, double _back_edge_weight);
                 Node(const Node &_copy);
                 Node(double _x, double _y, double _time, double _back_edge_weight);
                 Node(double _x, double _y, double _back_edge_weight);
-                coordinate_t getCoordinate();
                 void addFwdNode(Node * _cnnctn);
                 void debugPrintNode();
 
@@ -94,7 +95,7 @@ class Graph {
         void addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight);
         void deleteNode(Node* _handle);
         int getIndex(Node* _handle);
-        coordinate_t getCoordinate(Node* _handle);
+        Node::coordinate_t getCoordinate(Node* _handle);
         void addEdge(Node* _src, Node* _dest);
     
         // Function to print the adjacency list of the graph
