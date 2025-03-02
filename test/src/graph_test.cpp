@@ -37,37 +37,39 @@ namespace rrt
         virtual void TearDown()
         {
         }
+
+        friend class Graph;
     };
 
     TEST_F(Graph_test, ADDNODE_CREATE_WITH_BASE_CONSTRUCTOR_TEST)
     {
         underTest_->addNode(4.1, 5, 0, 2.2F);
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 2);
-        EXPECT_EQ(std::get<0>(underTest_->_adjacencyList.front()->crdnts_),10.0F);
-        EXPECT_EQ(std::get<1>(underTest_->_adjacencyList.front()->crdnts_),10.0F);
-        EXPECT_EQ(std::get<2>(underTest_->_adjacencyList.front()->crdnts_),0);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->back_edge_weight_,0);
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 2);
+        EXPECT_EQ(std::get<0>(underTest_->adjacencyList_.front()->crdnts_),10.0F);
+        EXPECT_EQ(std::get<1>(underTest_->adjacencyList_.front()->crdnts_),10.0F);
+        EXPECT_EQ(std::get<2>(underTest_->adjacencyList_.front()->crdnts_),0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->back_edge_weight_,0);
 
-        EXPECT_NEAR(std::get<0>(underTest_->_adjacencyList.back()->crdnts_),4.1F, 0.00001F);
-        EXPECT_NEAR(std::get<1>(underTest_->_adjacencyList.back()->crdnts_),5.0F,0.00001F);
-        EXPECT_NEAR(std::get<2>(underTest_->_adjacencyList.back()->crdnts_),0.0F,0.00001F);
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,2.2F,0.00001F);
+        EXPECT_EQ(std::get<0>(underTest_->adjacencyList_.back()->crdnts_),4.1F);
+        EXPECT_EQ(std::get<1>(underTest_->adjacencyList_.back()->crdnts_),5.0F);
+        EXPECT_EQ(std::get<2>(underTest_->adjacencyList_.back()->crdnts_),0.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.back()->back_edge_weight_,2.2F);
     }
 
     TEST_F(Graph_test, ADDNODE_LINK_WITH_BASE_CONSTRUCTOR_TEST)
     {
         underTest_->addNode(4.1, 5, 0, 2.2F);
-        underTest_->addNode(underTest_->_adjacencyList.back(), 8.2F, 10.0F ,1.0F, 4.4F);
+        underTest_->addNode(underTest_->adjacencyList_.back(), 8.2F, 10.0F ,1.0F, 4.4F);
 
         //Ensure proper assignment
-        EXPECT_NEAR(std::get<0>(underTest_->_adjacencyList.back()->crdnts_),8.2F, 0.00001F);
-        EXPECT_NEAR(std::get<1>(underTest_->_adjacencyList.back()->crdnts_),10.0F,0.00001F);
-        EXPECT_NEAR(std::get<2>(underTest_->_adjacencyList.back()->crdnts_),1.0F,0.00001F);
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,4.4F,0.00001F);
+        EXPECT_NEAR(std::get<0>(underTest_->adjacencyList_.back()->crdnts_),8.2F, 0.00001F);
+        EXPECT_NEAR(std::get<1>(underTest_->adjacencyList_.back()->crdnts_),10.0F,0.00001F);
+        EXPECT_NEAR(std::get<2>(underTest_->adjacencyList_.back()->crdnts_),1.0F,0.00001F);
+        EXPECT_NEAR(underTest_->adjacencyList_.back()->back_edge_weight_,4.4F,0.00001F);
 
         //Ensure proper adjacency list conections
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.front(), 
-                    underTest_->_adjacencyList.back()->back_node_);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front(), 
+                    underTest_->adjacencyList_.back()->back_node_);
     }
 
     TEST_F(Graph_test, GRAPH_BASICS)
@@ -88,18 +90,18 @@ namespace rrt
         /* Build Test Graph */
         Node* handle;
         underTest_->addNode(1.1, 2.1, 0, 1.0F);
-        handle = underTest_->_adjacencyList.back();
+        handle = underTest_->adjacencyList_.back();
         underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
-        handle = underTest_->_adjacencyList.front();
+        handle = underTest_->adjacencyList_.front();
         underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
         underTest_->addNode(2.2, 1.2, 0, 4.0F);
         underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
 
         /* Test Head-to-Tail */
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.size(), 3);
-        EXPECT_EQ(underTest_->_adjacencyList.back()->back_node_, 
-                  underTest_->_adjacencyList.front());
-        EXPECT_NEAR(underTest_->_adjacencyList.back()->back_edge_weight_,5.0F, 0.00001F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
+        EXPECT_EQ(underTest_->adjacencyList_.back()->back_node_, 
+                  underTest_->adjacencyList_.front());
+        EXPECT_NEAR(underTest_->adjacencyList_.back()->back_edge_weight_,5.0F, 0.00001F);
     }
 
     TEST_F(Graph_test, GRAPH_DELETE_INTERIOR_NODE)
@@ -133,20 +135,20 @@ namespace rrt
         /* Build Test Graph */
         Node *handle, *prev, *next;
         underTest_->addNode(1.1, 2.1, 0, 1.0F);
-        handle = underTest_->_adjacencyList.back();
+        handle = underTest_->adjacencyList_.back();
         underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
-        handle = underTest_->_adjacencyList.front();
+        handle = underTest_->adjacencyList_.front();
         underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
         underTest_->addNode(2.2, 1.2, 0, 4.0F);
         underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
-        handle = underTest_->_adjacencyList.at(3);
+        handle = underTest_->adjacencyList_.at(3);
         underTest_->addNode(handle, 2.3F, 1.3F, 0, 6.0F);
-        next = underTest_->_adjacencyList.back();
+        next = underTest_->adjacencyList_.back();
         prev = handle->back_node_;
         next = handle->fwd_node_.back();
 
         /* Sanity Check Test Graph */
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 7);
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 7);
         EXPECT_NEAR(handle->back_edge_weight_, 2.0F,0.00001F);
 
 
@@ -154,16 +156,16 @@ namespace rrt
         underTest_->deleteNode(handle);
 
         /* Verify Deletion */
-        handle = underTest_->_adjacencyList.at(3);
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 6);
+        handle = underTest_->adjacencyList_.at(3);
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
         EXPECT_NEAR(handle->back_edge_weight_, 4.0F,0.00001F);
 
         /* Verify forward connection Propagation */
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.size(), 4);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.front()->back_edge_weight_, 1.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.at(1)->back_edge_weight_, 2.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.at(2)->back_edge_weight_, 5.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.back()->back_edge_weight_, 5.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 4);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->back_edge_weight_, 1.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->back_edge_weight_, 2.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(2)->back_edge_weight_, 5.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->back_edge_weight_, 5.0F);
         
     }
 
@@ -195,31 +197,31 @@ namespace rrt
 
         /* Build Test Graph */
         Node *handle, *head, *temp;
-        head = underTest_->_adjacencyList.front();
+        head = underTest_->adjacencyList_.front();
         underTest_->addNode(1.1, 2.1, 0, 1.0F);
-        handle = underTest_->_adjacencyList.back();
+        handle = underTest_->adjacencyList_.back();
         underTest_->addNode(handle, 1.2, 2.2, 0, 3.0F);
-        handle = underTest_->_adjacencyList.front();
+        handle = underTest_->adjacencyList_.front();
         underTest_->addNode(handle, 2.1, 1.1, 0, 2.0F);
         underTest_->addNode(2.2, 1.2, 0, 4.0F);
         underTest_->addNode(handle, 3.1F, 3.2F, 0, 5.0F);
 
         /* Sanity Check Test Graph */
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 6);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->back_node_, nullptr);
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->back_node_, nullptr);
 
         /* Delete Graph Head */
         underTest_->deleteNode(head);
 
         /* Verify Deletion */
-        EXPECT_EQ(underTest_->_adjacencyList.size(), 5);
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 5);
 
         /* Verify Proper Node was selected as New Head */
         /* New Head should be the node with <previously> the smallest edge*/
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.size(), 3);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.front()->back_edge_weight_, 3.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.back()->back_edge_weight_, 5.0F);
-        EXPECT_EQ(underTest_->_adjacencyList.front()->fwd_node_.at(1)->back_edge_weight_, 2.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->back_edge_weight_, 3.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->back_edge_weight_, 5.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->back_edge_weight_, 2.0F);
     }
 };
 

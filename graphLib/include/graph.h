@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2024 Ryan Shedlock
+ * Copyright (c) 2025 Ryan Shedlock
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 /**
  * @file graph.h
- * @brief Linked list to be used in an RRT Graph
+ * @brief Graph in the form of an Adjacency List
  * @author Ryan Shedlock <rmshedlock@gmail.com>
  * @version 1.0
  */
@@ -41,24 +41,6 @@
 
 namespace rrt
 {
-
-    class coordinate_t
-    {
-        public:
-            double x_;
-            double y_;
-            double time_;
-            coordinate_t();
-            coordinate_t(const coordinate_t &_copy);
-            coordinate_t(double _x, double _y);
-            coordinate_t(double _x, double _y, double _time);
-            int getDimension();
-        private:
-            int dim_;
-
-
-    };
-
     class Node
         {
             private:
@@ -83,23 +65,23 @@ namespace rrt
 
 class Graph {
     private:
-        bool _initCmplt = false;
-    
+        bool initCmplt_ = false;
     public:
-        std::vector<Node *> _adjacencyList; //move this to private after debug
         Graph();
         Graph(double _xHead, double _yHead);
         ~Graph();
+        Node::coordinate_t getCoordinate(Node* _handle);
+        void printGraph();
 
+        //protected:
+        std::vector<Node *> adjacencyList_; 
         void addNode(double _x, double _y, double _time, double _back_edge_weight);
         void addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight);
         void deleteNode(Node* _handle);
         int getIndex(Node* _handle);
-        Node::coordinate_t getCoordinate(Node* _handle);
         void addEdge(Node* _src, Node* _dest);
     
-        // Function to print the adjacency list of the graph
-        void printGraph();
+
     };
 }
 
