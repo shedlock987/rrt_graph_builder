@@ -33,23 +33,66 @@
 
  namespace rrt 
  {
-    RRT::RRT()
+    RRT::RRT(Node::coordinate_t _odd_bound_a, Node::coordinate_t _odd_bound_b)
     {
-
+        this->odd_bound_a_ = _odd_bound_a;
+        this->odd_bound_b_ = _odd_bound_b;
     }
 
     RRT::~RRT()
     {
 
     }
-    Node* RRT::findNearest()
+
+    void RRT::buildRRT()
     {
-        Node* temp;
-        return temp;
+        
     }
+
+    Node* RRT::findNearest(Node::coordinate_t _handle)
+    {
+        int idx;
+        int i = 0;
+        double temp;
+        double min = DBL_MAX;
+
+        /* Need to optimize */
+        for(const auto &iter : this->adjacencyList_)
+        {
+            temp = this->calcDist(_handle, iter->crdnts_);
+            if(temp < min)
+            {
+                min = temp;
+                idx = i;
+                i++;
+            }
+            else
+            {
+                i++;
+            }
+        }
+        return this->adjacencyList_.at(idx);
+    }
+
+    double RRT::calcDist(Node::coordinate_t _handle, Node::coordinate_t _ref)
+    {
+        if(dim_3D_)
+        {
+            return std::sqrt(std::pow(std::get<0>(_handle) - std::get<0>(_ref), 2) + 
+                             std::pow(std::get<0>(_handle) - std::get<1>(_ref), 2) +
+                             std::pow(std::get<0>(_handle) - std::get<2>(_ref), 2));
+        }
+        else
+        {
+            return std::sqrt(std::pow(std::get<0>(_handle) - std::get<0>(_ref), 2) + 
+                             std::pow(std::get<0>(_handle) - std::get<1>(_ref), 2));
+        }
+    }
+
     Node::coordinate_t RRT::applyConstraints()
     {
         Node::coordinate_t temp = std::make_tuple(0.0F, 0.0F , 0.0F);
         return temp;
     }
+
  }

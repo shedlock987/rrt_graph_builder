@@ -32,6 +32,10 @@
 #define RRT_H_
 
 #include "graph.h"
+#include <cmath>
+#include <cfloat>
+#include <tuple>
+
 namespace rrt
 {
     class RRT : public Graph
@@ -40,14 +44,21 @@ namespace rrt
         double max_angle_;
         double max_dist_;
         double max_time_;
-        bool dim_3D_;
+        bool dim_3D_ = false;
 
-        Node* findNearest();
+        Node::coordinate_t odd_bound_a_ = std::make_tuple(-5.0F, -5.0F, 0.0F);
+        Node::coordinate_t odd_bound_b_ = std::make_tuple(5.0F, 5.0F, 0.0F);
+        Node::coordinate_t origin_ = std::make_tuple(0.0F, -5.0F, 0.0F);
+        Node::coordinate_t dest_ = std::make_tuple(5.0F, 5.0F, 0.0F);
+
+        Node* findNearest(Node::coordinate_t _handle);
+        double calcDist(Node::coordinate_t _handle, Node::coordinate_t _ref);
         Node::coordinate_t applyConstraints();
 
         public:
-        RRT();
+        RRT(Node::coordinate_t _odd_bound_a, Node::coordinate_t _odd_bound_b);
         ~RRT();
+        void buildRRT();
     };
 }
 
