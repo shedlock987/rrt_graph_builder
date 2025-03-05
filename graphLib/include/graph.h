@@ -41,6 +41,7 @@
 
 namespace rrt
 {
+    typedef std::tuple<double, double, double> coordinate_t;
     class Node
         {
             private:

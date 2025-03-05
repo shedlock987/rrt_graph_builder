@@ -35,28 +35,37 @@
 #include <cmath>
 #include <cfloat>
 #include <tuple>
+#include <random>
 
 namespace rrt
 {
     class RRT : public Graph
     {
         private:
-        double max_angle_;
+        double max_angle_rad_;
         double max_dist_;
         double max_time_;
         bool dim_3D_ = false;
+        bool cmplt = false;
 
-        Node::coordinate_t odd_bound_a_ = std::make_tuple(-5.0F, -5.0F, 0.0F);
-        Node::coordinate_t odd_bound_b_ = std::make_tuple(5.0F, 5.0F, 0.0F);
-        Node::coordinate_t origin_ = std::make_tuple(0.0F, -5.0F, 0.0F);
-        Node::coordinate_t dest_ = std::make_tuple(5.0F, 5.0F, 0.0F);
+        Node::coordinate_t range_a_; 
+        Node::coordinate_t range_b_;
+        Node::coordinate_t origin_;
+        Node::coordinate_t dest_;
 
         Node* findNearest(Node::coordinate_t _handle);
         double calcDist(Node::coordinate_t _handle, Node::coordinate_t _ref);
-        Node::coordinate_t applyConstraints();
+        void applyConstraints(Node *_handle);
+        Node::coordinate_t genRandomCrdnt();
 
         public:
-        RRT(Node::coordinate_t _odd_bound_a, Node::coordinate_t _odd_bound_b);
+        RRT();
+        RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
+            Node::coordinate_t _origin, Node::coordinate_t _dest,
+            double _max_angle_rad, double _max_dist, double _max_time, bool _dim);
+        RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
+            Node::coordinate_t _origin, Node::coordinate_t _dest,
+            double _max_angle_rad, double _max_dist);
         ~RRT();
         void buildRRT();
     };
