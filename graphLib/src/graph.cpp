@@ -123,22 +123,22 @@ namespace rrt
 
     Graph::Graph()
     {      
-        this->addNode(0.0F, 0.0F, 0.0F, 0.0F);
+        this->addNode(std::make_tuple(0.0F, 0.0F, 0.0F), 0.0F);
         initCmplt_ = true;
     }
     
     Graph::Graph(double _xHead, double _yHead)
     {
-        this->addNode(_xHead, _yHead, 0.0F, 0.0F);
+        this->addNode(std::make_tuple(_xHead, _yHead, 0.0F), 0.0F);
         initCmplt_ = true;
     }
 
-    void Graph::addNode(double _x, double _y, double _time, double _back_edge_weight)
+    void Graph::addNode(Node::coordinate_t _point, double _back_edge_weight)
     {
         int size;
         size = this->adjacencyList_.size();
 
-        this->adjacencyList_.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
+        this->adjacencyList_.emplace_back(new Node(_point, _back_edge_weight));
         if(this->initCmplt_ && size >= 1)
         {
             size++;
@@ -152,11 +152,11 @@ namespace rrt
 
     }
 
-    void Graph::addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight)
+    void Graph::addNode(Node* _link, Node::coordinate_t _point, double _back_edge_weight)
     {
         if(this->initCmplt_)
         {
-            this->adjacencyList_.emplace_back(new Node(_x,_y,_time, _back_edge_weight));
+            this->adjacencyList_.emplace_back(new Node(_point, _back_edge_weight));
             this->addEdge(_link, this->adjacencyList_.back());
         }
     }

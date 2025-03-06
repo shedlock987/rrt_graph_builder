@@ -76,8 +76,8 @@ class Graph {
 
         //protected:
         std::vector<Node *> adjacencyList_; 
-        void addNode(double _x, double _y, double _time, double _back_edge_weight);
-        void addNode(Node* _link, double _x, double _y, double _time, double _back_edge_weight);
+        void addNode(Node::coordinate_t _point, double _back_edge_weight);
+        void addNode(Node* _link, Node::coordinate_t _point, double _back_edge_weight);
         void deleteNode(Node* _handle);
         int getIndex(Node* _handle);
         void addEdge(Node* _src, Node* _dest);
