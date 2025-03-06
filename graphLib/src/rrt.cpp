@@ -108,6 +108,13 @@
         }
     }
 
+    double RRT::calcAngle(Node::coordinate_t _handle, Node::coordinate_t _ref)
+    {
+        double delta_x = std::get<0>(_handle) - std::get<0>(_ref);
+        double delta_y = std::get<1>(_handle) - std::get<1>(_ref);
+        return std::atan2(delta_y, delta_x);
+    }
+
     void RRT::applyConstraints(Node *_handle)
     {
         Node::coordinate_t temp = std::make_tuple(0.0F, 0.0F , 0.0F);
@@ -125,21 +132,31 @@
         double tm_min = std::min(std::get<2>(this->range_a_), std::get<2>(this->range_b_));
         double tm_max = std::min(std::get<2>(this->range_a_), std::get<2>(this->range_b_));
         
-        std::default_random_engine rand;
-        std::uniform_real_distribution<double> range_x(x_min, x_max);
+        /* Generate random points within the bounded space */
+        std::random_device rand;
+        std::mt19937 gen(rand());
+        std::uniform_real_distribution<> range_x(x_min, x_max);
         std::uniform_real_distribution<double> range_y(y_min, y_max);
         std::uniform_real_distribution<double> range_tm(tm_min, tm_max);
 
         while(!valid)
         {
-            // output = std::make_tuple(rand(range_x), rand(range_y), rand(range_tm));
-            // FInd Nearest
-            // Compare distance
-            // If too close then regenerate
-            // If not too close, apply constraints 
-            // Probably need to recursively check until we can confirm not too close
-            return output;
+            auto tm = range_tm(gen);
+            if (this->dim_3D_)
+            {
+                tm = 0;
+            }
+            output = std::make_tuple(range_x(gen), range_y(gen), tm);
+
+
+            Node nearest = this->findNearest(output)->crdnts_;
+            double raw_dist = this->calcDist(output, nearest.crdnts_);
+            double raw_angle = this->calcAngle(output, nearest.crdnts_);
+            
+            //if(std::abs(raw_angle) > this->max_angle_rad_)
+
         }
+        return output;
     }
 
     void RRT::buildRRT()
