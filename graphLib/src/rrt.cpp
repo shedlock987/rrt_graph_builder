@@ -117,7 +117,37 @@
 
     void RRT::applyConstraints(Node *_handle)
     {
-        Node::coordinate_t temp = std::make_tuple(0.0F, 0.0F , 0.0F);
+        Node *nearest = this->findNearest(_handle->crdnts_);
+        double dist = this->calcDist(_handle->crdnts_, nearest->crdnts_);
+        double angle = this->calcAngle(_handle->crdnts_, nearest->crdnts_);
+        double tm = std::get<2>(_handle->crdnts_);
+
+        if(std::abs(angle) > this->max_angle_rad_)
+        {
+            angle = (angle / std::abs(angle)) * this->max_angle_rad_;
+        }
+
+        if(std::abs(dist) > this->max_dist_)
+        {
+            dist = (dist / std::abs(dist)) * this->max_dist_;
+        }
+
+        if(tm > this->max_interval)
+        {
+            tm = max_interval;
+        }
+/*
+        if(this->dim_3D_)
+        (
+            tm = 0;
+        )
+*/
+        double x = (dist * std::sin(angle)) + std::get<0>(nearest->crdnts_);
+        double y = (dist * std::cos(angle)) + std::get<1>(nearest->crdnts_);
+
+        _handle->crdnts_ = std::make_tuple(x,y,tm);
+        _handle->back_edge_weight_ = dist;
+
     }
 
     Node::coordinate_t RRT::genRandomCrdnt()
@@ -126,18 +156,16 @@
         bool valid = false;
 
         double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
-        double x_max = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
+        double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
         double y_min = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
-        double y_max = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
-        double tm_min = std::min(std::get<2>(this->range_a_), std::get<2>(this->range_b_));
-        double tm_max = std::min(std::get<2>(this->range_a_), std::get<2>(this->range_b_));
+        double y_max = std::max(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
         
         /* Generate random points within the bounded space */
         std::random_device rand;
         std::mt19937 gen(rand());
-        std::uniform_real_distribution<> range_x(x_min, x_max);
+        std::uniform_real_distribution<double> range_x(x_min, x_max);
         std::uniform_real_distribution<double> range_y(y_min, y_max);
-        std::uniform_real_distribution<double> range_tm(tm_min, tm_max);
+        std::uniform_real_distribution<double> range_tm(0.0F, this->max_time_);
 
         while(!valid)
         {
@@ -146,12 +174,11 @@
             {
                 tm = 0;
             }
+
+
             output = std::make_tuple(range_x(gen), range_y(gen), tm);
-
-
-            Node nearest = this->findNearest(output)->crdnts_;
-            double raw_dist = this->calcDist(output, nearest.crdnts_);
-            double raw_angle = this->calcAngle(output, nearest.crdnts_);
+            this->addNode(output, 0.0F);
+            this->applyConstraints(this->adjacencyList_.back());
             
             //if(std::abs(raw_angle) > this->max_angle_rad_)
 

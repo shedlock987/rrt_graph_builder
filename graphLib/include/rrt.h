@@ -44,6 +44,7 @@ namespace rrt
         private:
         double max_angle_rad_;
         double max_dist_;
+        double max_interval;
         double max_time_;
         bool dim_3D_ = false;
         bool cmplt = false;
