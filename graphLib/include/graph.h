@@ -60,6 +60,9 @@ namespace rrt
                 Node(double _x, double _y, double _back_edge_weight);
                 void addFwdNode(Node * _cnnctn);
                 void debugPrintNode();
+                double getX();
+                double getY();
+                double getTm();
 
                 friend class Graph;
         };

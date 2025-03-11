@@ -121,6 +121,21 @@ namespace rrt
         std::cout << std::endl;
     }
 
+    double Node::getX()
+    {
+        return std::get<0>(this->crdnts_);
+    }
+
+    double Node::getY()
+    {
+        return std::get<1>(this->crdnts_);
+    }
+
+    double Node::getTm()
+    {
+        return std::get<2>(this->crdnts_);
+    }
+
     Graph::Graph()
     {      
         this->addNode(std::make_tuple(0.0F, 0.0F, 0.0F), 0.0F);

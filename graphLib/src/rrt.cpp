@@ -68,7 +68,7 @@
 
     }
 
-    Node* RRT::findNearest(Node::coordinate_t _handle)
+    Node* RRT::findNearest(Node *_handle)
     {
         int idx;
         int i = 0;
@@ -78,7 +78,7 @@
         /* Need to optimize */
         for(const auto &iter : this->adjacencyList_)
         {
-            temp = this->calcDist(_handle, iter->crdnts_);
+            temp = this->calcDist(_handle, iter);
             if(temp < min)
             {
                 min = temp;
@@ -93,34 +93,34 @@
         return this->adjacencyList_.at(idx);
     }
 
-    double RRT::calcDist(Node::coordinate_t _handle, Node::coordinate_t _ref)
+    double RRT::calcDist(Node *_handle, Node *_ref)
     {
         if(dim_3D_)
         {
-            return std::sqrt(std::pow(std::get<0>(_handle) - std::get<0>(_ref), 2) + 
-                             std::pow(std::get<1>(_handle) - std::get<1>(_ref), 2) +
-                             std::pow(std::get<2>(_handle) - std::get<2>(_ref), 2));
+            return std::sqrt(std::pow(_handle->getX() - _ref->getX(), 2) + 
+                             std::pow(_handle->getY() - _ref->getY(), 2) +
+                             std::pow(_handle->getTm() - _ref->getTm(), 2));
         }
         else
         {
-            return std::sqrt(std::pow(std::get<0>(_handle) - std::get<0>(_ref), 2) + 
-                             std::pow(std::get<1>(_handle) - std::get<1>(_ref), 2));
+            return std::sqrt(std::pow(_handle->getX() - _ref->getX(), 2) + 
+                             std::pow(_handle->getY() - _ref->getY(), 2));
         }
     }
 
-    double RRT::calcAngle(Node::coordinate_t _handle, Node::coordinate_t _ref)
+    double RRT::calcAngle(Node *_handle, Node *_ref)
     {
-        double delta_x = std::get<0>(_handle) - std::get<0>(_ref);
-        double delta_y = std::get<1>(_handle) - std::get<1>(_ref);
+        double delta_x = _handle->getX() - _ref->getX();
+        double delta_y = _handle->getY() - _ref->getY();
         return std::atan2(delta_y, delta_x);
     }
 
     void RRT::applyConstraints(Node *_handle)
     {
-        Node *nearest = this->findNearest(_handle->crdnts_);
-        double dist = this->calcDist(_handle->crdnts_, nearest->crdnts_);
-        double angle = this->calcAngle(_handle->crdnts_, nearest->crdnts_);
-        double tm = std::get<2>(_handle->crdnts_);
+        Node *nearest = this->findNearest(_handle);
+        double dist = this->calcDist(_handle, nearest);
+        double angle = this->calcAngle(_handle, nearest);
+        double tm = _handle->getTm();
 
         if(std::abs(angle) > this->max_angle_rad_)
         {
@@ -142,8 +142,8 @@
             tm = 0;
         )
 */
-        double x = (dist * std::sin(angle)) + std::get<0>(nearest->crdnts_);
-        double y = (dist * std::cos(angle)) + std::get<1>(nearest->crdnts_);
+        double x = (dist * std::sin(angle)) + nearest->getX();
+        double y = (dist * std::cos(angle)) + nearest->getY();
 
         _handle->crdnts_ = std::make_tuple(x,y,tm);
         _handle->back_edge_weight_ = dist;

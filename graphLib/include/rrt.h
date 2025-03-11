@@ -54,9 +54,9 @@ namespace rrt
         Node::coordinate_t origin_;
         Node::coordinate_t dest_;
 
-        Node* findNearest(Node::coordinate_t _handle);
-        double calcAngle(Node::coordinate_t _handle, Node::coordinate_t _ref);
-        double calcDist(Node::coordinate_t _handle, Node::coordinate_t _ref);
+        Node* findNearest(Node *_handle);
+        double calcAngle(Node *_handle, Node *_ref);
+        double calcDist(Node *_handle, Node *_ref);
         void applyConstraints(Node *_handle);
         Node::coordinate_t genRandomCrdnt();
 
