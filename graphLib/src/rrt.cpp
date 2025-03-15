@@ -38,27 +38,27 @@
                  origin_(std::make_tuple(0.0F, -5.0F, 0.0F)),
                  dest_(std::make_tuple(5.0F, 5.0F, 0.0F)),
                  max_angle_rad_(1.05F) , max_dist_(1.0F), 
-                 max_time_(0.0F) , dim_3D_(false)
+                 max_time_(0.0F) , dim_3D_(false), node_limit_(50)
     {
     }
 
     RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
         Node::coordinate_t _origin, Node::coordinate_t _dest,
-        double _max_angle_rad, double _max_dist, double _max_time, bool _dim) :
+        double _max_angle_rad, double _max_dist, double _max_time, bool _dim, int _node_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
                 origin_(_origin), dest_(_dest),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), 
-                max_time_(_max_time) , dim_3D_(_dim)
+                max_time_(_max_time) , dim_3D_(_dim), node_limit_(_node_limit)
     {
     }
 
     RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
         Node::coordinate_t _origin, Node::coordinate_t _dest,
-        double _max_angle_rad, double _max_dist) :
+        double _max_angle_rad, double _max_dist, int _node_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
                 origin_(_origin), dest_(_dest),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), 
-                max_time_(0.0F) , dim_3D_(false)
+                max_time_(0.0F) , dim_3D_(false), node_limit_(_node_limit)
     {
     }
 
@@ -117,11 +117,13 @@
 
     void RRT::applyConstraints(Node *_handle)
     {
+        /* Find Nearest existing Node */
         Node *nearest = this->findNearest(_handle);
         double dist = this->calcDist(_handle, nearest);
         double angle = this->calcAngle(_handle, nearest);
         double tm = _handle->getTm();
 
+        /* Apply Scaling Constraints */
         if(std::abs(angle) > this->max_angle_rad_)
         {
             angle = (angle / std::abs(angle)) * this->max_angle_rad_;
@@ -132,29 +134,64 @@
             dist = (dist / std::abs(dist)) * this->max_dist_;
         }
 
-        if(tm > this->max_interval)
+        if(tm < nearest->getTm()) // NEED TO MAKE SURE TIME DOESNT GO BACKWARDS!!!
         {
-            tm = max_interval;
+            tm = nearest->getTm();
         }
-/*
-        if(this->dim_3D_)
-        (
+        else if(tm >= nearest->getTm())
+        {
+            if((tm - nearest->getTm()) > this->max_interval)
+            {
+                tm = nearest->getTm() + this->max_interval;
+            }
+        }
+        if(!this->dim_3D_)
+        {
             tm = 0;
-        )
-*/
+        }
+
         double x = (dist * std::sin(angle)) + nearest->getX();
         double y = (dist * std::cos(angle)) + nearest->getY();
 
         _handle->crdnts_ = std::make_tuple(x,y,tm);
-        _handle->back_edge_weight_ = dist;
+        _handle->back_edge_weight_ = dist; //Update this with Lat Acceleration
 
     }
 
-    Node::coordinate_t RRT::genRandomCrdnt()
+    bool RRT::done()
+    {
+        /* Insert Dummy end-node in graph */
+        this->addNode(this->dest_, 0.0F);
+        Node *end = this->adjacencyList_.front();
+
+        /* Find the nearest Node to end */
+        Node *nearest = this->findNearest(end);
+
+        /* Check if we're done */
+        if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
+           std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
+           (end->getTm() - nearest->getTm()) <= this->max_interval)
+        {
+            /* We're at the end, connect the end node to the nearest */
+            this->cmplt = true;
+            this->addEdge(nearest, end);
+            return true;
+        }
+        else
+        {
+            /* Destroy dummy end node*/
+            this->deleteNode(end);
+            return false;
+        }
+        
+    }
+
+    void RRT::buildRRT()
     {
         Node::coordinate_t output;
         bool valid = false;
 
+        /* Ensure Random Node is within permissible range / operating region */
         double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
         double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
         double y_min = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
@@ -167,7 +204,7 @@
         std::uniform_real_distribution<double> range_y(y_min, y_max);
         std::uniform_real_distribution<double> range_tm(0.0F, this->max_time_);
 
-        while(!valid)
+        while(!this->cmplt)
         {
             auto tm = range_tm(gen);
             if (this->dim_3D_)
@@ -182,17 +219,6 @@
             
             //if(std::abs(raw_angle) > this->max_angle_rad_)
 
-        }
-        return output;
-    }
-
-    void RRT::buildRRT()
-    {
-
-        
-        while(!cmplt)
-        {
-            cmplt = true;
         }
     }
 
