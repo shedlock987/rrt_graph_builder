@@ -115,6 +115,12 @@
         return std::atan2(delta_y, delta_x);
     }
 
+    double RRT::calcKinematicEdge(Node *_handle, Node *_ref)
+    {
+        /* Calculate a composite back-edge weight based on kinematic cost */
+        return 0;
+    }
+
     void RRT::applyConstraints(Node *_handle)
     {
         /* Find Nearest existing Node */
@@ -134,7 +140,8 @@
             dist = (dist / std::abs(dist)) * this->max_dist_;
         }
 
-        if(tm < nearest->getTm()) // NEED TO MAKE SURE TIME DOESNT GO BACKWARDS!!!
+        /* Need to ensure time never runs backwards */
+        if(tm < nearest->getTm()) 
         {
             tm = nearest->getTm();
         }
@@ -145,6 +152,8 @@
                 tm = nearest->getTm() + this->max_interval;
             }
         }
+
+        /* If we dont care about time */
         if(!this->dim_3D_)
         {
             tm = 0;
@@ -160,28 +169,37 @@
 
     bool RRT::done()
     {
-        /* Insert Dummy end-node in graph */
-        this->addNode(this->dest_, 0.0F);
-        Node *end = this->adjacencyList_.front();
-
-        /* Find the nearest Node to end */
-        Node *nearest = this->findNearest(end);
-
-        /* Check if we're done */
-        if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
-           std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
-           (end->getTm() - nearest->getTm()) <= this->max_interval)
+        /* Make sure this graph isn't already complete */
+        if(!this->cmplt)
         {
-            /* We're at the end, connect the end node to the nearest */
-            this->cmplt = true;
-            this->addEdge(nearest, end);
-            return true;
+            /* Insert Dummy end-node in graph */
+            this->addNode(this->dest_, 0.0F);
+            Node *end = this->adjacencyList_.front();
+
+            /* Find the nearest Node to end */
+            Node *nearest = this->findNearest(end);
+
+            /* Check if we're done */
+            if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
+            std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
+            (end->getTm() - nearest->getTm()) <= this->max_interval)
+            {
+                /* We're at the end, connect the end node to the nearest */
+                this->cmplt = true;
+                this->addEdge(nearest, end);
+                this->endNode = end;
+                return true;
+            }
+            else
+            {
+                /* Destroy dummy end node*/
+                this->deleteNode(end);
+                return false;
+            }
         }
         else
         {
-            /* Destroy dummy end node*/
-            this->deleteNode(end);
-            return false;
+            return true;
         }
         
     }

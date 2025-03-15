@@ -50,6 +50,7 @@ namespace rrt
         bool cmplt = false;
         int node_limit_ = 50; //update constructor
         int dest_cnnctn_limit = 4; //upsate constructor
+        Node* endNode;
 
         Node::coordinate_t range_a_; 
         Node::coordinate_t range_b_;
@@ -57,8 +58,9 @@ namespace rrt
         Node::coordinate_t dest_;
 
         Node* findNearest(Node *_handle);
-        double calcAngle(Node *_handle, Node *_ref);
         double calcDist(Node *_handle, Node *_ref);
+        double calcAngle(Node *_handle, Node *_ref);
+        double calcKinematicEdge(Node *_handle, Node *_ref);
         void applyConstraints(Node *_handle);
         bool done();
 
