@@ -62,7 +62,7 @@ namespace rrt
         double calcAngle(Node *_handle, Node *_ref);
         double calcKinematicEdge(Node *_handle, Node *_ref);
         void applyConstraints(Node *_handle);
-        bool done();
+        void checkDone();
 
         public:
         RRT();

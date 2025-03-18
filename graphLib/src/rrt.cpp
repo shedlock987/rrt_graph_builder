@@ -167,7 +167,7 @@
 
     }
 
-    bool RRT::done()
+    void RRT::checkDone()
     {
         /* Make sure this graph isn't already complete */
         if(!this->cmplt)
@@ -188,20 +188,13 @@
                 this->cmplt = true;
                 this->addEdge(nearest, end);
                 this->endNode = end;
-                return true;
             }
             else
             {
                 /* Destroy dummy end node*/
                 this->deleteNode(end);
-                return false;
             }
-        }
-        else
-        {
-            return true;
-        }
-        
+        }  
     }
 
     void RRT::buildRRT()
@@ -222,6 +215,8 @@
         std::uniform_real_distribution<double> range_y(y_min, y_max);
         std::uniform_real_distribution<double> range_tm(0.0F, this->max_time_);
 
+        int i = 0;
+        std::cout << "Building RRT!\n";
         while(!this->cmplt)
         {
             auto tm = range_tm(gen);
@@ -230,14 +225,22 @@
                 tm = 0;
             }
 
-
+            /* Generate Random Node within permissible range */
             output = std::make_tuple(range_x(gen), range_y(gen), tm);
-            this->addNode(output, 0.0F);
-            this->applyConstraints(this->adjacencyList_.back());
-            
-            //if(std::abs(raw_angle) > this->max_angle_rad_)
 
+            /* Add the Node to the Graph */
+            this->addNode(output, 0.0F);
+
+            /* Apply Constraints, This effectively implements the RRT
+               and also implements kinematic constraints */
+            this->applyConstraints(this->adjacencyList_.back());
+
+            /* Check to see if the new node is within range of the destination */
+            this->checkDone();
+            i++;
+            std::cout << "." << std::endl;
         }
+        std::cout << "RRT Complete with " << i << " Nodes\n";
     }
 
  }
