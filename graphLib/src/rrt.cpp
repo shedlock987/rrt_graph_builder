@@ -79,7 +79,9 @@
         for(const auto &iter : this->adjacencyList_)
         {
             temp = this->calcDist(_handle, iter);
-            if(temp < min)
+
+            /* make sure we're not comparing the handle to itself */
+            if(temp < min && _handle != iter)
             {
                 min = temp;
                 idx = i;
@@ -174,7 +176,9 @@
         {
             /* Insert Dummy end-node in graph */
             this->addNode(this->dest_, 0.0F);
-            Node *end = this->adjacencyList_.front();
+            Node *end = this->adjacencyList_.back();
+
+            //find nearest doesnt have check on itelf
 
             /* Find the nearest Node to end */
             Node *nearest = this->findNearest(end);
@@ -238,7 +242,7 @@
             /* Check to see if the new node is within range of the destination */
             this->checkDone();
             i++;
-            std::cout << "." << std::endl;
+            std::cout << ".";
         }
         std::cout << "RRT Complete with " << i << " Nodes\n";
     }

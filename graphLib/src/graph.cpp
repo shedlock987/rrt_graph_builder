@@ -113,8 +113,8 @@ namespace rrt
             }
             else
             {
-                std::cout << "                                  |\n";
-                std::cout << "                                  O ---> "; 
+                std::cout << "                                       |\n";
+                std::cout << "                                       O ---> "; 
                 std::cout << "Fwd Connection ID:" << iter << std::endl;    
             }  
         }
