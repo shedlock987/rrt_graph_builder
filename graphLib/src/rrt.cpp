@@ -243,6 +243,10 @@
             this->checkDone();
             i++;
             std::cout << ".";
+
+            //Temporary
+            if(i > node_limit_)
+                this->cmplt = true;
         }
         std::cout << "RRT Complete with " << i << " Nodes\n";
     }
