@@ -44,12 +44,13 @@ namespace rrt
         private:
         double max_angle_rad_;
         double max_dist_;
+        double min_dist_;
         double max_interval;
         double max_time_;
         bool dim_3D_ = false;
         bool cmplt = false;
-        int node_limit_ = 50; //update constructor
-        int dest_cnnctn_limit = 4; //upsate constructor
+        int node_limit_; //update constructor
+        int dest_cnnctn_limit = 10; //upsate constructor
         Node* endNode;
 
         Node::coordinate_t range_a_; 
@@ -68,11 +69,13 @@ namespace rrt
         RRT();
         RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
             Node::coordinate_t _origin, Node::coordinate_t _dest,
-            double _max_angle_rad, double _max_dist, double _max_time, 
+            double _max_angle_rad, double _max_dist, double _min_dist,
+            double _max_time, 
             bool _dim, int _node_limit);
         RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
             Node::coordinate_t _origin, Node::coordinate_t _dest,
-            double _max_angle_rad, double _max_dist, int _node_limit);
+            double _max_angle_rad, double _max_dist, double _min_dist, 
+            int _node_limit);
         ~RRT();
         void buildRRT();
     };

@@ -37,27 +37,27 @@
                  range_b_(std::make_tuple(5.0F, 5.0F, 0.0F)), 
                  origin_(std::make_tuple(0.0F, -5.0F, 0.0F)),
                  dest_(std::make_tuple(5.0F, 5.0F, 0.0F)),
-                 max_angle_rad_(1.05F) , max_dist_(1.0F), 
+                 max_angle_rad_(1.05F) , max_dist_(1.0F), min_dist_(0.5F),
                  max_time_(0.0F) , dim_3D_(false), node_limit_(50)
     {
     }
 
     RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
         Node::coordinate_t _origin, Node::coordinate_t _dest,
-        double _max_angle_rad, double _max_dist, double _max_time, bool _dim, int _node_limit) :
+        double _max_angle_rad, double _max_dist, double _min_dist, double _max_time, bool _dim, int _node_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
                 origin_(_origin), dest_(_dest),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), 
+                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
                 max_time_(_max_time) , dim_3D_(_dim), node_limit_(_node_limit)
     {
     }
 
     RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
         Node::coordinate_t _origin, Node::coordinate_t _dest,
-        double _max_angle_rad, double _max_dist, int _node_limit) :
+        double _max_angle_rad, double _max_dist, double _min_dist, int _node_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
                 origin_(_origin), dest_(_dest),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), 
+                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
                 max_time_(0.0F) , dim_3D_(false), node_limit_(_node_limit)
     {
     }
@@ -140,6 +140,10 @@
         if(std::abs(dist) > this->max_dist_)
         {
             dist = (dist / std::abs(dist)) * this->max_dist_;
+        }
+        else if (std::abs(dist) < this->min_dist_)
+        {
+            dist = (dist / std::abs(dist)) * this->min_dist_;
         }
 
         /* Need to ensure time never runs backwards */
