@@ -63,6 +63,7 @@ namespace rrt
                 double getX();
                 double getY();
                 double getTm();
+                void setCord(double _x, double _y, double _tm);
 
                 friend class Graph;
         };

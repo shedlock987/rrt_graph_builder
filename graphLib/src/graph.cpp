@@ -43,7 +43,8 @@ namespace rrt
 
     Node::Node(coordinate_t _crdnts)
     {
-        this->back_edge_weight_ = 1.0F; // ensure real value
+        /// Ensure real value
+        this->back_edge_weight_ = 1.0F; 
         this->crdnts_ = _crdnts;
 
     }
@@ -136,6 +137,11 @@ namespace rrt
         return std::get<2>(this->crdnts_);
     }
 
+    void Node::setCord(double _x, double _y, double _tm)
+    {
+        this->crdnts_ = std::make_tuple(_x, _y, _tm);
+    }
+
     Graph::Graph()
     {      
         this->addNode(std::make_tuple(0.0F, 0.0F, 0.0F), 0.0F);
@@ -180,14 +186,14 @@ namespace rrt
     {
         int idx = this->getIndex(_handle);
 
-        /* Check that this is an actual graph */
+        /// Check that this is an actual graph 
         if(this->adjacencyList_.size() > 1)
         {
-            /* Check if youre deleting the HEAD */
+            /// Check if youre deleting the HEAD 
             if(this->adjacencyList_.at(idx)->back_node_ == nullptr)
             {
-                /* Find the Foward Edge with the smallest Weight
-                    This will be the new Head */
+                /// Find the Foward Edge with the smallest Weight
+                /// This will be the new Head 
 
                 std::vector<double> list;
                 for (const auto& i : this->adjacencyList_.at(idx)->fwd_node_)
@@ -199,7 +205,7 @@ namespace rrt
                 auto min_idx = std::distance(list.begin(), temp);
                 auto new_head = this->adjacencyList_.at(idx)->fwd_node_.at(min_idx);
 
-                /* Add Old-HEAD's Fwd Connections to New-HEAD */
+                /// Add Old-HEAD's Fwd Connections to New-HEAD 
                 for(const auto &iter : this->adjacencyList_.at(idx)->fwd_node_)
                 {
                     if(iter != new_head)
@@ -210,37 +216,37 @@ namespace rrt
                 new_head->back_node_ = nullptr;
                 new_head->back_edge_weight_ = 0.0F;
 
-                /* Delete Old-HEAD node from adjacency list */
+                /// Delete Old-HEAD node from adjacency list 
                 this->adjacencyList_.erase(this->adjacencyList_.begin());
                 
-                /* Housekeeping: Make sure New-HEAD is index 0 */
+                /// Housekeeping: Make sure New-HEAD is index 0 
                 int temp_head_idx = this->getIndex(new_head);
                 Node* cpy = this->adjacencyList_.at(temp_head_idx);
                 this->adjacencyList_.erase(this->adjacencyList_.begin() + temp_head_idx);
                 this->adjacencyList_.insert(this->adjacencyList_.begin(), cpy);
 
-                /* Delete Old-HEAD */
+                /// Delete Old-HEAD 
                 temp_head_idx = this->getIndex(_handle);
                 //std::cout << "Old Head Index: " << temp_head_idx << " Old Head: " << this->adjacencyList_.at(temp_head_idx] << std::endl;
                 //this->adjacencyList_.erase(this->adjacencyList_.begin() + temp_head_idx + 1); 
             }
             else 
             {
-                /* Migrate Deleted Node's Forward Links to the new back link */
+                /// Migrate Deleted Node's Forward Links to the new back link 
                 this->adjacencyList_.at(idx) = this->adjacencyList_.at(idx)->back_node_;
                 for(const auto &iter_b : this->adjacencyList_.at(idx)->fwd_node_)
                 {
                     this->adjacencyList_.at(idx)->fwd_node_.push_back(iter_b);
                 }
 
-                /* Update Back Links for all the forward connections
-                / aka do double linked list house keeping */
+                /// Update Back Links for all the forward connections
+                /// aka do double linked list house keeping 
                 for(const auto &iter_f : this->adjacencyList_.at(idx)->fwd_node_)
                 {
                     iter_f->back_node_ = this->adjacencyList_.at(idx);
                 }
                 
-                /* Delete the node from adjacency list */
+                /// Delete the node from adjacency list 
                 this->adjacencyList_.erase(this->adjacencyList_.begin() + idx);
             }
         }

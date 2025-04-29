@@ -62,6 +62,7 @@ namespace rrt
         double calcDist(Node *_handle, Node *_ref);
         double calcAngle(Node *_handle, Node *_ref);
         double calcKinematicEdge(Node *_handle, Node *_ref);
+        bool checkConstraints(Node *_handle, Node * _nearest);
         void applyConstraints(Node *_handle);
         void checkDone();
 

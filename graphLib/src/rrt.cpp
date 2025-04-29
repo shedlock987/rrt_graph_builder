@@ -28,6 +28,7 @@
  * @author Ryan Shedlock <rmshedlock@gmail.com>
  * @version 1.0
  */
+ 
 
  #include "rrt.h"
 
@@ -75,12 +76,12 @@
         double temp;
         double min = DBL_MAX;
 
-        /* Need to optimize */
+        /// Need to optimize 
         for(const auto &iter : this->adjacencyList_)
         {
             temp = this->calcDist(_handle, iter);
 
-            /* make sure we're not comparing the handle to itself */
+            /// make sure we're not comparing the handle to itself 
             if(temp < min && _handle != iter)
             {
                 min = temp;
@@ -119,19 +120,47 @@
 
     double RRT::calcKinematicEdge(Node *_handle, Node *_ref)
     {
-        /* Calculate a composite back-edge weight based on kinematic cost */
+        /// Calculate a composite back-edge weight based on kinematic cost 
         return 0;
+    }
+
+    bool RRT::checkConstraints(Node *_handle, Node * _nearest)
+    {
+        /// Find Nearest existing Node 
+        //Node *nearest = this->findNearest(_handle);
+        double dist = this->calcDist(_handle, _nearest);
+        double angle = this->calcAngle(_handle, _nearest);
+        double tm = _handle->getTm();
+        auto eplison = 0.0001F;
+
+        if((std::abs(angle) < this->max_angle_rad_ || std::fabs(angle - this->max_angle_rad_) < eplison) &&
+           (std::abs(dist) < this->max_dist_ || std::fabs(dist - this->max_dist_) < eplison) &&
+           (std::abs(dist) > this->min_dist_ || std::fabs(dist - this->min_dist_) > eplison)
+           //tm >= nearest->getTm() && 
+           //tm <= (nearest->getTm() + this->max_interval)
+           )
+        {
+            //std::cout << "Check Constraints met: " << true << std::endl;
+            return true;
+        }
+        else 
+        {
+            std::cout << std::endl << "angle:" << std::abs(angle) << "::Max:" << this->max_angle_rad_ << std::endl;
+            std::cout << "dist:" << std::abs(dist) << "::Max:" << this->max_dist_ << std::endl;
+            std::cout << "dist:" << std::abs(dist) << "::Min:" << this->min_dist_ << std::endl;
+            return false;
+        }
     }
 
     void RRT::applyConstraints(Node *_handle)
     {
-        /* Find Nearest existing Node */
+        /// Find Nearest existing Node 
         Node *nearest = this->findNearest(_handle);
         double dist = this->calcDist(_handle, nearest);
         double angle = this->calcAngle(_handle, nearest);
         double tm = _handle->getTm();
 
-        /* Apply Scaling Constraints */
+        /// Apply Scaling Constraints 
         if(std::abs(angle) > this->max_angle_rad_)
         {
             angle = (angle / std::abs(angle)) * this->max_angle_rad_;
@@ -146,60 +175,54 @@
             dist = (dist / std::abs(dist)) * this->min_dist_;
         }
 
-        /* Need to ensure time never runs backwards */
-        if(tm < nearest->getTm()) 
+        /// Need to ensure time never runs backwards 
+        if(tm <= nearest->getTm()) 
         {
             tm = nearest->getTm();
         }
-        else if(tm >= nearest->getTm())
+        else if((tm - nearest->getTm()) > this->max_interval)
         {
-            if((tm - nearest->getTm()) > this->max_interval)
-            {
-                tm = nearest->getTm() + this->max_interval;
-            }
+            tm = nearest->getTm() + this->max_interval;
         }
 
-        /* If we dont care about time */
-        if(!this->dim_3D_)
-        {
-            tm = 0;
-        }
+        double x = (dist * std::cos(angle)) + nearest->getX();
+        double y = (dist * std::sin(angle)) + nearest->getY();
 
-        double x = (dist * std::sin(angle)) + nearest->getX();
-        double y = (dist * std::cos(angle)) + nearest->getY();
-
-        _handle->crdnts_ = std::make_tuple(x,y,tm);
+        /// Update the Node with the new coordinates
+        _handle->setCord(x,y,tm);
         _handle->back_edge_weight_ = dist; //Update this with Lat Acceleration
+
+        auto cnstrnts_met = this->checkConstraints(_handle, nearest);
 
     }
 
     void RRT::checkDone()
     {
-        /* Make sure this graph isn't already complete */
+        /// Make sure this graph isn't already complete 
         if(!this->cmplt)
         {
-            /* Insert Dummy end-node in graph */
+            /// Insert Dummy end-node in graph 
             this->addNode(this->dest_, 0.0F);
             Node *end = this->adjacencyList_.back();
 
             //find nearest doesnt have check on itelf
 
-            /* Find the nearest Node to end */
+            /// Find the nearest Node to end 
             Node *nearest = this->findNearest(end);
 
-            /* Check if we're done */
+            /// Check if we're done 
             if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
             std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
             (end->getTm() - nearest->getTm()) <= this->max_interval)
             {
-                /* We're at the end, connect the end node to the nearest */
+                /// We're at the end, connect the end node to the nearest 
                 this->cmplt = true;
                 this->addEdge(nearest, end);
                 this->endNode = end;
             }
             else
             {
-                /* Destroy dummy end node*/
+                /// Destroy dummy end node
                 this->deleteNode(end);
             }
         }  
@@ -210,13 +233,13 @@
         Node::coordinate_t output;
         bool valid = false;
 
-        /* Ensure Random Node is within permissible range / operating region */
+        /// Ensure Random Node is within permissible range / operating region 
         double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
         double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
         double y_min = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
         double y_max = std::max(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
         
-        /* Generate random points within the bounded space */
+        /// Generate random points within the bounded space 
         std::random_device rand;
         std::mt19937 gen(rand());
         std::uniform_real_distribution<double> range_x(x_min, x_max);
@@ -233,17 +256,17 @@
                 tm = 0;
             }
 
-            /* Generate Random Node within permissible range */
+            /// Generate Random Node within permissible range 
             output = std::make_tuple(range_x(gen), range_y(gen), tm);
 
-            /* Add the Node to the Graph */
+            /// Add the Node to the Graph 
             this->addNode(output, 0.0F);
 
-            /* Apply Constraints, This effectively implements the RRT
-               and also implements kinematic constraints */
+            /// Apply Constraints, This effectively implements the RRT
+            /// and also implements kinematic constraints 
             this->applyConstraints(this->adjacencyList_.back());
 
-            /* Check to see if the new node is within range of the destination */
+            /// Check to see if the new node is within range of the destination 
             this->checkDone();
             i++;
             std::cout << ".";
