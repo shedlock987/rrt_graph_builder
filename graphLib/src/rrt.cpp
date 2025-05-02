@@ -81,7 +81,7 @@
         {
             temp = this->calcDist(_handle, iter);
 
-            /// make sure we're not comparing the handle to itself 
+            /// Make sure we're not comparing the handle to itself 
             if(temp < min && _handle != iter)
             {
                 min = temp;
@@ -128,17 +128,17 @@
     {
         /// Find Nearest existing Node 
         //Node *nearest = this->findNearest(_handle);
-        Node *_nearest = this->findNearest(_handle);
-        double dist = this->calcDist(_handle, _nearest);
-        double angle = this->calcAngle(_handle, _nearest);
+        Node *nearest = this->findNearest(_handle);
+        double dist = this->calcDist(_handle, nearest);
+        double angle = this->calcAngle(_handle, nearest);
         double tm = _handle->getTm();
         auto eplison = 0.0001F;
 
         if((std::abs(angle) < this->max_angle_rad_ || std::abs(std::abs(angle) - this->max_angle_rad_) <= eplison) &&
            (std::abs(dist) < this->max_dist_ || std::abs(std::abs(dist) - this->max_dist_) <= eplison) &&
            (std::abs(dist) > this->min_dist_ || std::abs(std::abs(dist) - this->min_dist_) <= eplison) &&
-           (tm >= _nearest->getTm() || (std::fabs(tm - _nearest->getTm() <= eplison))) &&
-           (tm <= (_nearest->getTm() + this->max_interval) || std::abs(_nearest->getTm() + this->max_interval - this->max_interval) <= eplison)
+           (tm >= nearest->getTm() || (std::fabs(tm - nearest->getTm() <= eplison))) &&
+           (tm <= (nearest->getTm() + this->max_interval) || std::abs(nearest->getTm() + this->max_interval - this->max_interval) <= eplison)
            )
         {
             return true;
@@ -151,11 +151,11 @@
 
     void RRT::applyConstraints(Node *_handle)
     {
-        /// Find Nearest existing Node 
         Node *nearest = this->findNearest(_handle);
         double dist = this->calcDist(_handle, nearest);
         double angle = this->calcAngle(_handle, nearest);
         double tm = _handle->getTm();
+        bool cnstrnts_met = this->checkConstraints(_handle);
 
         /// Apply Scaling Constraints 
         if(std::abs(angle) > this->max_angle_rad_)
@@ -189,8 +189,7 @@
         _handle->setCord(x,y,tm);
         _handle->back_edge_weight_ = dist; //Update this with Lat Acceleration
 
-        auto cnstrnts_met = this->checkConstraints(_handle);
-
+        cnstrnts_met = this->checkConstraints(_handle);
     }
 
     void RRT::checkDone()
@@ -266,7 +265,6 @@
             /// Check to see if the new node is within range of the destination 
             this->checkDone();
             i++;
-            std::cout << ".";
 
             //Temporary
             if(i > node_limit_)

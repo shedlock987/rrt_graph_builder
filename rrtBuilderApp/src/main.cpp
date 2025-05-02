@@ -12,8 +12,4 @@ int main() {
     
     testRRT.buildRRT();
     //testRRT.printGraph();
-
-
-
-
 }
