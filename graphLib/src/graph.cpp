@@ -87,17 +87,17 @@ namespace rrt
                   << " Back Weight:" << this->back_edge_weight_ << std::endl;
         std::cout << "Connections:" << std::endl << std::endl;
 
-        if(this->back_node_ == nullptr)
+        if(this->getBackCnnctn() == nullptr)
         {
             std::cout << "        Back Connection ID:";
-            std::cout << this->back_node_;
+            std::cout << this->getBackCnnctn();
             std::cout << " <--- O";
             std::cout << " ---> Fwd Connection ID:" << this->fwd_node_.front() << std::endl;
         }
         else
         {
             std::cout << "Back Connection ID:";
-            std::cout << this->back_node_;
+            std::cout << this->getBackCnnctn();
             std::cout << " <--- O";
             if(this->fwd_node_.size() > 0)
             {
@@ -200,7 +200,7 @@ namespace rrt
         if(this->adjacencyList_.size() > 1)
         {
             /// Check if youre deleting the HEAD 
-            if(this->adjacencyList_.at(idx)->back_node_ == nullptr)
+            if(this->adjacencyList_.at(idx)->getBackCnnctn() == nullptr)
             {
                 /// Find the Foward Edge with the smallest Weight
                 /// This will be the new Head 
@@ -223,7 +223,7 @@ namespace rrt
                         new_head->fwd_node_.push_back(iter);
                     }
                 }
-                new_head->back_node_ = nullptr;
+                new_head->setBackCnnctn(nullptr);
                 new_head->back_edge_weight_ = 0.0F;
 
                 /// Delete Old-HEAD node from adjacency list 
@@ -243,7 +243,7 @@ namespace rrt
             else 
             {
                 /// Migrate Deleted Node's Forward Links to the new back link 
-                this->adjacencyList_.at(idx) = this->adjacencyList_.at(idx)->back_node_;
+                this->adjacencyList_.at(idx) = this->adjacencyList_.at(idx)->getBackCnnctn();
                 for(const auto &iter_b : this->adjacencyList_.at(idx)->fwd_node_)
                 {
                     this->adjacencyList_.at(idx)->fwd_node_.push_back(iter_b);
@@ -253,7 +253,7 @@ namespace rrt
                 /// aka do double linked list house keeping 
                 for(const auto &iter_f : this->adjacencyList_.at(idx)->fwd_node_)
                 {
-                    iter_f->back_node_ = this->adjacencyList_.at(idx);
+                    iter_f->setBackCnnctn(this->adjacencyList_.at(idx));
                 }
                 
                 /// Delete the node from adjacency list 
@@ -290,7 +290,7 @@ namespace rrt
     void Graph::addEdge(Node* _src, Node* _dest)
     {
         _src->fwd_node_.push_back(_dest);
-        _dest->back_node_ = _src;
+        _dest->setBackCnnctn(_src);
     }
 
     // Function to print the adjacency list of the graph

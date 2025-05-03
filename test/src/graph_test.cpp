@@ -69,7 +69,7 @@ namespace rrt
 
         //Ensure proper adjacency list conections
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front(), 
-                    underTest_->adjacencyList_.back()->back_node_);
+                    underTest_->adjacencyList_.back()->getBackCnnctn());
     }
 
     TEST_F(Graph_test, GRAPH_BASICS)
@@ -99,7 +99,7 @@ namespace rrt
 
         /* Test Head-to-Tail */
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
-        EXPECT_EQ(underTest_->adjacencyList_.back()->back_node_, 
+        EXPECT_EQ(underTest_->adjacencyList_.back()->getBackCnnctn(), 
                   underTest_->adjacencyList_.front());
         EXPECT_NEAR(underTest_->adjacencyList_.back()->back_edge_weight_,5.0F, 0.00001F);
     }
@@ -144,7 +144,7 @@ namespace rrt
         handle = underTest_->adjacencyList_.at(3);
         underTest_->addNode(handle, std::make_tuple( 2.3F, 1.3F, 0), 6.0F);
         next = underTest_->adjacencyList_.back();
-        prev = handle->back_node_;
+        prev = handle->getBackCnnctn();
         next = handle->fwd_node_.back();
 
         /* Sanity Check Test Graph */
@@ -208,7 +208,7 @@ namespace rrt
 
         /* Sanity Check Test Graph */
         EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->back_node_, nullptr);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->getBackCnnctn(), nullptr);
 
         /* Delete Graph Head */
         underTest_->deleteNode(head);

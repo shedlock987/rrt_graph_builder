@@ -45,14 +45,14 @@ namespace rrt
     class Node
         {
             private:
-
+            Node* back_node_;
             
             public: 
             double back_edge_weight_;
             typedef std::tuple<double, double, double> coordinate_t;
             coordinate_t crdnts_;       
             std::vector<Node *> fwd_node_;
-            Node* back_node_;
+            
                 /**
                  * @brief   Constructs a new Node/Vertex
                  */   
