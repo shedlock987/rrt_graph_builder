@@ -72,6 +72,12 @@ namespace rrt
     {
     }
 
+    Node::~Node()
+    {
+        this->fwd_node_.clear();
+        this->back_node_ = nullptr;
+    }
+
     void Node::addFwdNode(Node* _cnnctn)
     {
         this->fwd_node_.push_back(_cnnctn);

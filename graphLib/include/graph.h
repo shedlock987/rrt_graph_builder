@@ -45,7 +45,7 @@ namespace rrt
     class Node
         {
             public: 
-            typedef std::tuple<double, double, double> coordinate_t;
+            typedef std::tuple<double, double, double> coordinate_t; /**< custom type used for 2D eculidan coordinate with a time component */
               
             std::vector<Node *> fwd_node_;
             
@@ -97,6 +97,11 @@ namespace rrt
                 Node(double _x, double _y, double _back_edge_weight);
 
                 /**
+                 * @brief   Destroys the Node/Vertex
+                 */
+                ~Node();
+
+                /**
                  * @brief   Dynamically adds a connection to another Node/vertex in the forward direction
                  *
                  * @param[in]  _cnnctn  Pointer to the forward node we will connect to
@@ -105,7 +110,6 @@ namespace rrt
 
                 /**
                  * @brief Console prints Node/Vertex Parameters, used for debugging
-                 *
                 */
                 void debugPrintNode();
 
@@ -194,19 +198,78 @@ class Graph {
     private:
         bool initCmplt_ = false;
     public:
+
+        /**
+        * @brief    Constructs a new Graph in the form of an Adjacency List, Head at 0,0
+        */   
         Graph();
+
+        /**
+        * @brief    Constructs a new Graph in the form of an Adjacency List, user specificed head location
+        
+        * @param[in]    _xHead  xCordinate of the head of the graph
+        * @param[in]    _yHead  yCordinate of the head of the graph
+        */   
         Graph(double _xHead, double _yHead);
+
+        /**
+        * @brief    Destroys the Graph 
+        */
         ~Graph();
+
+        /**
+        * @brief    Returns the coordinates of a given Node/Vertex
+        * 
+        * @return   The Coordinates of type coordinate_t
+        */
         Node::coordinate_t getCoordinate(Node* _handle);
+
+        /**
+        * @brief    Console prints the Graph, used for debugging
+        */
         void printGraph();
 
-        //protected:
-        std::vector<Node *> adjacencyList_; 
+        /**
+        * @brief    Inserts a new Node/Vertex into the Graph connected to the last node
+        *
+        * @param[in]    _point Coordinates of the new Node/Vertex
+        * @param[in]    _back_edge_weight The weight of the back-connected edge
+        */           
         void addNode(Node::coordinate_t _point, double _back_edge_weight);
+
+         /**
+        * @brief    Inserts a new Node/Vertex into the Graph connected to selected node
+        *
+        * @param[in]    _link Pointer to the Graph-Node we want to connect our new node to
+        * @param[in]    _point Coordinates of the new Node/Vertex
+        * @param[in]    _back_edge_weight The weight of the back-connected edge
+        */         
         void addNode(Node* _link, Node::coordinate_t _point, double _back_edge_weight);
+
+         /**
+        * @brief    Removes a specified Node/Vertex from the Graph, Deleted Node's forward links are migrated to the back-connected Node
+        *
+        * @param[in]    _handle Pointer of the Node/Vertex we want removed
+        */        
         void deleteNode(Node* _handle);
+
+         /**
+        * @brief    Removes a specified Node/Vertex from the Graph, Deleted Node's forward links are migrated to the back-connected Node
+        *
+        * @param[in]    _handle Pointer of the Node/Vertex we want removed
+        * @return   The Pointer to a node which corresponds to an index of the adjacency list
+        */          
         int getIndex(Node* _handle);
+
+         /**
+        * @brief    Creates a new connection/edg between two existing nodes/vertices in the adajacency list
+        *
+        * @param[in]    _src Pointer of the Node/Vertex we want the directed edge to originate from
+        * @param[in]    _dest Pointer to the destination Node/Vertex we want the directed edge to point to
+        */   
         void addEdge(Node* _src, Node* _dest);
+
+        std::vector<Node *> adjacencyList_; /**< The Adjacency List which represents our graph */
     
 
     };
