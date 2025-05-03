@@ -45,25 +45,113 @@ namespace rrt
     class Node
         {
             private:
-                int dimension_;
+
+            
             public: 
-                double back_edge_weight_;
-                typedef std::tuple<double, double, double> coordinate_t;
-                coordinate_t crdnts_;       
-                std::vector<Node *> fwd_node_;
-                Node* back_node_;
+            double back_edge_weight_;
+            typedef std::tuple<double, double, double> coordinate_t;
+            coordinate_t crdnts_;       
+            std::vector<Node *> fwd_node_;
+            Node* back_node_;
+                /**
+                 * @brief   Constructs a new Node/Vertex
+                 */   
                 Node();
+
+                /**
+                 * @brief   Constructs a new Node/Vertex
+                 *
+                 * @param[in]  _crdnts  Cordinates of the Node/Vertex
+                 */                
                 Node(coordinate_t _crdnts);
+
+                /**
+                 * @brief   Constructs a new Node/Vertex
+                 *
+                 * @param[in]  _crdnts Coordinates of the Node/Vertex
+                 * * @param[in]  _back_edge_weight  The weight of the back-connected edge
+                 */
                 Node(coordinate_t _crdnts, double _back_edge_weight);
+
+                /**
+                 * @brief   Node/Vertex Copy Constructor
+                 *
+                 * @param[in]  _copy    Node/Vertex to be copied
+                 * @param[in]  _back_edge_weight    The weight of the back-connected edge
+                 */
                 Node(const Node &_copy);
+
+                /**
+                 * @brief   Constructs a new 3D Node/Vertex
+                 *
+                 * @param[in]  _x   The x-axis cordinate of the Node/Vertex
+                 * @param[in]  _y   The y-axis cordinate of the Node/Vertex
+                 * @param[in]  _time    The time coordinate of the Node/Vertex (assumes 3D)
+                 * @param[in]  _back_edge_weight    The weight of the back-connected edge
+                 */
                 Node(double _x, double _y, double _time, double _back_edge_weight);
+
+                /**
+                 * @brief   Constructs a new 2D Node/Vertex
+                 *
+                 * @param[in]  _x   The x-axis cordinate of the Node/Vertex
+                 * @param[in]  _y   The y-axis cordinate of the Node/Vertex
+                 * @param[in]  _back_edge_weight    The weight of the back-connected edge
+                 */
                 Node(double _x, double _y, double _back_edge_weight);
+
+                /**
+                 * @brief   Dynamically adds a connection to another Node/vertex in the forward direction
+                 *
+                 * @param[in]  _cnnctn  Pointer to the forward node we will connect to
+                 */
                 void addFwdNode(Node * _cnnctn);
+
+                /**
+                 * @brief Console prints Node/Vertex Parameters, used for debugging
+                 *
+                */
                 void debugPrintNode();
+
+                /**
+                 * @brief   Returns the x-axis coordinate of the node/vertex 
+                 *
+                 * @return  x-axis coordinate
+                 */
                 double getX();
+
+                /**
+                 * @brief   Returns the x-axis coordinate of the node/vertex 
+                 *
+                 * @return  y-axis coordinate
+                 */
                 double getY();
+
+                /**
+                 * @brief   Returns the time/temporal component of the node/vertex 
+                 *
+                 * @return  timestamp
+                 */
                 double getTm();
+
+                /**
+                 * @brief   Sets/updates the coordinates for the Node/Vertex
+                 */
                 void setCord(double _x, double _y, double _tm);
+
+                /**
+                 * @brief   Gets the Pointer to the Backward-connected Node/Vertex
+                 *
+                 * @return  Pointer to Backward-connected Node/Vertex
+                 */
+                Node* getBackCnnctn();
+
+                /**
+                 * @brief  Sets/Updates the Pointer to the Backward-connected Node/Vertex
+                 *
+                 * @param[in]  _cnnctn  Pointer to the backward node we will connect to
+                 */
+                void setBackCnnctn(Node* _cnnctn);
 
                 friend class Graph;
         };

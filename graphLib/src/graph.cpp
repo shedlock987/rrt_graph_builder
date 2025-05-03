@@ -142,6 +142,16 @@ namespace rrt
         this->crdnts_ = std::make_tuple(_x, _y, _tm);
     }
 
+    Node* Node::getBackCnnctn()
+    {
+        return this->back_node_;
+    }
+
+    void Node::setBackCnnctn(Node* _cnnctn)
+    {
+        this->back_node_ = _cnnctn;;
+    }
+
     Graph::Graph()
     {      
         this->addNode(std::make_tuple(0.0F, 0.0F, 0.0F), 0.0F);

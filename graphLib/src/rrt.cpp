@@ -126,8 +126,6 @@
 
     bool RRT::checkConstraints(Node *_handle)
     {
-        /// Find Nearest existing Node 
-        //Node *nearest = this->findNearest(_handle);
         Node *nearest = this->findNearest(_handle);
         double dist = this->calcDist(_handle, nearest);
         double angle = this->calcAngle(_handle, nearest);
