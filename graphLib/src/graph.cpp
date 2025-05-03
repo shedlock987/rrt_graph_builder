@@ -37,34 +37,34 @@ namespace rrt
     
     Node::Node() 
     {
-        this->back_edge_weight_ = 0.0F;
-        this->crdnts_ = std::make_tuple(0.0F, 0.0F , 0.0F);
+        this->setBackEdgeWeight(0.0F);
+        this->setCrdnts(0.0F, 0.0F , 0.0F);
     }
 
     Node::Node(coordinate_t _crdnts)
     {
         /// Ensure real value
-        this->back_edge_weight_ = 1.0F; 
-        this->crdnts_ = _crdnts;
+        this->setBackEdgeWeight(1.0F); 
+        this->setCrdnts(_crdnts);
 
     }
 
     Node::Node(coordinate_t _crdnts, double _back_edge_weight)
     {
-        this->back_edge_weight_ = _back_edge_weight;
-        this->crdnts_ = _crdnts;
+        this->setBackEdgeWeight(_back_edge_weight);
+        this->setCrdnts(_crdnts);
     }
 
     Node::Node(double _x, double _y, double _time, double _back_edge_weight) 
     {
-        this->back_edge_weight_ = _back_edge_weight;
-        this->crdnts_ = std::make_tuple(_x, _y, _time);
+        this->setBackEdgeWeight(_back_edge_weight);
+        this->setCrdnts(_x, _y, _time);
     }
 
     Node::Node(double _x, double _y, double _back_edge_weight)
     {
-        this->back_edge_weight_ = _back_edge_weight;
-        this->crdnts_ = std::make_tuple(_x, _y, 0.0F);
+        this->setBackEdgeWeight(_back_edge_weight);
+        this->setCrdnts(_x, _y, 0.0F);
     }
 
     Node::Node(const Node &_copy) : back_edge_weight_(_copy.back_edge_weight_), back_node_(_copy.back_node_),
@@ -84,20 +84,20 @@ namespace rrt
         std::cout << std::endl;
 
         std::cout << this << " X:" << std::get<0>(this->crdnts_) << " Y:" << std::get<1>(this->crdnts_)  << " time:" << std::get<2>(this->crdnts_) 
-                  << " Back Weight:" << this->back_edge_weight_ << std::endl;
+                  << " Back Weight:" << this->backEdgeWeight() << std::endl;
         std::cout << "Connections:" << std::endl << std::endl;
 
-        if(this->getBackCnnctn() == nullptr)
+        if(this->BackCnnctn() == nullptr)
         {
             std::cout << "        Back Connection ID:";
-            std::cout << this->getBackCnnctn();
+            std::cout << this->BackCnnctn();
             std::cout << " <--- O";
             std::cout << " ---> Fwd Connection ID:" << this->fwd_node_.front() << std::endl;
         }
         else
         {
             std::cout << "Back Connection ID:";
-            std::cout << this->getBackCnnctn();
+            std::cout << this->BackCnnctn();
             std::cout << " <--- O";
             if(this->fwd_node_.size() > 0)
             {
@@ -122,27 +122,37 @@ namespace rrt
         std::cout << std::endl;
     }
 
-    double Node::getX()
+    double Node::xCrdnt()
     {
         return std::get<0>(this->crdnts_);
     }
 
-    double Node::getY()
+    double Node::yCrdnt()
     {
         return std::get<1>(this->crdnts_);
     }
 
-    double Node::getTm()
+    double Node::time()
     {
         return std::get<2>(this->crdnts_);
     }
 
-    void Node::setCord(double _x, double _y, double _tm)
+    void Node::setCrdnts(double _x, double _y, double _tm)
     {
         this->crdnts_ = std::make_tuple(_x, _y, _tm);
     }
 
-    Node* Node::getBackCnnctn()
+    void Node::setCrdnts(coordinate_t _crdnts)
+    {
+        this->crdnts_ = _crdnts;
+    }
+
+    coordinate_t Node::Crdnts()
+    {
+        return this->crdnts_;
+    }
+
+    Node* Node::BackCnnctn()
     {
         return this->back_node_;
     }
@@ -150,6 +160,16 @@ namespace rrt
     void Node::setBackCnnctn(Node* _cnnctn)
     {
         this->back_node_ = _cnnctn;;
+    }
+
+    double Node::backEdgeWeight()
+    {
+        return this->back_edge_weight_;
+    }
+
+    void Node::setBackEdgeWeight(double _back_edge_weight)
+    {
+        this->back_edge_weight_ = _back_edge_weight;
     }
 
     Graph::Graph()
@@ -200,7 +220,7 @@ namespace rrt
         if(this->adjacencyList_.size() > 1)
         {
             /// Check if youre deleting the HEAD 
-            if(this->adjacencyList_.at(idx)->getBackCnnctn() == nullptr)
+            if(this->adjacencyList_.at(idx)->BackCnnctn() == nullptr)
             {
                 /// Find the Foward Edge with the smallest Weight
                 /// This will be the new Head 
@@ -208,7 +228,7 @@ namespace rrt
                 std::vector<double> list;
                 for (const auto& i : this->adjacencyList_.at(idx)->fwd_node_)
                 {
-                    list.push_back(i->back_edge_weight_);
+                    list.push_back(i->backEdgeWeight());
                 }
 
                 auto temp = std::min_element(list.begin(), list.end());
@@ -224,7 +244,7 @@ namespace rrt
                     }
                 }
                 new_head->setBackCnnctn(nullptr);
-                new_head->back_edge_weight_ = 0.0F;
+                new_head->setBackEdgeWeight(0.0F);
 
                 /// Delete Old-HEAD node from adjacency list 
                 this->adjacencyList_.erase(this->adjacencyList_.begin());
@@ -243,7 +263,7 @@ namespace rrt
             else 
             {
                 /// Migrate Deleted Node's Forward Links to the new back link 
-                this->adjacencyList_.at(idx) = this->adjacencyList_.at(idx)->getBackCnnctn();
+                this->adjacencyList_.at(idx) = this->adjacencyList_.at(idx)->BackCnnctn();
                 for(const auto &iter_b : this->adjacencyList_.at(idx)->fwd_node_)
                 {
                     this->adjacencyList_.at(idx)->fwd_node_.push_back(iter_b);

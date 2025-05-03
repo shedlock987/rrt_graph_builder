@@ -100,21 +100,21 @@
     {
         if(dim_3D_)
         {
-            return std::sqrt(std::pow(_handle->getX() - _ref->getX(), 2) + 
-                             std::pow(_handle->getY() - _ref->getY(), 2) +
-                             std::pow(_handle->getTm() - _ref->getTm(), 2));
+            return std::sqrt(std::pow(_handle->xCrdnt() - _ref->xCrdnt(), 2) + 
+                             std::pow(_handle->yCrdnt() - _ref->yCrdnt(), 2) +
+                             std::pow(_handle->time() - _ref->time(), 2));
         }
         else
         {
-            return std::sqrt(std::pow(_handle->getX() - _ref->getX(), 2) + 
-                             std::pow(_handle->getY() - _ref->getY(), 2));
+            return std::sqrt(std::pow(_handle->xCrdnt() - _ref->xCrdnt(), 2) + 
+                             std::pow(_handle->yCrdnt() - _ref->yCrdnt(), 2));
         }
     }
 
     double RRT::calcAngle(Node *_handle, Node *_ref)
     {
-        double delta_x = _handle->getX() - _ref->getX();
-        double delta_y = _handle->getY() - _ref->getY();
+        double delta_x = _handle->xCrdnt() - _ref->xCrdnt();
+        double delta_y = _handle->yCrdnt() - _ref->yCrdnt();
         return std::atan2(delta_y, delta_x);
     }
 
@@ -129,14 +129,14 @@
         Node *nearest = this->findNearest(_handle);
         double dist = this->calcDist(_handle, nearest);
         double angle = this->calcAngle(_handle, nearest);
-        double tm = _handle->getTm();
+        double tm = _handle->time();
         auto eplison = 0.0001F;
 
         if((std::abs(angle) < this->max_angle_rad_ || std::abs(std::abs(angle) - this->max_angle_rad_) <= eplison) &&
            (std::abs(dist) < this->max_dist_ || std::abs(std::abs(dist) - this->max_dist_) <= eplison) &&
            (std::abs(dist) > this->min_dist_ || std::abs(std::abs(dist) - this->min_dist_) <= eplison) &&
-           (tm >= nearest->getTm() || (std::fabs(tm - nearest->getTm() <= eplison))) &&
-           (tm <= (nearest->getTm() + this->max_interval) || std::abs(nearest->getTm() + this->max_interval - this->max_interval) <= eplison)
+           (tm >= nearest->time() || (std::fabs(tm - nearest->time() <= eplison))) &&
+           (tm <= (nearest->time() + this->max_interval) || std::abs(nearest->time() + this->max_interval - this->max_interval) <= eplison)
            )
         {
             return true;
@@ -152,7 +152,7 @@
         Node *nearest = this->findNearest(_handle);
         double dist = this->calcDist(_handle, nearest);
         double angle = this->calcAngle(_handle, nearest);
-        double tm = _handle->getTm();
+        double tm = _handle->time();
         bool cnstrnts_met = this->checkConstraints(_handle);
 
         /// Apply Scaling Constraints 
@@ -171,21 +171,21 @@
         }
 
         /// Need to ensure time never runs backwards 
-        if(tm <= nearest->getTm()) 
+        if(tm <= nearest->time()) 
         {
-            tm = nearest->getTm();
+            tm = nearest->time();
         }
-        else if((tm - nearest->getTm()) > this->max_interval)
+        else if((tm - nearest->time()) > this->max_interval)
         {
-            tm = nearest->getTm() + this->max_interval;
+            tm = nearest->time() + this->max_interval;
         }
 
-        double x = (dist * std::cos(angle)) + nearest->getX();
-        double y = (dist * std::sin(angle)) + nearest->getY();
+        double x = (dist * std::cos(angle)) + nearest->xCrdnt();
+        double y = (dist * std::sin(angle)) + nearest->yCrdnt();
 
         /// Update the Node with the new coordinates
-        _handle->setCord(x,y,tm);
-        _handle->back_edge_weight_ = dist; //Update this with Lat Acceleration
+        _handle->setCrdnts(x,y,tm);
+        _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
 
         cnstrnts_met = this->checkConstraints(_handle);
     }
@@ -207,7 +207,7 @@
             /// Check if we're done 
             if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
             std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
-            (end->getTm() - nearest->getTm()) <= this->max_interval)
+            (end->time() - nearest->time()) <= this->max_interval)
             {
                 /// We're at the end, connect the end node to the nearest 
                 this->cmplt = true;

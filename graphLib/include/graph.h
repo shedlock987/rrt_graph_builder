@@ -44,13 +44,9 @@ namespace rrt
     typedef std::tuple<double, double, double> coordinate_t;
     class Node
         {
-            private:
-            Node* back_node_;
-            
             public: 
-            double back_edge_weight_;
             typedef std::tuple<double, double, double> coordinate_t;
-            coordinate_t crdnts_;       
+              
             std::vector<Node *> fwd_node_;
             
                 /**
@@ -86,7 +82,7 @@ namespace rrt
                  *
                  * @param[in]  _x   The x-axis cordinate of the Node/Vertex
                  * @param[in]  _y   The y-axis cordinate of the Node/Vertex
-                 * @param[in]  _time    The time coordinate of the Node/Vertex (assumes 3D)
+                 * @param[in]  _time    The time/temporal component of the Node/Vertex (assumes 3D)
                  * @param[in]  _back_edge_weight    The weight of the back-connected edge
                  */
                 Node(double _x, double _y, double _time, double _back_edge_weight);
@@ -118,41 +114,79 @@ namespace rrt
                  *
                  * @return  x-axis coordinate
                  */
-                double getX();
+                double xCrdnt();
 
                 /**
                  * @brief   Returns the x-axis coordinate of the node/vertex 
                  *
                  * @return  y-axis coordinate
                  */
-                double getY();
+                double yCrdnt();
 
                 /**
                  * @brief   Returns the time/temporal component of the node/vertex 
                  *
                  * @return  timestamp
                  */
-                double getTm();
+                double time();
 
                 /**
                  * @brief   Sets/updates the coordinates for the Node/Vertex
+                 * 
+                 * @param[in]  _x   The x-axis cordinate of the Node/Vertex
+                 * @param[in]  _y   The y-axis cordinate of the Node/Vertex
+                 * @param[in]  _tm  The time/temporal component of the Node/Vertex (assumes 3D)
                  */
-                void setCord(double _x, double _y, double _tm);
+                void setCrdnts(double _x, double _y, double _tm);
 
                 /**
-                 * @brief   Gets the Pointer to the Backward-connected Node/Vertex
+                 * @brief   Sets/updates the coordinates for the Node/Vertex
+                 * 
+                 * @param[in]  _crdnts   The desired Values for the coordinates
+                 */
+                void setCrdnts(coordinate_t _crdnts);
+
+                /**
+                 * @brief   Gets the coordinates for the Node/Vertex
+                 * 
+                 * @return  The Coordinates of type coordinate_t
+                 */
+                coordinate_t Crdnts();
+
+                /**
+                 * @brief   Gets the Pointer to the Backward-connected Node/Vertex aka Back-Edge
                  *
-                 * @return  Pointer to Backward-connected Node/Vertex
+                 * @return  Pointer to Backward-connected Node/Vertex aka Back-Edge
                  */
-                Node* getBackCnnctn();
+                Node* BackCnnctn();
 
                 /**
-                 * @brief  Sets/Updates the Pointer to the Backward-connected Node/Vertex
+                 * @brief  Sets/Updates the Pointer to the Backward-connected Node/Vertex aka Back-Edge
                  *
                  * @param[in]  _cnnctn  Pointer to the backward node we will connect to
                  */
                 void setBackCnnctn(Node* _cnnctn);
 
+                /**
+                 * @brief  Gets the weight of the Backward-connected Node/Vertex aka Back-Edge
+                 *
+                 * @return  Weight of the Node/Vertex's Back Connection
+                 */
+                double backEdgeWeight();
+
+                /**
+                 * @brief  Sets/Updates the weight of the Backward-connected Node/Vertex aka Back-Edge
+                 *
+                 * @param[in]  _back_edge_weight  The desired/new weight of the back-connected edge
+                 */
+                void setBackEdgeWeight(double _back_edge_weight);
+
+
+                private:
+                Node* back_node_; /**< Pointer to the backward connected Node/Vertex aka back-edge*/
+                coordinate_t crdnts_; /**< Coordinates of the Node/Vertex */
+                double back_edge_weight_; /**< Weight of the backward-connected Edge */
+                
                 friend class Graph;
         };
 
