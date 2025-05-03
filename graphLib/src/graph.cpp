@@ -308,6 +308,11 @@ namespace rrt
   
     Graph::~Graph()
     {
+        for(auto &iter : this->adjacencyList_)
+        {
+            delete iter;
+        }
+        this->adjacencyList_.clear();
     }
 
     // Method to add an edge to the graph
