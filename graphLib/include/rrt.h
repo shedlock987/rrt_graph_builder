@@ -43,42 +43,136 @@ namespace rrt
     class RRT : public Graph
     {
         private:
-        double max_angle_rad_;
-        double max_dist_;
-        double min_dist_;
-        double max_interval;
-        double max_time_;
-        bool dim_3D_ = false;
-        bool cmplt = false;
-        int node_limit_; //update constructor
-        int dest_cnnctn_limit = 10; //upsate constructor
+        double max_angle_rad_; /**< Constraint: maximum permitted angle between 2 Nodes */
+        double max_dist_; /**< Constraint: maximum permitted distance between 2 Nodes */
+        double min_dist_; /**< Constraint: minimum permitted distance between 2 Nodes */
+        double max_interval; /**< Constraint: maximum time interval between 2 Nodes */
+        double max_time_;   /**< Constraint: maximum time interval between 2 Nodes */
+        bool dim_3D_ = false; /**< Specifies if the RRT is 2D or 3D, initialized to 2D, no temporal */
+        bool cmplt = false; /**< Flag to indicate the RRT is complete */
+        int node_limit_; /**< Maximum number of nodes permitted in the RRT */
+        int dest_cnnctn_limit = 10; 
         Node* endNode;
 
-        Node::coordinate_t range_a_; 
-        Node::coordinate_t range_b_;
-        Node::coordinate_t origin_;
-        Node::coordinate_t dest_;
+        Node::coordinate_t range_a_; /**< Lower Left Corner of the Operating Region */
+        Node::coordinate_t range_b_; /**< Upper Right Corner of the Operating Region */
+        Node::coordinate_t origin_; /**< Origin of the RRT */
+        Node::coordinate_t dest_; /**< Destination of the RRT */
 
+        /**
+        * @brief   Searches the adjacency list for the nearest node to the given node
+        * 
+        * @param[in]    _handle  The given node we want to reference the search against 
+        * @return   Pointer to the Graph-Node which is nearest to the handle
+        */
         Node* findNearest(Node *_handle);
+
+        /**
+        * @brief   Calculates the 2D eculidian distance between two nodes 
+        * 
+        * @param[in]    _ref  The first node
+        * @param[in]    _handle  The second node
+        * @return   Eculidian distance between the two nodes
+        */
         double calcDist(Node *_handle, Node *_ref);
+
+        /**
+        * @brief   Calculates the angle (in radians) between two nodes 
+        * 
+        * @param[in]    _ref  The first node
+        * @param[in]    _handle  The second node
+        * @return   Angle between the two nodes
+        */       
         double calcAngle(Node *_handle, Node *_ref);
+
+        /**
+        * @brief   Calculates an edge weight based upon kinematic cost constraints
+        * 
+        * @param[in]    _ref  The first node
+        * @param[in]    _handle  The second node
+        * @return   Edge weight based upon kinematic cost constraints
+        */            
         double calcKinematicEdge(Node *_handle, Node *_ref);
+
+        /**
+        * @brief   Checks if the constraints (distance, angle, interval) are satisfied between a given node and its nearest neighbor
+        * 
+        * @note   This is only intended to be used by the Build function since it only checks against the nearest neighbor
+        * @param[in]    _handle  The given node we want to check constraints for
+        * @return   Returns true if the constraints are satisfied, false otherwise
+        */        
         bool checkConstraints(Node *_handle);
+
+        /**
+        * @brief   Applies/Updates node parameters to ensure the constraints are satisfied
+        * 
+        * @note    Also ensures the node is within the operating region
+        * @param[in]    _handle  The given node we want to force constraints upon
+        */
         void applyConstraints(Node *_handle);
+
+        /**
+        * @brief   Checks if the RRT gaph has a Node near the desired destination and said node is within the constraints relative to the destination
+        * 
+        * @note    Sets this->cmplt = true if the destination is reached within constraints
+        * */
         void checkDone();
 
+
+
         public:
+        /**
+        * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
+        */   
         RRT();
+
+        /**
+        * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
+        * 
+        * @param[in]    _range_a  Lower Left Corner of the Operating Region
+        * @param[in]    _range_b  Upper Right Corner of the Operating Region
+        * @param[in]    _origin   Origin of the RRT
+        * @param[in]    _dest     Destination of the RRT
+        * @param[in]    _max_angle_rad  Constraint: maximum permitted angle between 2 Nodes
+        * @param[in]    _max_dist Constraint: maximum permitted distance between 2 Nodes
+        * @param[in]    _min_dist Constraint: minimum permitted distance between 2 Nodes
+        * @param[in]    _max_time Constraint: maximum time interval between 2 Nodes
+        * @param[in]    _dim     Specifies if the RRT is 2D or 3D
+        * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
+        */           
         RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
             Node::coordinate_t _origin, Node::coordinate_t _dest,
             double _max_angle_rad, double _max_dist, double _min_dist,
             double _max_time, 
             bool _dim, int _node_limit);
+
+        /**
+        * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List, No temporal component
+        * 
+        * @param[in]    _range_a  Lower Left Corner of the Operating Region
+        * @param[in]    _range_b  Upper Right Corner of the Operating Region
+        * @param[in]    _origin   Origin of the RRT
+        * @param[in]    _dest     Destination of the RRT
+        * @param[in]    _max_angle_rad  Constraint: maximum permitted angle between 2 Nodes
+        * @param[in]    _max_dist Constraint: maximum permitted distance between 2 Nodes
+        * @param[in]    _min_dist Constraint: minimum permitted distance between 2 Nodes
+        * @param[in]    _max_time Constraint: maximum time interval between 2 Nodes
+        * @param[in]    _dim     Specifies if the RRT is 2D or 3D
+        * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
+        */        
         RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
             Node::coordinate_t _origin, Node::coordinate_t _dest,
             double _max_angle_rad, double _max_dist, double _min_dist, 
             int _node_limit);
+
+        /**
+        * @brief    Destroys the RRT Graph 
+        */
         ~RRT();
+
+        /**
+        * @brief    Generates the RRT Graph
+        */        
         void buildRRT();
     };
 }

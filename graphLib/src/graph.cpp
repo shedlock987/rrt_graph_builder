@@ -315,16 +315,16 @@ namespace rrt
         this->adjacencyList_.clear();
     }
 
-    // Method to add an edge to the graph
-    // Parameters: src - source vertex
-    // dest - destination vertex
+    /// Method to add an edge to the graph
+    /// Parameters: src - source vertex
+    /// dest - destination vertex
     void Graph::addEdge(Node* _src, Node* _dest)
     {
         _src->fwd_node_.push_back(_dest);
         _dest->setBackCnnctn(_src);
     }
 
-    // Function to print the adjacency list of the graph
+    /// Function to print the adjacency list of the graph
     void Graph::printGraph()
     {
         for(const auto &iter : this->adjacencyList_)

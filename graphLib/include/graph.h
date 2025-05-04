@@ -196,7 +196,7 @@ namespace rrt
 
 class Graph {
     private:
-        bool initCmplt_ = false;
+        bool initCmplt_ = false; /**< Flag to indicate the Graph is initialized */
     public:
 
         /**
@@ -262,15 +262,14 @@ class Graph {
         int getIndex(Node* _handle);
 
          /**
-        * @brief    Creates a new connection/edg between two existing nodes/vertices in the adajacency list
+        * @brief    Creates a new connection/edge between two existing nodes/vertices in the adajacency list
         *
         * @param[in]    _src Pointer of the Node/Vertex we want the directed edge to originate from
         * @param[in]    _dest Pointer to the destination Node/Vertex we want the directed edge to point to
         */   
         void addEdge(Node* _src, Node* _dest);
-
-        std::vector<Node *> adjacencyList_; /**< The Adjacency List which represents our graph */
     
+        std::vector<Node *> adjacencyList_; /**< The Adjacency List which represents our graph */
 
     };
 }
