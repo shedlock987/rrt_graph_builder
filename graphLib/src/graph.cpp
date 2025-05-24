@@ -268,13 +268,19 @@ namespace rrt
             }
             else 
             {
+                auto upstream = this->adjacencyList_.at(idx)->BackCnnctn();
+                auto upstream_idx = this->getIndex(upstream);
+                //std::cout << "INITIAL fwd connection size on upstream: " << upstream->fwd_node_.size() << std::endl;
                 /// Migrate Deleted Node's Forward Links to the new back link 
-                this->adjacencyList_.at(idx) = this->adjacencyList_.at(idx)->BackCnnctn();
+ 
                 for(const auto &iter_b : this->adjacencyList_.at(idx)->fwd_node_)
                 {
-                    this->adjacencyList_.at(idx)->fwd_node_.push_back(iter_b);
+                    if(iter_b != nullptr) 
+                    {
+                        this->adjacencyList_.at(upstream_idx)->fwd_node_.push_back(iter_b);
+                    }
                 }
-
+                //std::cout << "AFTER MIGRATION fwd connection size on upstream: " << upstream->fwd_node_.size() << std::endl;
                 /// Update Back Links for all the forward connections
                 /// aka do double linked list house keeping 
                 for(const auto &iter_f : this->adjacencyList_.at(idx)->fwd_node_)
@@ -282,7 +288,15 @@ namespace rrt
                     iter_f->setBackCnnctn(this->adjacencyList_.at(idx));
                 }
                 
-                /// Delete the node from adjacency list 
+                /// Break the forward connection to the deleted node
+                if(upstream != nullptr)
+                {
+                    /// Remove the deleted node from the upstream node's forward connections
+                    auto fwd_link = std::remove(upstream->fwd_node_.begin(), upstream->fwd_node_.end(), _handle);
+                    upstream->fwd_node_.erase(fwd_link);
+                }
+                //std::cout << "AFTER fwd connection size on upstream: " << upstream->fwd_node_.size() << std::endl;
+                /// Finally, Delete the node from adjacency list 
                 this->adjacencyList_.erase(this->adjacencyList_.begin() + idx);
             }
         }

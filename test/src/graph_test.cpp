@@ -43,17 +43,17 @@ namespace rrt
 
     TEST_F(Graph_test, ADDNODE_CREATE_WITH_BASE_CONSTRUCTOR_TEST)
     {
-        underTest_->addNode(std::make_tuple(4.1, 5, 0), 2.2F);
+        underTest_->addNode(std::make_tuple(4.1, 5, 0), 2.2);
         EXPECT_EQ(underTest_->adjacencyList_.size(), 2);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->xCrdnt(),10.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->yCrdnt(),10.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->xCrdnt(),10.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->yCrdnt(),10.0);
         EXPECT_EQ(underTest_->adjacencyList_.front()->time(),0);
         EXPECT_EQ(underTest_->adjacencyList_.front()->backEdgeWeight(),0);
 
-        EXPECT_EQ(underTest_->adjacencyList_.back()->xCrdnt(),4.1F);
-        EXPECT_EQ(underTest_->adjacencyList_.back()->yCrdnt(),5.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.back()->time(),0.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.back()->backEdgeWeight(),2.2F);
+        EXPECT_EQ(underTest_->adjacencyList_.back()->xCrdnt(),4.1);
+        EXPECT_EQ(underTest_->adjacencyList_.back()->yCrdnt(),5.0);
+        EXPECT_EQ(underTest_->adjacencyList_.back()->time(),0.0);
+        EXPECT_EQ(underTest_->adjacencyList_.back()->backEdgeWeight(),2.2);
     }
 
     TEST_F(Graph_test, ADDNODE_LINK_WITH_BASE_CONSTRUCTOR_TEST)
@@ -136,20 +136,19 @@ namespace rrt
         Node *handle, *prev, *next;
         underTest_->addNode(std::make_tuple(1.1, 2.1, 0), 1.0F);
         handle = underTest_->adjacencyList_.back();
-        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0), 3.0F);
-        handle = underTest_->adjacencyList_.front();
+        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0), 3.0F); //Left Tree Complete
+        handle = underTest_->adjacencyList_.front(); //Go back to the head
         underTest_->addNode(handle, std::make_tuple(2.1, 1.1, 0), 2.0F);
         underTest_->addNode(std::make_tuple(2.2, 1.2, 0), 4.0F);
         underTest_->addNode(handle, std::make_tuple( 3.1F, 3.2F, 0), 5.0F);
         handle = underTest_->adjacencyList_.at(3);
         underTest_->addNode(handle, std::make_tuple( 2.3F, 1.3F, 0), 6.0F);
-        next = underTest_->adjacencyList_.back();
-        prev = handle->BackCnnctn();
-        next = handle->fwd_node_.back();
 
         /* Sanity Check Test Graph */
         EXPECT_EQ(underTest_->adjacencyList_.size(), 7);
-        EXPECT_NEAR(handle->backEdgeWeight(), 2.0F,0.00001F);
+        EXPECT_EQ(handle->backEdgeWeight(), 2.0);
+        auto upstream = handle->BackCnnctn();
+        EXPECT_EQ(upstream->fwd_node_.size(), 3);
 
 
         /* Delete Interior Node */
@@ -158,14 +157,14 @@ namespace rrt
         /* Verify Deletion */
         handle = underTest_->adjacencyList_.at(3);
         EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
-        EXPECT_NEAR(handle->backEdgeWeight(), 4.0F,0.00001F);
+        EXPECT_EQ(handle->backEdgeWeight(), 4.0);
 
         /* Verify forward connection Propagation */
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 4);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->backEdgeWeight(), 1.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(2)->backEdgeWeight(), 5.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->backEdgeWeight(), 5.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->backEdgeWeight(), 1.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(2)->backEdgeWeight(), 5.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->backEdgeWeight(), 5.0);
         
     }
 
@@ -219,9 +218,9 @@ namespace rrt
         /* Verify Proper Node was selected as New Head */
         /* New Head should be the node with <previously> the smallest edge*/
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->backEdgeWeight(), 3.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->backEdgeWeight(), 5.0F);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0F);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->backEdgeWeight(), 3.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->backEdgeWeight(), 5.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0);
     }
 };
 
