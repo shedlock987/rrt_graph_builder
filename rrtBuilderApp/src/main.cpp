@@ -1,6 +1,7 @@
 #include "graph.h"
 #include "rrt.h"
 #include <iostream>
+#include <boost/python.hpp>
 
 int main() {
     rrt::Node::coordinate_t origin(0.0F,0.0F,0.0F);
