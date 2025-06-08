@@ -17,7 +17,7 @@ echo Done
 
 #Running App
 echo Running App
-cd rrtBuilderApp
-./rrtBuilderApp
+cd rrtDemo
+./rrtDemo
 echo Complete
 

@@ -17,11 +17,11 @@ rm -rf cmake_install.cmake
 rm -rf Makefile
 cd ..
 
-cd rrtBuilderApp
+cd rrtDemo
 rm -rf CMakeFiles
 rm -rf cmake_install.cmake
 rm -rf Makefile
-rm -rf rrtBuilderApp
+rm -rf rrtDemo
 cd ..
 
 cd test
