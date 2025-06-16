@@ -34,12 +34,13 @@
 
  namespace rrt 
  {
-    RRT::RRT() : range_a_(std::make_tuple(-5.0F, -5.0F, 0.0F)),
-                 range_b_(std::make_tuple(5.0F, 5.0F, 0.0F)), 
-                 origin_(std::make_tuple(0.0F, -5.0F, 0.0F)),
-                 dest_(std::make_tuple(5.0F, 5.0F, 0.0F)),
-                 max_angle_rad_(1.05F) , max_dist_(1.0F), min_dist_(0.5F),
-                 max_time_(0.0F) , dim_3D_(false), node_limit_(50)
+    RRT::RRT(std::optional<std::vector<std::vector<std::vector<double>>>> _occupancy_map) : 
+                range_a_(std::make_tuple(-5.0F, -5.0F, 0.0F)),
+                range_b_(std::make_tuple(5.0F, 5.0F, 0.0F)), 
+                origin_(std::make_tuple(0.0F, -5.0F, 0.0F)),
+                dest_(std::make_tuple(5.0F, 5.0F, 0.0F)),
+                max_angle_rad_(1.05F) , max_dist_(1.0F), min_dist_(0.5F),
+                max_time_(0.0F) , dim_3D_(false), node_limit_(50)
     {
     }
 
@@ -67,6 +68,71 @@
     RRT::~RRT()
     {
 
+    }
+
+    void RRT::setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b)
+    {
+        this->range_a_ = _range_a;
+        this->range_b_ = _range_b;
+        this->max_time_ = std::get<2>(_range_b); // Assuming the time component is in the z-axis
+        if(std::get<2>(_range_a) <= 0.0F)
+        {
+            this->setDim3D(true); // If the z-axis is not zero, we are in 3D
+        }
+        else
+        {
+            this->setDim3D(false); // Otherwise, we are in 2D
+        }
+    }
+
+    void RRT::setBoundaries(double _range_a_x, double _range_a_y, 
+                           double _range_b_x, double _range_b_y, double _time_horizon)
+    {
+        this->max_time_ = _time_horizon;
+        this->range_a_ = std::make_tuple(_range_a_x, _range_a_y, 0.0F);
+        this->range_b_ = std::make_tuple(_range_b_x, _range_b_y, _time_horizon);
+        if(_time_horizon <= 0.0F)
+        {
+            this->setDim3D(true); // If the z-axis is not zero, we are in 3D
+        }
+        else
+        {
+            this->setDim3D(false); // Otherwise, we are in 2D
+        }
+    }
+
+     
+    void setOrigin(Node::coordinate_t _origin)
+    {
+        //this->adjacencyList_.front()->setCrdnts(_origin);
+    }
+ 
+    void RRT::setOrigin(double _origin_x, double _origin_y)
+    {
+        //this->adjacencyList_.frontc()->setCrdnts(_origin_x, _origin_y, 0.0F);
+    }
+          
+    void RRT::updateDestination(Node::coordinate_t _dest)
+    {
+        this->dest_ = _dest;
+    }
+
+    void RRT::updateDestination(double _dest_x, double _dest_y)
+    {
+        this->dest_ = std::make_tuple(_dest_x, _dest_y, this->max_time_);
+    }
+
+    void RRT::updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval)
+    {
+        this->max_angle_rad_ = _max_angle_rad;
+        this->max_dist_ = _max_dist;
+        this->min_dist_ = _min_dist;
+        this->max_interval = _max_interval;
+    }
+ 
+    void RRT::setDim3D(bool _dim_3D)
+    {
+        this->dim_3D_ = _dim_3D;
     }
 
     Node* RRT::findNearest(Node *_handle)
@@ -195,14 +261,20 @@
         /// Make sure this graph isn't already complete 
         if(!this->cmplt)
         {
-            /// Insert Dummy end-node in graph 
+            /* Insert Dummy end-node in graph
+            if (this->dest_.time() < 0.0F)
+            {
+                /// TO DO: Need to scale this as a Bar
+            }*/
+           
             this->addNode(this->dest_, 0.0F);
             Node *end = this->adjacencyList_.back();
 
-            //find nearest doesnt have check on itelf
-
             /// Find the nearest Node to end 
             Node *nearest = this->findNearest(end);
+
+            /// Ensure our dummy end node is on the same time as the nearest node
+            end->setCrdnts(end->xCrdnt(), end->yCrdnt(), nearest->time());
 
             /// Check if we're done 
             if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
@@ -225,50 +297,59 @@
     void RRT::buildRRT()
     {
         Node::coordinate_t output;
-        bool valid = false;
 
-        /// Ensure Random Node is within permissible range / operating region 
-        double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
-        double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
-        double y_min = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
-        double y_max = std::max(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
-        
-        /// Generate random points within the bounded space 
-        std::random_device rand;
-        std::mt19937 gen(rand());
-        std::uniform_real_distribution<double> range_x(x_min, x_max);
-        std::uniform_real_distribution<double> range_y(y_min, y_max);
-        std::uniform_real_distribution<double> range_tm(0.0F, this->max_time_);
-
-        int i = 0;
-        std::cout << "Building RRT!\n";
         while(!this->cmplt)
         {
-            auto tm = range_tm(gen);
-            if (this->dim_3D_)
-            {
-                tm = 0;
-            }
-
-            /// Generate Random Node within permissible range 
-            output = std::make_tuple(range_x(gen), range_y(gen), tm);
-
-            /// Add the Node to the Graph 
-            this->addNode(output, 0.0F);
-
-            /// Apply Constraints, This effectively implements the RRT
-            /// and also implements kinematic constraints 
-            this->applyConstraints(this->adjacencyList_.back());
-
-            /// Check to see if the new node is within range of the destination 
-            this->checkDone();
-            i++;
-
-            //Temporary
-            if(i > node_limit_)
-                this->cmplt = true;
+            this->stepRRT();
         }
-        std::cout << "RRT Complete with " << i << " Nodes\n";
+        std::cout << "RRT Completed with: " << this->adjacencyList_.size() << " Nodes" << std::endl;
+    }
+
+    bool RRT::stepRRT()
+    {
+        Node::coordinate_t output;
+        static auto i = 0;
+        i++;
+
+        /// Ensure Random Node is within permissible range / operating region 
+        static double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
+        static double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
+        static double y_min = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
+        static double y_max = std::max(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
+        
+        /// Generate random points within the bounded space 
+        static std::random_device rand;
+        static std::mt19937 gen(rand());
+        static std::uniform_real_distribution<double> range_x(x_min, x_max);
+        static std::uniform_real_distribution<double> range_y(y_min, y_max);
+        static std::uniform_real_distribution<double> range_tm(0.0F, this->max_time_);
+
+        auto tm = range_tm(gen);
+        if (!this->dim_3D_)
+        {
+            tm = 0;
+        }
+
+        /// Generate Random Node within permissible range 
+        output = std::make_tuple(range_x(gen), range_y(gen), tm);
+
+        /// Add the Node to the Graph 
+        this->addNode(output, 0.0F);
+
+        /// Apply Constraints, This effectively implements the RRT
+        /// and also implements kinematic constraints 
+        this->applyConstraints(this->adjacencyList_.back());
+
+        /// Check to see if the new node is within range of the destination 
+        this->checkDone();
+
+        if(i > this->node_limit_)
+        {
+            std::cout << "Node Limit Reached, Stopping RRT" << std::endl;
+            this->cmplt = true;
+        }
+
+        return this->cmplt;
     }
 
  }

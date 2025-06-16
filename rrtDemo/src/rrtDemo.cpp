@@ -8,7 +8,9 @@ using namespace boost::python;
 
 namespace rrt
 {
-    VisRRT::VisRRT() : rrt_pimpl_(new RRT) {}
+    VisRRT::VisRRT() : rrt_pimpl_()
+    {      
+    }
 
     VisRRT::~VisRRT() = default;
 
@@ -20,6 +22,7 @@ namespace rrt
         rrt_pimpl_->printGraph();
     }
 }
+
 BOOST_PYTHON_MODULE(display_RRT) {
     class_<rrt::VisRRT, boost::noncopyable>("RRT")
         .def("buildRRT", &rrt::VisRRT::buildRRT)
@@ -38,7 +41,7 @@ int main() {
 
     rrt::VisRRT displayRRT;
     
-    displayRRT.rrt_pimpl_->buildRRT();
+    //displayRRT.rrt_pimpl_->buildRRT();
     //testRRT.printGraph();
 
     return 0;
