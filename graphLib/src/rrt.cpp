@@ -34,14 +34,51 @@
 
  namespace rrt 
  {
-    RRT::RRT(std::optional<std::vector<std::vector<std::vector<double>>>> _occupancy_map) : 
-                range_a_(std::make_tuple(-5.0F, -5.0F, 0.0F)),
-                range_b_(std::make_tuple(5.0F, 5.0F, 0.0F)), 
-                origin_(std::make_tuple(0.0F, -5.0F, 0.0F)),
-                dest_(std::make_tuple(5.0F, 5.0F, 0.0F)),
-                max_angle_rad_(1.05F) , max_dist_(1.0F), min_dist_(0.5F),
-                max_time_(0.0F) , dim_3D_(false), node_limit_(50)
+    RRT::RRT(const std::optional<std::vector<std::vector<std::vector<double>>>> &_occupancy_map) : 
+                occupancy_map_(_occupancy_map)
     {
+        if(_occupancy_map.has_value())
+        {
+            /// Find Min and Max of the occupancy map
+            auto min_x = std::numeric_limits<double>::max();
+            auto min_y = std::numeric_limits<double>::max();
+            auto min_t = std::numeric_limits<double>::max();
+            auto max_x = std::numeric_limits<double>::min();
+            auto max_y = std::numeric_limits<double>::min();
+            auto max_t = std::numeric_limits<double>::min();
+            /// Iterate through the outer vector (representing the x-dimension)
+            for (const auto& vector_y : _occupancy_map.value()) {
+                /// Iterate through the middle vector (representing the y-dimension)
+                for (const auto& vector_t : vector_y) {
+                    /// Iterate through the inner vector (representing the time-dimension)
+                    for (const auto& value : vector_t) {
+                        /// Update max/min values
+                        max_x = std::max(max_x, value);
+                        max_y = std::max(max_y, value);
+                        max_t = std::max(max_t, value);
+                        min_x = std::min(min_x, value);
+                        min_y = std::min(min_y, value); 
+                        min_t = std::min(min_t, value);
+                    }
+                }
+            }
+
+            /// Time cannot be negative
+            max_t = max_t - min_t;
+
+            this->setBoundaries(min_x, min_y, max_x, max_y, max_t);
+
+
+        }
+        else
+        {
+            this->setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
+            this->setOrigin(0.0F, -5.0F);
+            this->updateDestination(5.0F, 5.0F);
+            this->updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
+            this->setDim3D(false);
+            this->node_limit_ = 50;
+        }
     }
 
     RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
@@ -127,7 +164,7 @@
         this->max_angle_rad_ = _max_angle_rad;
         this->max_dist_ = _max_dist;
         this->min_dist_ = _min_dist;
-        this->max_interval = _max_interval;
+        this->max_interval_ = _max_interval;
     }
  
     void RRT::setDim3D(bool _dim_3D)
@@ -202,7 +239,7 @@
            (std::abs(dist) < this->max_dist_ || std::abs(std::abs(dist) - this->max_dist_) <= eplison) &&
            (std::abs(dist) > this->min_dist_ || std::abs(std::abs(dist) - this->min_dist_) <= eplison) &&
            (tm >= nearest->time() || (std::fabs(tm - nearest->time() <= eplison))) &&
-           (tm <= (nearest->time() + this->max_interval) || std::abs(nearest->time() + this->max_interval - this->max_interval) <= eplison)
+           (tm <= (nearest->time() + this->max_interval_) || std::abs(nearest->time() + this->max_interval_ - this->max_interval_) <= eplison)
            )
         {
             return true;
@@ -241,9 +278,9 @@
         {
             tm = nearest->time();
         }
-        else if((tm - nearest->time()) > this->max_interval)
+        else if((tm - nearest->time()) > this->max_interval_)
         {
-            tm = nearest->time() + this->max_interval;
+            tm = nearest->time() + this->max_interval_;
         }
 
         double x = (dist * std::cos(angle)) + nearest->xCrdnt();
@@ -261,12 +298,7 @@
         /// Make sure this graph isn't already complete 
         if(!this->cmplt)
         {
-            /* Insert Dummy end-node in graph
-            if (this->dest_.time() < 0.0F)
-            {
-                /// TO DO: Need to scale this as a Bar
-            }*/
-           
+            /// Insert Dummy end-node in graph
             this->addNode(this->dest_, 0.0F);
             Node *end = this->adjacencyList_.back();
 
@@ -279,7 +311,7 @@
             /// Check if we're done 
             if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
             std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
-            (end->time() - nearest->time()) <= this->max_interval)
+            (end->time() - nearest->time()) <= this->max_interval_)
             {
                 /// We're at the end, connect the end node to the nearest 
                 this->cmplt = true;

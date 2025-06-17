@@ -47,7 +47,7 @@ namespace rrt
         double max_angle_rad_; /**< Constraint: maximum permitted angle between 2 Nodes */
         double max_dist_; /**< Constraint: maximum permitted distance between 2 Nodes */
         double min_dist_; /**< Constraint: minimum permitted distance between 2 Nodes */
-        double max_interval; /**< Constraint: maximum time interval between 2 Nodes */
+        double max_interval_; /**< Constraint: maximum time interval between 2 Nodes */
         double max_time_;   /**< Constraint: maximum time */
         bool dim_3D_ = false; /**< Specifies if the RRT is 2D or 3D, initialized to 2D, no temporal */
         bool cmplt = false; /**< Flag to indicate the RRT is complete */
@@ -118,7 +118,7 @@ namespace rrt
         * @param[in]    _min_dist  minimum distance allowed between two nodes
         * @param[in]    _max_time  maximum <positive> time interval allowed between two nodes 
         */ 
-        void updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval);
+        void updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval_);
 
         /**
         * @brief   Sets the RRT to be 2D or 3D
@@ -189,10 +189,13 @@ namespace rrt
 
 
         public:
+        /**< Optional occupancy map, if provided, will be used to check for freespace */
+        std::optional<std::vector<std::vector<std::vector<double>>>> occupancy_map_; 
+
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
         */   
-        RRT(std::optional<std::vector<std::vector<std::vector<double>>>> _occupancy_map);
+        RRT(const std::optional<std::vector<std::vector<std::vector<double>>>> &_occupancy_map);
 
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
