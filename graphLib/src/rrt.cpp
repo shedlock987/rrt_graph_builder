@@ -138,14 +138,14 @@
     }
 
      
-    void setOrigin(Node::coordinate_t _origin)
+    void RRT::setOrigin(Node::coordinate_t _origin)
     {
-        //this->adjacencyList_.front()->setCrdnts(_origin);
+        this->adjacencyList_.front()->setCrdnts(_origin);
     }
  
     void RRT::setOrigin(double _origin_x, double _origin_y)
     {
-        //this->adjacencyList_.frontc()->setCrdnts(_origin_x, _origin_y, 0.0F);
+        this->adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, 0.0F);
     }
           
     void RRT::updateDestination(Node::coordinate_t _dest)
