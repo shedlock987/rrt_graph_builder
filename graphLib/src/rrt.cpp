@@ -34,98 +34,45 @@
 
  namespace rrt 
  {
-    RRT::RRT(const std::optional<std::vector<std::vector<std::vector<double>>>> &_occupancy_map) : 
+    RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map) : 
                 occupancy_map_(_occupancy_map)
     {
-        if(_occupancy_map.has_value())
-        {
-            /// Find Min and Max of the occupancy map
-            auto min_x = std::numeric_limits<double>::max();
-            auto min_y = std::numeric_limits<double>::max();
-            auto min_t = std::numeric_limits<double>::max();
-            auto max_x = std::numeric_limits<double>::min();
-            auto max_y = std::numeric_limits<double>::min();
-            auto max_t = std::numeric_limits<double>::min();
-            /// Iterate through the outer vector (representing the x-dimension)
-            for (const auto& vector_y : _occupancy_map.value()) {
-                /// Iterate through the middle vector (representing the y-dimension)
-                for (const auto& vector_t : vector_y) {
-                    /// Iterate through the inner vector (representing the time-dimension)
-                    for (const auto& value : vector_t) {
-                        /// Update max/min values
-                        max_x = std::max(max_x, value);
-                        max_y = std::max(max_y, value);
-                        max_t = std::max(max_t, value);
-                        min_x = std::min(min_x, value);
-                        min_y = std::min(min_y, value); 
-                        min_t = std::min(min_t, value);
-                    }
-                }
-            }
-
-            /// Time cannot be negative
-            max_t = max_t - min_t;
-
-            this->setBoundaries(min_x, min_y, max_x, max_y, max_t);
-        }
-        else
-        {
-            /// Defaults
-            this->setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
-            this->setOrigin(0.0F, -5.0F);
-            this->updateDestination(5.0F, 5.0F);
-            this->updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
-            this->setDim3D(false);
-            this->node_limit_ = 50;
-        }
+        
+        /// Defaults
+        this->setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
+        this->setOrigin(0.0F, -5.0F);
+        this->updateDestination(5.0F, 5.0F);
+        this->updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
+        this->setDim3D(false);
+        this->node_limit_ = 50;
     }
 
-    RRT::RRT(const std::optional<std::vector<std::vector<std::vector<double>>>> &_occupancy_map,
+    RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+            double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
             double _max_interval, double _max_time, bool _dim, int _node_limit) : 
                 occupancy_map_(_occupancy_map), 
+                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F)),
+                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time)),
                 origin_(std::make_tuple(_origin_x, _origin_y, 0.0F)),
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
     {
-        if(_occupancy_map.has_value())
-        {
-            /// Find Min and Max of the occupancy map
-            auto min_x = std::numeric_limits<double>::max();
-            auto min_y = std::numeric_limits<double>::max();
-            auto min_t = std::numeric_limits<double>::max();
-            auto max_x = std::numeric_limits<double>::min();
-            auto max_y = std::numeric_limits<double>::min();
-            auto max_t = std::numeric_limits<double>::min();
-            /// Iterate through the outer vector (representing the x-dimension)
-            for (const auto& vector_y : _occupancy_map.value()) {
-                /// Iterate through the middle vector (representing the y-dimension)
-                for (const auto& vector_t : vector_y) {
-                    /// Iterate through the inner vector (representing the time-dimension)
-                    for (const auto& value : vector_t) {
-                        /// Update max/min values
-                        max_x = std::max(max_x, value);
-                        max_y = std::max(max_y, value);
-                        max_t = std::max(max_t, value);
-                        min_x = std::min(min_x, value);
-                        min_y = std::min(min_y, value); 
-                        min_t = std::min(min_t, value);
-                    }
-                }
-            }
+    }
 
-            /// Time cannot be negative
-            max_t = max_t - min_t;
-
-            this->setBoundaries(min_x, min_y, max_x, max_y, max_t);
-        }
-        else
-        {
-            /// Defaults
-            this->setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
-        }            
+    RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+        Node::coordinate_t _range_a, Node::coordinate_t _range_b,
+        Node::coordinate_t _origin, Node::coordinate_t _dest,
+        double _max_angle_rad, double _max_dist, double _min_dist, 
+        double _max_interval, double _max_time, bool _dim, int _node_limit) :
+                occupancy_map_(_occupancy_map), 
+                range_a_(_range_a), range_b_(_range_b), 
+                origin_(_origin), dest_(_dest),
+                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
+                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
+    {
     }
 
     RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,

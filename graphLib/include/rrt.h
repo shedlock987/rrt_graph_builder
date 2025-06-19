@@ -189,36 +189,82 @@ namespace rrt
 
 
         public:
-        /**< Optional occupancy map, if provided, will be used to check for freespace */
-        std::optional<std::vector<std::vector<std::vector<double>>>> occupancy_map_; 
+        /**
+         * @brief An custom type representing a single voxel in an occupancy map.
+         *
+         * @details This is represented as a pair containing:
+         *          - coordinate_t: The coordinates of the voxel (x, y, time). Where Time is a physical dimension
+         *          - double: A double representing the size of the voxel in meters.
+         * @note This is used to represent the occupancy map in the RRT class.
+         */
+        typedef std::tuple<coordinate_t, double> occupancy_t; 
+
+        /**
+         * @brief An Occupancy Map (Grid) represented as a simple list of occupied voxels
+         *
+         * @details This is represented as a vector of occupancy_t, where each element (coordinate_t)
+         *          present in the list implies occupied space/time. Space is assumed to be free if 
+         *          not present in the list.
+         */
+        std::optional<std::vector<occupancy_t>> occupancy_map_; 
 
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
-        * @note     Automatically sets the boundaries based on the provided occupqncy map
+        * @note     ADefault constructor, Freespaceboundaries are set to reserved values
         * 
         * @param[in]    _occupancy_map  Optional occupancy map, if provided, will be used to check for freespace
         */   
-        RRT(const std::optional<std::vector<std::vector<std::vector<double>>>> &_occupancy_map);
+        RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map);
 
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
-        * @note     Automatically sets the boundaries based on the provided occupqncy map
+        * @note     DConstuctor where boundaries are explicitly defined by x and y coordinates, includes occupancy map
         * 
         * @param[in]    _occupancy_map  Optional occupancy map, if provided, will be used to check for freespace
+        * @param[in]    _range_a_x  X Coordinate Lower Left Corner of the Operating Region
+        * @param[in]    _range_a_y  Y Coordinate Lower Left Corner of the Operating Region
+        * @param[in]    _range_b_x  X Coordinate Upper Right Corner of the Operating Region
+        * @param[in]    _range_b_y  Y Coordinate Upper Right Corner of the Operating Region
+        * @param[in]    _origin_x  The x coordinate of the origin  
+        * @param[in]    _origin_y  The y coordinate of the origin 
+        * @param[in]    _dest_x  The x coordinate of the destination
+        * @param[in]    _dest_y  The y coordinate of the destination
+        * @param[in]    _max_angle_rad  Constraint: maximum permitted angle between 2 Nodes
+        * @param[in]    _max_dist Constraint: maximum permitted distance between 2 Nodes
+        * @param[in]    _min_dist Constraint: minimum permitted distance between 2 Nodes
+        * @param[in]    _max_interval Constraint: maximum time interval between 2 Nodes
+        * @param[in]    _max_time Absolute temporal boundary/limit for the RRT
+        * @param[in]    _dim     Specifies if the RRT is 2D or 3D
+        * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
+        */   
+        RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+            double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
+            double _origin_x, double _origin_y, double _dest_x, double _dest_y,
+            double _max_angle_rad, double _max_dist, double _min_dist,
+            double _max_interval, double _max_time, bool _dim, int _node_limit);
+
+       /**
+        * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
+        * @note     Constuctor where boundaries are of the type coordinate_t, incluides occupancy map
+        * 
+        * @param[in]    _occupancy_map  Optional occupancy map, if provided, will be used to check for freespace
+        * @param[in]    _range_a  Lower Left Corner of the Operating Region
+        * @param[in]    _range_b  Upper Right Corner of the Operating Region
         * @param[in]    _origin   Origin of the RRT
         * @param[in]    _dest     Destination of the RRT
         * @param[in]    _max_angle_rad  Constraint: maximum permitted angle between 2 Nodes
         * @param[in]    _max_dist Constraint: maximum permitted distance between 2 Nodes
         * @param[in]    _min_dist Constraint: minimum permitted distance between 2 Nodes
         * @param[in]    _max_interval Constraint: maximum time interval between 2 Nodes
-        * @param[in]    _max_time Constraint: maximum time interval between 2 Nodes
+        * @param[in]    _max_time Absolute temporal boundary/limit for the RRT
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
-        */   
-        RRT(const std::optional<std::vector<std::vector<std::vector<double>>>> &_occupancy_map,
-            double _origin_x, double _origin_y, double _dest_x, double _dest_y,
-            double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _node_limit);
+        */     
+        RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+        Node::coordinate_t _range_a, Node::coordinate_t _range_b,
+        Node::coordinate_t _origin, Node::coordinate_t _dest,
+        double _max_angle_rad, double _max_dist, double _min_dist, 
+        double _max_interval, double _max_time, bool _dim, int _node_limit);
 
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
@@ -232,7 +278,7 @@ namespace rrt
         * @param[in]    _max_dist Constraint: maximum permitted distance between 2 Nodes
         * @param[in]    _min_dist Constraint: minimum permitted distance between 2 Nodes
         * @param[in]    _max_interval Constraint: maximum time interval between 2 Nodes
-        * @param[in]    _max_time Constraint: maximum time interval between 2 Nodes
+        * @param[in]    _max_time Absolute temporal boundary/limit for the RRT
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */           
