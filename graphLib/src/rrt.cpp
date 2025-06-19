@@ -47,7 +47,7 @@
         this->node_limit_ = 50;
     }
 
-    RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+    RRT::RRT(std::vector<occupancy_t> _occupancy_map,
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
@@ -62,7 +62,7 @@
     {
     }
 
-    RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+    RRT::RRT(std::vector<occupancy_t> _occupancy_map,
         Node::coordinate_t _range_a, Node::coordinate_t _range_b,
         Node::coordinate_t _origin, Node::coordinate_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
@@ -101,10 +101,7 @@
     }
 
 
-    RRT::~RRT()
-    {
-
-    }
+    RRT::~RRT() = default;
 
     void RRT::setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b)
     {
@@ -169,6 +166,11 @@
     void RRT::setDim3D(bool _dim_3D)
     {
         this->dim_3D_ = _dim_3D;
+    }
+
+    void RRT::setOccupancyMap(std::vector<occupancy_t> &_occupancy_map)
+    {
+        this->occupancy_map_ = _occupancy_map;
     }
 
     Node* RRT::findNearest(Node *_handle)

@@ -61,73 +61,6 @@ namespace rrt
         Node::coordinate_t dest_; /**< Destination of the RRT */
 
         /**
-        * @brief   Sets the boundaries of where the RRT will build
-        * 
-        * @param[in]    _range_a  Lower Left Corner of the Operating Region
-        * @param[in]    _range_b  Upper Right Corner of the Operating Region
-        */
-        void setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b);
-
-        /**
-        * @brief   Sets the boundaries of where the RRT will build
-        * 
-        * @param[in]    _range_a_x  X Coordinate Lower Left Corner of the Operating Region
-        * @param[in]    _range_a_y  Y Coordinate Lower Left Corner of the Operating Region
-        * @param[in]    _range_b_x  X Coordinate Upper Right Corner of the Operating Region
-        * @param[in]    _range_b_y  Y Coordinate Upper Right Corner of the Operating Region
-        * @param[in]    _time_horizon  Maximum time horizon for the RRT
-        */
-        void setBoundaries(double _range_a_x, double _range_a_y, 
-                           double _range_b_x, double _range_b_y, double _time_horizon);
-
-        /**
-        * @brief   Updates/sets the geometric location of the origin node of the RRT
-        * 
-        * @param[in]    _origin  The coordinate of the origin  
-        */       
-        void setOrigin(Node::coordinate_t _origin);
-
-        /**
-        * @brief   Updates/sets the geometric location of the origin node of the RRT
-        * 
-        * @param[in]    _origin_x  The x coordinate of the origin  
-        * @param[in]    _origin_y  The y coordinate of the origin 
-        */     
-        void setOrigin(double _origin_x, double _origin_y);
-
-        /**
-        * @brief   Updates/sets the geometric location of the destination node of the RRT
-        * 
-        * @param[in]    _dest  The coordinate of the destination  
-        */            
-        void updateDestination(Node::coordinate_t _dest);
-
-        /**
-        * @brief   Updates/sets the geometric location of the destination node of the RRT
-        * 
-        * @param[in]    _dest_x  The x coordinate of the destination  
-        * @param[in]    _dest_y  The y coordinate of the destination
-        */ 
-        void updateDestination(double _dest_x, double _dest_y);
-
-        /**
-        * @brief   Updates/sets the geometric constraints for next-node placement
-        * 
-        * @param[in]    _max_angle_rad  maximum angle allowed between two nodes in radians
-        * @param[in]    _max_dist  maximum distance allowed between two nodes
-        * @param[in]    _min_dist  minimum distance allowed between two nodes
-        * @param[in]    _max_time  maximum <positive> time interval allowed between two nodes 
-        */ 
-        void updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval_);
-
-        /**
-        * @brief   Sets the RRT to be 2D or 3D
-        * 
-        * @param[in]    _dim_3D  If true, the RRT will be 3D, otherwise it will be 2D  
-        */   
-        void setDim3D(bool _dim_3D);
-
-        /**
         * @brief   Searches the adjacency list for the nearest node to the given node
         * 
         * @param[in]    _handle  The given node we want to reference the search against 
@@ -195,7 +128,7 @@ namespace rrt
          * @details This is represented as a pair containing:
          *          - coordinate_t: The coordinates of the voxel (x, y, time). Where Time is a physical dimension
          *          - double: A double representing the size of the voxel in meters.
-         * @note This is used to represent the occupancy map in the RRT class.
+         * @note    The coordinate is at the geometric center of the voxel/grid cell.
          */
         typedef std::tuple<coordinate_t, double> occupancy_t; 
 
@@ -204,7 +137,7 @@ namespace rrt
          *
          * @details This is represented as a vector of occupancy_t, where each element (coordinate_t)
          *          present in the list implies occupied space/time. Space is assumed to be free if 
-         *          not present in the list.
+         *          not present in the list. 
          */
         std::optional<std::vector<occupancy_t>> occupancy_map_; 
 
@@ -237,7 +170,7 @@ namespace rrt
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */   
-        RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+        RRT(std::vector<occupancy_t> _occupancy_map,
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
@@ -260,7 +193,7 @@ namespace rrt
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */     
-        RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map,
+        RRT(std::vector<occupancy_t> _occupancy_map,
         Node::coordinate_t _range_a, Node::coordinate_t _range_b,
         Node::coordinate_t _origin, Node::coordinate_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
@@ -332,6 +265,81 @@ namespace rrt
         * @return   Returns true if the RRT is complete, false otherwise
         */        
         bool stepRRT();
+
+                /**
+        * @brief   Sets the boundaries of where the RRT will build
+        * 
+        * @param[in]    _range_a  Lower Left Corner of the Operating Region
+        * @param[in]    _range_b  Upper Right Corner of the Operating Region
+        */
+        void setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b);
+
+        /**
+        * @brief   Sets the boundaries of where the RRT will build
+        * 
+        * @param[in]    _range_a_x  X Coordinate Lower Left Corner of the Operating Region
+        * @param[in]    _range_a_y  Y Coordinate Lower Left Corner of the Operating Region
+        * @param[in]    _range_b_x  X Coordinate Upper Right Corner of the Operating Region
+        * @param[in]    _range_b_y  Y Coordinate Upper Right Corner of the Operating Region
+        * @param[in]    _time_horizon  Maximum time horizon for the RRT
+        */
+        void setBoundaries(double _range_a_x, double _range_a_y, 
+                           double _range_b_x, double _range_b_y, double _time_horizon);
+
+        /**
+        * @brief   Updates/sets the geometric location of the origin node of the RRT
+        * 
+        * @param[in]    _origin  The coordinate of the origin  
+        */       
+        void setOrigin(Node::coordinate_t _origin);
+
+        /**
+        * @brief   Updates/sets the geometric location of the origin node of the RRT
+        * 
+        * @param[in]    _origin_x  The x coordinate of the origin  
+        * @param[in]    _origin_y  The y coordinate of the origin 
+        */     
+        void setOrigin(double _origin_x, double _origin_y);
+
+        /**
+        * @brief   Updates/sets the geometric location of the destination node of the RRT
+        * 
+        * @param[in]    _dest  The coordinate of the destination  
+        */            
+        void updateDestination(Node::coordinate_t _dest);
+
+        /**
+        * @brief   Updates/sets the geometric location of the destination node of the RRT
+        * 
+        * @param[in]    _dest_x  The x coordinate of the destination  
+        * @param[in]    _dest_y  The y coordinate of the destination
+        */ 
+        void updateDestination(double _dest_x, double _dest_y);
+
+        /**
+        * @brief   Updates/sets the geometric constraints for next-node placement
+        * 
+        * @param[in]    _max_angle_rad  maximum angle allowed between two nodes in radians
+        * @param[in]    _max_dist  maximum distance allowed between two nodes
+        * @param[in]    _min_dist  minimum distance allowed between two nodes
+        * @param[in]    _max_time  maximum <positive> time interval allowed between two nodes 
+        */ 
+        void updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval_);
+
+        /**
+        * @brief   Sets the RRT to be 2D or 3D
+        * 
+        * @param[in]    _dim_3D  If true, the RRT will be 3D, otherwise it will be 2D  
+        */   
+        void setDim3D(bool _dim_3D);
+
+        /**
+        * @brief   Sets the occupancy map for the RRT
+        * @note    if using the stepRRT function, the occupancy map must be set before the first call
+        * 
+        * @param[in]    _occupancy_map  Optional occupancy map, if prov
+        */ 
+        void setOccupancyMap(std::vector<occupancy_t> &_occupancy_map);
     };
 }
 
