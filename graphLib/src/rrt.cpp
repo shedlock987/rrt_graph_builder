@@ -327,6 +327,34 @@
         }  
     }
 
+    bool RRT::isOccupied(Node *_handle)
+    {
+        if(!this->occupancy_map_.has_value())
+        {
+            return false; /// No occupancy map provided, assume not occupied
+        }
+
+        for(const auto &occupancy : this->occupancy_map_.value())
+        {
+
+            auto half_width = occupancy.second / 2.0F;
+            auto x_min = std::get<0>(occupancy.first) - half_width;
+            auto x_max = std::get<0>(occupancy.first) + half_width;
+            auto y_min = std::get<1>(occupancy.first) - half_width;
+            auto y_max = std::get<1>(occupancy.first) + half_width;
+            auto time_min = std::get<2>(occupancy.first);
+            auto time_max = std::get<2>(occupancy.first) + this->max_interval_;
+
+            if(_handle->xCrdnt() >= x_min && _handle->xCrdnt() <= x_max &&
+               _handle->yCrdnt() >= y_min && _handle->yCrdnt() <= y_max &&
+               _handle->time() >= time_min && _handle->time() <= time_max)
+            {
+                return true; /// Node is occupied
+            }
+        }
+        return false; /// Node is not occupied
+    }
+
     void RRT::buildRRT()
     {
         Node::coordinate_t output;
@@ -363,15 +391,28 @@
             tm = 0;
         }
 
-        /// Generate Random Node within permissible range 
-        output = std::make_tuple(range_x(gen), range_y(gen), tm);
+        /// Looping to ensure step call results in a new node in non-occupied space
+        auto occupied = true;
+        while(occupied)
+        {
+            /// Generate Random Node within permissible range 
+            output = std::make_tuple(range_x(gen), range_y(gen), tm);
 
-        /// Add the Node to the Graph 
-        this->addNode(output, 0.0F);
+            /// Add the Node to the Graph 
+            this->addNode(output, 0.0F);
 
-        /// Apply Constraints, This effectively implements the RRT
-        /// and also implements kinematic constraints 
-        this->applyConstraints(this->adjacencyList_.back());
+            /// Apply Constraints, This effectively implements the RRT
+            /// and also implements kinematic constraints 
+            this->applyConstraints(this->adjacencyList_.back());
+
+            /// Check if the new node is in occupied space
+            occupied = this->isOccupied(this->adjacencyList_.back());
+            if(occupied)
+            {
+                /// If the node is occupied, delete it and try again
+                this->deleteNode(this->adjacencyList_.back());
+            }
+        }
 
         /// Check to see if the new node is within range of the destination 
         this->checkDone();

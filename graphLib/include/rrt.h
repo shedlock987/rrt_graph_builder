@@ -119,6 +119,14 @@ namespace rrt
         * */
         void checkDone();
 
+        /**
+        * @brief   Compares a node (coordinates) against the occupancy map to determine if it is occupied
+        * 
+        * @param[in]    _handle  The node (coordinates) we want
+        * @return   Returns true if the node is occupied, false otherwise
+        */
+        bool isOccupied(Node *_handle);
+
 
 
         public:
@@ -128,9 +136,9 @@ namespace rrt
          * @details This is represented as a pair containing:
          *          - coordinate_t: The coordinates of the voxel (x, y, time). Where Time is a physical dimension
          *          - double: A double representing the size of the voxel in meters.
-         * @note    The coordinate is at the geometric center of the voxel/grid cell.
+         * @note    The coordinate is at the 2D (x,y) geometric center of the grid cell, and extends vertical by 1 unit time
          */
-        typedef std::tuple<coordinate_t, double> occupancy_t; 
+        typedef std::pair<coordinate_t, double> occupancy_t; 
 
         /**
          * @brief An Occupancy Map (Grid) represented as a simple list of occupied voxels
