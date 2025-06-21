@@ -79,7 +79,9 @@ namespace rrt
                 double _max_time, bool _dim_3D, int _node_limit);
             void setOccupancyMap(std::vector<std::vector<double>> _occp_coords, 
                                  std::vector<double> _occp_widths, 
-                                 std::vector<double> _occp_interval); 
+                                 std::vector<double> _occp_interval);
+            void setOccupancyMap(std::vector<RRT::occupancy_t> &_occupancy_map);
+            int getNodeCount();
         private:
         std::unique_ptr<RRT> rrt_; /**< Pointer to the RRT object */
             

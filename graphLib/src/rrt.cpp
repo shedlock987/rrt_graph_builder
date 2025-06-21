@@ -372,6 +372,12 @@
         static auto i = 0;
         i++;
 
+        if(this->cmplt)
+        {
+            std::cout << "RRT is already complete, no need to step." << std::endl;
+            return this->cmplt;
+        }
+
         /// Ensure Random Node is within permissible range / operating region 
         static double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
         static double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));

@@ -77,6 +77,10 @@ namespace rrt
         /// Set the occupancy map in the RRT instance
         rrt_->setOccupancyMap(occupancy_map);
     }
+
+    int VisRRT::getNodeCount() { 
+        return this->rrt_->adjacencyList_.size(); 
+    }
 }
 
 BOOST_PYTHON_MODULE(display_RRT) {
@@ -84,7 +88,8 @@ BOOST_PYTHON_MODULE(display_RRT) {
         .def("buildRRT", &rrt::VisRRT::buildRRT)
         .def("stepRRT", &rrt::VisRRT::stepRRT)
         .def("initializeRRT", &rrt::VisRRT::initializeRRT)
-        .def("setOccupancyMap", &rrt::VisRRT::setOccupancyMap);
+        .def("setOccupancyMap", static_cast<void (rrt::VisRRT::*)(std::vector<std::vector<double>>, std::vector<double>, std::vector<double>)>(&rrt::VisRRT::setOccupancyMap))
+        .def("getNodeCount", &rrt::VisRRT::getNodeCount);
 }
 
 int main() {
@@ -93,7 +98,7 @@ int main() {
     rrt::Node::coordinate_t upperRight(5.0F, 5.00, 0.0F);
     rrt::Graph testGraph(3.0F,3.0F);
 
-    rrt::RRT testRRT(lowerLeft, upperRight, origin, upperRight, 1.05F, 1.0F, 0.5F, 0.2F, 10.0F, false, 50);
+    rrt::RRT testRRT(lowerLeft, upperRight, origin, upperRight, 1.05F, 1.0F, 0.5F, 0.2F, 10.0F, false, 1000);
     
     testRRT.buildRRT();
 
@@ -117,8 +122,24 @@ int main() {
 
 
     rrt::VisRRT displayRRT(-5.0F, 0.0F, 5.0F, 5.0F, 0.0F, 0.0F, 5.0F, 5.0F, 1.05F, 1.0F, 0.5F, 2.0F, 10.0F, false, 10000, matrix, width, interval);
+    rrt::VisRRT steptestRRT(-5.0F, 0.0F, 5.0F, 5.0F, 0.0F, 0.0F, 5.0F, 5.0F, 1.05F, 1.0F, 0.5F, 2.0F, 10.0F, false, 10000, matrix, width, interval);
     
     displayRRT.buildRRT();
+    //displayRRT.getNodeCount();
+
+    displayRRT.initializeRRT(
+        -5.0F, 0.0F, 5.0F, 5.0F, 
+        0.0F, 0.0F, 5.0F, 5.0F, 
+        1.05F, 1.0F, 0.5F, 2.0F, 
+        10.0F, false, 10000);
+
+
+
+    while(!steptestRRT.stepRRT())
+    {
+        // Continue stepping through the RRT until it is complete
+    }
+    std::cout << "RRT Completed with: " << steptestRRT.getNodeCount() <<  " Nodes" << std::endl;
     //testRRT.printGraph();
 
     return 0;
