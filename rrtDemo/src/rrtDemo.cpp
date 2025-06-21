@@ -4,6 +4,7 @@
 #include "rrt.h"
 #include <iostream>
 #include <boost/python.hpp>
+#include <vector>
 
 using namespace boost::python;
 
@@ -64,9 +65,10 @@ namespace rrt
         
         std::vector<RRT::occupancy_t> occupancy_map;
         for (size_t i = 0; i < _occp_coords.size(); ++i) {
+            /*
             if (_occp_coords[i].size() != 2) {
                 throw std::invalid_argument("Invalid occupancy map data");
-            }
+            } */
             RRT::occupancy_t occ;
             occ.first = std::make_tuple(_occp_coords[i][0], _occp_coords[i][1], _occp_interval[i]);
             occ.second = _occp_widths[i];
@@ -95,9 +97,28 @@ int main() {
     
     testRRT.buildRRT();
 
-    //rrt::VisRRT displayRRT;
+    // Define the dimensions of the 2D vector
+    int num_rows = 4; // Example: 3 rows
+    int num_cols = 4; // Example: 4 columns
+
+    // Create the 2D vector
+    std::vector<std::vector<double>> matrix(num_rows, std::vector<double>(num_cols));
+    std::vector<double> width = {0.2, 0.2, 0.2, 0.2};
+    std::vector<double> interval = {0.2, 0.2, 0.2, 0.2};
+
+    // Populate the matrix with linearly increasing values from 1 to 5
+    double current_value = 1.0;
+    for (int i = 0; i < num_rows; ++i) {
+        for (int j = 0; j < num_cols; ++j) {
+            matrix[i][j] = current_value;
+            current_value += (5.0 - 1.0) / (num_rows * num_cols - 1); // Adjust increment for linear increase to 5
+        }
+    }
+
+
+    rrt::VisRRT displayRRT(-5.0F, 0.0F, 5.0F, 5.0F, 0.0F, 0.0F, 5.0F, 5.0F, 1.05F, 1.0F, 0.5F, 2.0F, 10.0F, false, 10000, matrix, width, interval);
     
-    //displayRRT.rrt_pimpl_->buildRRT();
+    displayRRT.buildRRT();
     //testRRT.printGraph();
 
     return 0;
