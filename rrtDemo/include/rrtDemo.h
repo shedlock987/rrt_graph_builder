@@ -41,8 +41,26 @@ namespace rrt
         public:
             /**
              * @brief   Constructs a new VisRRT object
+             * @note    Default constructor, initializes the RRT with default parameters
+             *          - range_a_x: -5.0, range_a_y: 0.0
+             *          - range_b_x: 5.0, range_b_y: 5.0            
              */
             VisRRT();
+
+            /**
+             * @brief   Constructs a new VisRRT object
+             * @note    Primary constructor used in the Python interface       
+             */
+            VisRRT(double _range_a_x, double _range_a_y, 
+                double _range_b_x, double _range_b_y,
+                double _origin_x, double _origin_y, 
+                double _dest_x, double _dest_y,
+                double _max_angle_rad, double _max_dist, 
+                double _min_dist, double _max_interval,
+                double _max_time, bool _dim_3D, int _node_limit,
+                std::vector<std::vector<double>> _occp_coords, 
+                std::vector<double> _occp_widths,  
+                std::vector<double> _occp_interval);
 
             /**
              * @brief   Destroys the VisRRT object
@@ -50,9 +68,20 @@ namespace rrt
             ~VisRRT();
 
             void buildRRT();
-            void printGraph();
-            std::unique_ptr<RRT> rrt_pimpl_; /**< Pointer to the RRT object */
+            bool stepRRT();
+            void initializeRRT(
+                double _range_a_x, double _range_a_y, 
+                double _range_b_x, double _range_b_y,
+                double _origin_x, double _origin_y, 
+                double _dest_x, double _dest_y,
+                double _max_angle_rad, double _max_dist, 
+                double _min_dist, double _max_interval,
+                double _max_time, bool _dim_3D, int _node_limit);
+            void setOccupancyMap(std::vector<std::vector<double>> _occp_coords, 
+                                 std::vector<double> _occp_widths, 
+                                 std::vector<double> _occp_interval); 
         private:
+        std::unique_ptr<RRT> rrt_; /**< Pointer to the RRT object */
             
 
     };
