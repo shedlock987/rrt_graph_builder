@@ -31,6 +31,7 @@
  
 
  #include "rrt.h"
+ 
 
  namespace rrt 
  {
@@ -39,12 +40,12 @@
     {
         
         /// Defaults
-        this->setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
-        this->setOrigin(0.0F, -5.0F);
-        this->updateDestination(5.0F, 5.0F);
-        this->updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
-        this->setDim3D(false);
-        this->node_limit_ = 50;
+        setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
+        setOrigin(0.0F, -5.0F);
+        updateDestination(5.0F, 5.0F);
+        updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
+        setDim3D(false);
+        node_limit_ = 50;
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
@@ -105,72 +106,72 @@
 
     void RRT::setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b)
     {
-        this->range_a_ = _range_a;
-        this->range_b_ = _range_b;
-        this->max_time_ = std::get<2>(_range_b); // Assuming the time component is in the z-axis
+        range_a_ = _range_a;
+        range_b_ = _range_b;
+        max_time_ = std::get<2>(_range_b); // Assuming the time component is in the z-axis
         if(std::get<2>(_range_a) <= 0.0F)
         {
-            this->setDim3D(true); // If the z-axis is not zero, we are in 3D
+            setDim3D(true); // If the z-axis is not zero, we are in 3D
         }
         else
         {
-            this->setDim3D(false); // Otherwise, we are in 2D
+            setDim3D(false); // Otherwise, we are in 2D
         }
     }
 
     void RRT::setBoundaries(double _range_a_x, double _range_a_y, 
                            double _range_b_x, double _range_b_y, double _time_horizon)
     {
-        this->max_time_ = _time_horizon;
-        this->range_a_ = std::make_tuple(_range_a_x, _range_a_y, 0.0F);
-        this->range_b_ = std::make_tuple(_range_b_x, _range_b_y, _time_horizon);
+        max_time_ = _time_horizon;
+        range_a_ = std::make_tuple(_range_a_x, _range_a_y, 0.0F);
+        range_b_ = std::make_tuple(_range_b_x, _range_b_y, _time_horizon);
         if(_time_horizon <= 0.0F)
         {
-            this->setDim3D(true); // If the z-axis is not zero, we are in 3D
+            setDim3D(true); // If the z-axis is not zero, we are in 3D
         }
         else
         {
-            this->setDim3D(false); // Otherwise, we are in 2D
+            setDim3D(false); // Otherwise, we are in 2D
         }
     }
 
      
     void RRT::setOrigin(Node::coordinate_t _origin)
     {
-        this->adjacencyList_.front()->setCrdnts(_origin);
+        adjacencyList_.front()->setCrdnts(_origin);
     }
  
     void RRT::setOrigin(double _origin_x, double _origin_y)
     {
-        this->adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, 0.0F);
+        adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, 0.0F);
     }
           
     void RRT::updateDestination(Node::coordinate_t _dest)
     {
-        this->dest_ = _dest;
+        dest_ = _dest;
     }
 
     void RRT::updateDestination(double _dest_x, double _dest_y)
     {
-        this->dest_ = std::make_tuple(_dest_x, _dest_y, this->max_time_);
+        dest_ = std::make_tuple(_dest_x, _dest_y, max_time_);
     }
 
     void RRT::updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval)
     {
-        this->max_angle_rad_ = _max_angle_rad;
-        this->max_dist_ = _max_dist;
-        this->min_dist_ = _min_dist;
-        this->max_interval_ = _max_interval;
+        max_angle_rad_ = _max_angle_rad;
+        max_dist_ = _max_dist;
+        min_dist_ = _min_dist;
+        max_interval_ = _max_interval;
     }
  
     void RRT::setDim3D(bool _dim_3D)
     {
-        this->dim_3D_ = _dim_3D;
+        dim_3D_ = _dim_3D;
     }
 
     void RRT::setOccupancyMap(std::vector<occupancy_t> &_occupancy_map)
     {
-        this->occupancy_map_ = _occupancy_map;
+        occupancy_map_ = _occupancy_map;
     }
 
     Node* RRT::findNearest(Node *_handle)
@@ -181,9 +182,9 @@
         double min = DBL_MAX;
 
         /// Need to optimize 
-        for(const auto &iter : this->adjacencyList_)
+        for(const auto &iter : adjacencyList_)
         {
-            temp = this->calcDist(_handle, iter);
+            temp = calcDist(_handle, iter);
 
             /// Make sure we're not comparing the handle to itself 
             if(temp < min && _handle != iter)
@@ -197,7 +198,7 @@
                 i++;
             }
         }
-        return this->adjacencyList_.at(idx);
+        return adjacencyList_.at(idx);
     }
 
     double RRT::calcDist(Node *_handle, Node *_ref)
@@ -230,17 +231,17 @@
 
     bool RRT::checkConstraints(Node *_handle)
     {
-        Node *nearest = this->findNearest(_handle);
-        double dist = this->calcDist(_handle, nearest);
-        double angle = this->calcAngle(_handle, nearest);
+        Node *nearest = findNearest(_handle);
+        double dist = calcDist(_handle, nearest);
+        double angle = calcAngle(_handle, nearest);
         double tm = _handle->time();
         auto eplison = 0.0001F;
 
-        if((std::abs(angle) < this->max_angle_rad_ || std::abs(std::abs(angle) - this->max_angle_rad_) <= eplison) &&
-           (std::abs(dist) < this->max_dist_ || std::abs(std::abs(dist) - this->max_dist_) <= eplison) &&
-           (std::abs(dist) > this->min_dist_ || std::abs(std::abs(dist) - this->min_dist_) <= eplison) &&
+        if((std::abs(angle) < max_angle_rad_ || std::abs(std::abs(angle) - max_angle_rad_) <= eplison) &&
+           (std::abs(dist) < max_dist_ || std::abs(std::abs(dist) - max_dist_) <= eplison) &&
+           (std::abs(dist) > min_dist_ || std::abs(std::abs(dist) - min_dist_) <= eplison) &&
            (tm >= nearest->time() || (std::fabs(tm - nearest->time() <= eplison))) &&
-           (tm <= (nearest->time() + this->max_interval_) || std::abs(nearest->time() + this->max_interval_ - this->max_interval_) <= eplison)
+           (tm <= (nearest->time() + max_interval_) || std::abs(nearest->time() + max_interval_ - max_interval_) <= eplison)
            )
         {
             return true;
@@ -253,25 +254,25 @@
 
     void RRT::applyConstraints(Node *_handle)
     {
-        Node *nearest = this->findNearest(_handle);
-        double dist = this->calcDist(_handle, nearest);
-        double angle = this->calcAngle(_handle, nearest);
+        Node *nearest = findNearest(_handle);
+        double dist = calcDist(_handle, nearest);
+        double angle = calcAngle(_handle, nearest);
         double tm = _handle->time();
-        bool cnstrnts_met = this->checkConstraints(_handle);
+        bool cnstrnts_met = checkConstraints(_handle);
 
         /// Apply Scaling Constraints 
-        if(std::abs(angle) > this->max_angle_rad_)
+        if(std::abs(angle) > max_angle_rad_)
         {
-            angle = (angle / std::abs(angle)) * this->max_angle_rad_;
+            angle = (angle / std::abs(angle)) * max_angle_rad_;
         }
 
-        if(std::abs(dist) > this->max_dist_)
+        if(std::abs(dist) > max_dist_)
         {
-            dist = (dist / std::abs(dist)) * this->max_dist_;
+            dist = (dist / std::abs(dist)) * max_dist_;
         }
-        else if (std::abs(dist) < this->min_dist_)
+        else if (std::abs(dist) < min_dist_)
         {
-            dist = (dist / std::abs(dist)) * this->min_dist_;
+            dist = (dist / std::abs(dist)) * min_dist_;
         }
 
         /// Need to ensure time never runs backwards 
@@ -279,9 +280,9 @@
         {
             tm = nearest->time();
         }
-        else if((tm - nearest->time()) > this->max_interval_)
+        else if((tm - nearest->time()) > max_interval_)
         {
-            tm = nearest->time() + this->max_interval_;
+            tm = nearest->time() + max_interval_;
         }
 
         double x = (dist * std::cos(angle)) + nearest->xCrdnt();
@@ -291,50 +292,50 @@
         _handle->setCrdnts(x,y,tm);
         _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
 
-        cnstrnts_met = this->checkConstraints(_handle);
+        cnstrnts_met = checkConstraints(_handle);
     }
 
     void RRT::checkDone()
     {
         /// Make sure this graph isn't already complete 
-        if(!this->cmplt)
+        if(!cmplt)
         {
             /// Insert Dummy end-node in graph
-            this->addNode(this->dest_, 0.0F);
-            Node *end = this->adjacencyList_.back();
+            addNode(dest_, 0.0F);
+            Node *end = adjacencyList_.back();
 
             /// Find the nearest Node to end 
-            Node *nearest = this->findNearest(end);
+            Node *nearest = findNearest(end);
 
             /// Ensure our dummy end node is on the same time as the nearest node
             end->setCrdnts(end->xCrdnt(), end->yCrdnt(), nearest->time());
 
             /// Check if we're done 
-            if(std::abs(this->calcDist(end, nearest)) < this->max_dist_ &&
-            std::abs(this->calcAngle(end, nearest)) < this->max_angle_rad_ &&
-            (end->time() - nearest->time()) <= this->max_interval_)
+            if(std::abs(calcDist(end, nearest)) < max_dist_ &&
+            std::abs(calcAngle(end, nearest)) < max_angle_rad_ &&
+            (end->time() - nearest->time()) <= max_interval_)
             {
                 /// We're at the end, connect the end node to the nearest 
-                this->cmplt = true;
-                this->addEdge(nearest, end);
-                this->endNode = end;
+                cmplt = true;
+                addEdge(nearest, end);
+                endNode = end;
             }
             else
             {
                 /// Destroy dummy end node
-                this->deleteNode(end);
+                deleteNode(end);
             }
         }  
     }
 
     bool RRT::isOccupied(Node *_handle)
     {
-        if(!this->occupancy_map_.has_value())
+        if(!occupancy_map_.has_value())
         {
             return false; /// No occupancy map provided, assume not occupied
         }
 
-        for(const auto &occupancy : this->occupancy_map_.value())
+        for(const auto &occupancy : occupancy_map_.value())
         {
 
             auto half_width = occupancy.second / 2.0F;
@@ -343,7 +344,7 @@
             auto y_min = std::get<1>(occupancy.first) - half_width;
             auto y_max = std::get<1>(occupancy.first) + half_width;
             auto time_min = std::get<2>(occupancy.first);
-            auto time_max = std::get<2>(occupancy.first) + this->max_interval_;
+            auto time_max = std::get<2>(occupancy.first) + max_interval_;
 
             if(_handle->xCrdnt() >= x_min && _handle->xCrdnt() <= x_max &&
                _handle->yCrdnt() >= y_min && _handle->yCrdnt() <= y_max &&
@@ -359,11 +360,11 @@
     {
         Node::coordinate_t output;
 
-        while(!this->cmplt)
+        while(!cmplt)
         {
-            this->stepRRT();
+            stepRRT();
         }
-        std::cout << "RRT Completed with: " << this->adjacencyList_.size() << " Nodes" << std::endl;
+        std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes" << std::endl;
     }
 
     bool RRT::stepRRT()
@@ -372,27 +373,27 @@
         static auto i = 0;
         i++;
 
-        if(this->cmplt)
+        if(cmplt)
         {
             std::cout << "RRT is already complete, no need to step." << std::endl;
-            return this->cmplt;
+            return cmplt;
         }
 
         /// Ensure Random Node is within permissible range / operating region 
-        static double x_min = std::min(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
-        static double x_max = std::max(std::get<0>(this->range_a_), std::get<0>(this->range_b_));
-        static double y_min = std::min(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
-        static double y_max = std::max(std::get<1>(this->range_a_), std::get<1>(this->range_b_));
+        static double x_min = std::min(std::get<0>(range_a_), std::get<0>(range_b_));
+        static double x_max = std::max(std::get<0>(range_a_), std::get<0>(range_b_));
+        static double y_min = std::min(std::get<1>(range_a_), std::get<1>(range_b_));
+        static double y_max = std::max(std::get<1>(range_a_), std::get<1>(range_b_));
         
         /// Generate random points within the bounded space 
         static std::random_device rand;
         static std::mt19937 gen(rand());
         static std::uniform_real_distribution<double> range_x(x_min, x_max);
         static std::uniform_real_distribution<double> range_y(y_min, y_max);
-        static std::uniform_real_distribution<double> range_tm(0.0F, this->max_time_);
+        static std::uniform_real_distribution<double> range_tm(0.0F, max_time_);
 
         auto tm = range_tm(gen);
-        if (!this->dim_3D_)
+        if (!dim_3D_)
         {
             tm = 0;
         }
@@ -405,31 +406,31 @@
             output = std::make_tuple(range_x(gen), range_y(gen), tm);
 
             /// Add the Node to the Graph 
-            this->addNode(output, 0.0F);
+            addNode(output, 0.0F);
 
             /// Apply Constraints, This effectively implements the RRT
             /// and also implements kinematic constraints 
-            this->applyConstraints(this->adjacencyList_.back());
+            applyConstraints(adjacencyList_.back());
 
             /// Check if the new node is in occupied space
-            occupied = this->isOccupied(this->adjacencyList_.back());
+            occupied = isOccupied(adjacencyList_.back());
             if(occupied)
             {
                 /// If the node is occupied, delete it and try again
-                this->deleteNode(this->adjacencyList_.back());
+                deleteNode(adjacencyList_.back());
             }
         }
 
         /// Check to see if the new node is within range of the destination 
-        this->checkDone();
+        checkDone();
 
-        if(i > this->node_limit_)
+        if(i > node_limit_)
         {
             std::cout << "Node Limit Reached, Stopping RRT" << std::endl;
-            this->cmplt = true;
+            cmplt = true;
         }
 
-        return this->cmplt;
+        return cmplt;
     }
 
  }
