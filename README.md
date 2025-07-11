@@ -17,6 +17,16 @@ This RRT Implementation optionally allows for the graph to be built in 3D space.
 *To increase optimality I did not go with some large 3D data structure to represent an occupancy grid because this would effectively nullify the efficiencies of using an adjacency list for the RRT.* Here the occupancy grid (if desired) is a simple list of coordinates and the same coordinate custom type used in the RRT is also employed here. Appended to the coordinate is length/width/time-interval data. The idea here is you can generate a "cube" or a voxel of occupancy. and every element in the occupancy *"list"* can have its own unique dimensional constraint. This makes the occupancy list/data structure more sparse and thus more efficient.
 ![OccupancyMap](doc/OccupancyMap.jpg)
 
+# To-Do
+**FUNCTIONAL**
+1. When doing a 3D/temporal graph, need to update/add an additional constraint to ensure that the graph always builds with an "upward" gradient; wherein the upward gradient is proportional to the robot's current velocity (assumed to be constant). This is especially needed for areas of the RRT where there are no obstacles present (because since we're messing with time.... we don’t want to break the laws of physics)
+
+**NON_FUNCTIONAL**
+1. Need more expansive testing, only really covered the basic graph functions, nothing in the way of the actually RRT methods has been rigorously tested
+2. Need to finish the python matplotlib to get both a good visualization and gif
+
+
+
 # Getting Started
 These instructions will help you generate the necessary documentation for using this package, and list the required dependencies.
 
