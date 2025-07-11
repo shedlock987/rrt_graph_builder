@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 # Find Python and Boost.Python
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 find_package(Boost COMPONENTS python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR} REQUIRED)
+message(STATUS "Found Boost Python: ${Boost_LIBRARIES}")
 
 add_executable(rrtDemo src/rrtDemo.cpp)
 target_include_directories(rrtDemo PRIVATE ${Boost_INCLUDE_DIRS} ${Python3_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
