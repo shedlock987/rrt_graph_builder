@@ -45,10 +45,10 @@ namespace rrt
     class Node
         {
             public: 
-            typedef std::tuple<double, double, double> coordinate_t; /**< custom type used for 2D eculidan coordinate with a time component */
-              
-            std::vector<Node *> fwd_node_;
+                typedef std::tuple<double, double, double> coordinate_t; /**< custom type used for 2D eculidan coordinate with a time component */
             
+                std::vector<Node *> fwd_node_; /**< Public for testing, Vector of forward connected Nodes/Vertices */
+                
                 /**
                  * @brief   Constructs a new Node/Vertex
                  */   
@@ -185,13 +185,10 @@ namespace rrt
                  */
                 void setBackEdgeWeight(double _back_edge_weight);
 
-
                 private:
                 Node* back_node_; /**< Pointer to the backward connected Node/Vertex aka back-edge*/
                 coordinate_t crdnts_; /**< Coordinates of the Node/Vertex */
                 double back_edge_weight_; /**< Weight of the backward-connected Edge */
-                
-                friend class Graph;
         };
 
 class Graph {

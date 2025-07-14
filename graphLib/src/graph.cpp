@@ -317,7 +317,7 @@ namespace rrt
     {
 
         auto idx = getIndex(_handle);
-        return adjacencyList_.at(idx)->crdnts_;
+        return adjacencyList_.at(idx)->Crdnts();
     }
   
     Graph::~Graph()

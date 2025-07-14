@@ -37,15 +37,13 @@ namespace rrt
         virtual void TearDown()
         {
         }
-
-        friend class Graph;
     };
 
     TEST_F(Graph_test, ADDNODE_CREATE_WITH_BASE_CONSTRUCTOR_TEST)
     {
         underTest_->addNode(std::make_tuple(4.1, 5, 0), 2.2);
         EXPECT_EQ(underTest_->adjacencyList_.size(), 2);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->xCrdnt(),10.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->xCrdnt(),10.0); 
         EXPECT_EQ(underTest_->adjacencyList_.front()->yCrdnt(),10.0);
         EXPECT_EQ(underTest_->adjacencyList_.front()->time(),0);
         EXPECT_EQ(underTest_->adjacencyList_.front()->backEdgeWeight(),0);

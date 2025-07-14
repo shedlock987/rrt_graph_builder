@@ -104,7 +104,7 @@ int main() {
         10000                  // _node_limit
     );
 
-    rrt::VisRRT testViz();
+    rrt::VisRRT testViz;
 
     myRRT.buildRRT();
 
