@@ -109,7 +109,8 @@
         range_a_ = _range_a;
         range_b_ = _range_b;
         max_time_ = std::get<2>(_range_b); // Assuming the time component is in the z-axis
-        if(std::get<2>(_range_a) > 0.0F)
+        auto start_time = std::get<2>(_range_a);
+        if(start_time >= 0.0F && max_time_ > start_time)
         {
             setDim3D(true); // If the z-axis is not zero, we are in 3D
         }
