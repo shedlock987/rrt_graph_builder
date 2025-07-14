@@ -109,7 +109,7 @@
         range_a_ = _range_a;
         range_b_ = _range_b;
         max_time_ = std::get<2>(_range_b); // Assuming the time component is in the z-axis
-        if(std::get<2>(_range_a) <= 0.0F)
+        if(std::get<2>(_range_a) > 0.0F)
         {
             setDim3D(true); // If the z-axis is not zero, we are in 3D
         }
@@ -125,7 +125,7 @@
         max_time_ = _time_horizon;
         range_a_ = std::make_tuple(_range_a_x, _range_a_y, 0.0F);
         range_b_ = std::make_tuple(_range_b_x, _range_b_y, _time_horizon);
-        if(_time_horizon <= 0.0F)
+        if(_time_horizon > 0.0F)
         {
             setDim3D(true); // If the z-axis is not zero, we are in 3D
         }
