@@ -350,10 +350,10 @@
                _handle->yCrdnt() >= y_min && _handle->yCrdnt() <= y_max &&
                _handle->time() >= time_min && _handle->time() <= time_max)
             {
-                return true; /// Node is occupied
+                return true; /// Node is in occupied space
             }
         }
-        return false; /// Node is not occupied
+        return false; /// Node is not in occupied space
     }
 
     void RRT::buildRRT()
@@ -413,11 +413,14 @@
             applyConstraints(adjacencyList_.back());
 
             /// Check if the new node is in occupied space
-            occupied = isOccupied(adjacencyList_.back());
-            if(occupied)
+            if(isOccupied(adjacencyList_.back()))
             {
                 /// If the node is occupied, delete it and try again
                 deleteNode(adjacencyList_.back());
+            }
+            else
+            {
+                occupied = false; /// Node is not occupied, placement is good
             }
         }
 
