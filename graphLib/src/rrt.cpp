@@ -170,6 +170,11 @@
         dim_3D_ = _dim_3D;
     }
 
+    void RRT::setNodeLimit(int _node_limit)
+    {
+        node_limit_ = _node_limit;
+    }
+
     void RRT::setOccupancyMap(std::vector<occupancy_t> &_occupancy_map)
     {
         occupancy_map_ = _occupancy_map;
@@ -357,6 +362,11 @@
         return false; /// Node is not in occupied space
     }
 
+    bool RRT::isComplete() 
+    {
+        return cmplt;
+    }
+
     void RRT::buildRRT()
     {
         Node::coordinate_t output;
@@ -365,7 +375,6 @@
         {
             stepRRT();
         }
-        std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes" << std::endl;
     }
 
     bool RRT::stepRRT()
@@ -418,6 +427,7 @@
             {
                 /// If the node is occupied, delete it and try again
                 deleteNode(adjacencyList_.back());
+                i--; ///This iteration doesn't count because we didnt emplace a Node
             }
             else
             {
@@ -430,8 +440,13 @@
 
         if(i > node_limit_)
         {
-            std::cout << "Node Limit Reached, Stopping RRT" << std::endl;
+            std::cout << "Node Limit of " << i-1 << " Reached, Stopping RRT" << std::endl;
             cmplt = true;
+        }
+
+        if(cmplt && i <= node_limit_)
+        {
+            std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes" << std::endl;
         }
 
         return cmplt;

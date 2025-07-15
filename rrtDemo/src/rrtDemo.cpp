@@ -55,7 +55,14 @@ namespace rrt
         double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, 
         double _min_dist, double _max_interval,
-        double _max_time, bool _dim_3D, int _node_limit) {
+        double _max_time, bool _dim_3D, int _node_limit)
+    {
+        rrt_->setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
+        rrt_->setOrigin(_origin_x, _origin_y);
+        rrt_->updateDestination(_dest_x, _dest_y);
+        rrt_->updateConstraints(_max_angle_rad, _max_dist, _min_dist, _max_interval);
+        rrt_->setDim3D(_dim_3D);
+        rrt_->setNodeLimit(_node_limit);
     }
 
     void VisRRT::setOccupancyMap(
@@ -81,6 +88,10 @@ namespace rrt
     int VisRRT::getNodeCount() { 
         return rrt_->adjacencyList_.size(); 
     }
+
+    bool VisRRT::isComplete() {
+        return rrt_->isComplete();
+    }
 }
 
 BOOST_PYTHON_MODULE(display_RRT) {
@@ -89,6 +100,7 @@ BOOST_PYTHON_MODULE(display_RRT) {
         .def("stepRRT", &rrt::VisRRT::stepRRT)
         .def("initializeRRT", &rrt::VisRRT::initializeRRT)
         .def("setOccupancyMap", static_cast<void (rrt::VisRRT::*)(std::vector<std::vector<double>>, std::vector<double>, std::vector<double>)>(&rrt::VisRRT::setOccupancyMap))
+        .def("isComplete", &rrt::VisRRT::isComplete)
         .def("getNodeCount", &rrt::VisRRT::getNodeCount);
 }
 
@@ -105,8 +117,20 @@ int main() {
     );
 
     rrt::VisRRT testViz;
+    testViz.initializeRRT(
+        0.0, 0.0, 10.0, 10.0,   // _range_a_x, _range_a_y, _range_b_x, _range_b_y
+        0.0, 0.0, 10.0, 10.0,    // _origin_x, _origin_y, _dest_x, _dest_y
+        0.3, 1.0, 0.2, 1.0,    // _max_angle_rad, _max_dist, _min_dist, _max_interval
+        100.0,                  // _max_time
+        true,                  // _dim_3D
+        10000                  // _node_limit
+    );
 
     myRRT.buildRRT();
+
+    while (!testViz.stepRRT()) 
+    {
+    }
 
     return 0;
 }

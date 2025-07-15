@@ -342,12 +342,24 @@ namespace rrt
         void setDim3D(bool _dim_3D);
 
         /**
+        * @breif    Updates the Node Limit for the RRT
+        * @param[in]    _node_limit  The maximum number of nodes permitted in the RRT   
+        */
+        void setNodeLimit(int _node_limit);
+
+        /**
         * @brief   Sets the occupancy map for the RRT
         * @note    if using the stepRRT function, the occupancy map must be set before the first call
         * 
         * @param[in]    _occupancy_map  Optional occupancy map, if prov
         */ 
         void setOccupancyMap(std::vector<occupancy_t> &_occupancy_map);
+
+        /**
+         * @brief   Returns the completion state of the RRT
+         * @return   Returns true if the RRT is complete, false otherwise
+         */
+        bool isComplete();
     };
 }
 

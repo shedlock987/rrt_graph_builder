@@ -82,6 +82,7 @@ namespace rrt
                                  std::vector<double> _occp_interval);
             void setOccupancyMap(std::vector<RRT::occupancy_t> &_occupancy_map);
             int getNodeCount();
+            bool isComplete();
         private:
         std::unique_ptr<RRT> rrt_; /**< Pointer to the RRT object */
             
