@@ -12,3 +12,9 @@ target_include_directories(rrtDemo PRIVATE ${Boost_INCLUDE_DIRS} ${Python3_INCLU
 target_link_libraries(rrtDemo graphLib)
 target_link_libraries(rrtDemo rrtLib)
 target_link_libraries(rrtDemo ${Boost_LIBRARIES} ${Python3_LIBRARIES})
+
+# Add the shared library for Python module
+add_library(rrtDemoModule SHARED src/rrtDemo.cpp)
+set_target_properties(rrtDemoModule PROPERTIES OUTPUT_NAME "rrtDemo" PREFIX "" SUFFIX ".so")
+target_include_directories(rrtDemoModule PRIVATE ${Boost_INCLUDE_DIRS} ${Python3_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(rrtDemoModule graphLib rrtLib ${Boost_LIBRARIES} ${Python3_LIBRARIES})
