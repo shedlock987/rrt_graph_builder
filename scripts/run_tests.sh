@@ -24,5 +24,6 @@ echo Done
 echo Running tests
 cd test
 ./graphTest
+./rrtTest
 echo Complete
 

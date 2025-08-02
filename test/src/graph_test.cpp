@@ -5,24 +5,6 @@
 
 namespace rrt
 {
-    /*
-    class Node_test : public ::testing::Test
-    {
-        protected:
-        Node* under_test_(10.0F, 10.0F, 1.0F);
-        std::shared_ptr<Node*> alt_node_;
-        std::shared_ptr<Node> value_node_;
-
-        virtual void SetUp()
-        {
-
-        }
-
-        virtual void TearDown()
-        {
-        }
-    };
-    */
 
     class Graph_test : public ::testing::Test
     {

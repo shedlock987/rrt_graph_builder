@@ -94,7 +94,7 @@ namespace rrt
     }
 }
 
-BOOST_PYTHON_MODULE(display_RRT) {
+BOOST_PYTHON_MODULE(rrtDemo) {
     class_<rrt::VisRRT, boost::noncopyable>("RRT")
         .def("buildRRT", &rrt::VisRRT::buildRRT)
         .def("stepRRT", &rrt::VisRRT::stepRRT)

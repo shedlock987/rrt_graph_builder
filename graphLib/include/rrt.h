@@ -131,6 +131,18 @@ namespace rrt
 
         public:
         /**
+         * @brief An custom type representing an occupied space of length,width projected in time.
+         *
+         * @details This is represented as a tuple containing:
+         *          - double: A double representing the width (x) of the occupied space in meters.
+         *          - double: A double representing the length (y) of the occupied space in meters.
+         *          - double: A double representing the temporal starting time (t0) of when the space begins being occupied in seconds.   
+         *          - double: A double representing the temporal ending time (t1, t1-t0=height) of when the space ends being occupied in seconds.
+         * @note    The coordinate is at the 2D (x,y) geometric center of the grid cell, and extends vertical by 1 unit time
+         */
+        typedef std::tuple<double, double, double, double, double, double> occupancy_pillar_t; 
+
+        /**
          * @brief An custom type representing a single voxel in an occupancy map.
          *
          * @details This is represented as a pair containing:
@@ -138,7 +150,7 @@ namespace rrt
          *          - double: A double representing the size of the voxel in meters.
          * @note    The coordinate is at the 2D (x,y) geometric center of the grid cell, and extends vertical by 1 unit time
          */
-        typedef std::pair<coordinate_t, double> occupancy_t; 
+        typedef std::pair<coordinate_t, double> occupancy_pillar_t; 
 
         /**
          * @brief An Occupancy Map (Grid) represented as a simple list of occupied voxels
