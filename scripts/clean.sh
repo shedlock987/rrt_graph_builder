@@ -15,6 +15,8 @@ cd graphLib
 rm -rf CMakeFiles
 rm -rf cmake_install.cmake
 rm -rf Makefile
+rm -rf libgraphLib.a
+rm -rf librrtLib.a
 cd ..
 
 cd rrtDemo
@@ -22,6 +24,8 @@ rm -rf CMakeFiles
 rm -rf cmake_install.cmake
 rm -rf Makefile
 rm -rf rrtDemo
+rm -rf rrtDemo.so
+rm -rf librrtDemo.a
 cd ..
 
 cd test
