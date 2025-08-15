@@ -16,8 +16,8 @@ make
 echo Done
 
 #Running App
-echo Running App
-cd rrtDemo
-./rrtDemo
+#echo Running App
+#cd rrtDemo
+#./rrtDemo
 echo Complete
 

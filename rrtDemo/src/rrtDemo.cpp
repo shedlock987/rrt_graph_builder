@@ -103,7 +103,7 @@ BOOST_PYTHON_MODULE(rrtDemo) {
         .def("isComplete", &rrt::VisRRT::isComplete)
         .def("getNodeCount", &rrt::VisRRT::getNodeCount);
 }
-
+/*
 int main() {
 
 
@@ -134,3 +134,4 @@ int main() {
 
     return 0;
 }
+    */
