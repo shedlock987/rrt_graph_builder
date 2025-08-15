@@ -1,9 +1,9 @@
-
 #include "rrtDemo.h"
 #include "graph.h"
 #include "rrt.h"
 #include <iostream>
 #include <boost/python.hpp>
+#include <boost/python/stl_iterator.hpp>
 #include <vector>
 
 using namespace boost::python;
@@ -94,6 +94,36 @@ namespace rrt
     }
 }
 
+/// @brief Utility for registering conversions from Python iterables to C++ containers.
+struct iterable_converter {
+  /// @brief Registers converter for a specific container type.
+  template <typename Container>
+  iterable_converter& from_python() {
+    boost::python::converter::registry::push_back(
+      &iterable_converter::convertible,
+      &iterable_converter::construct<Container>,
+      boost::python::type_id<Container>());
+    return *this;
+  }
+
+  /// @brief Checks if PyObject is iterable.
+  static void* convertible(PyObject* object) {
+    return PyObject_GetIter(object) ? object : nullptr;
+  }
+
+  /// @brief Converts iterable PyObject to C++ container.
+  template <typename Container>
+  static void construct(PyObject* object, boost::python::converter::rvalue_from_python_stage1_data* data) {
+    namespace python = boost::python;
+    python::handle<> handle(python::borrowed(object));
+    typedef python::converter::rvalue_from_python_storage<Container> storage_type;
+    void* storage = reinterpret_cast<storage_type*>(data)->storage.bytes;
+    typedef python::stl_input_iterator<typename Container::value_type> iterator;
+    new (storage) Container(iterator(python::object(handle)), iterator());
+    data->convertible = storage;
+  }
+};
+
 BOOST_PYTHON_MODULE(rrtDemo) {
     class_<rrt::VisRRT, boost::noncopyable>("RRT")
         .def("buildRRT", &rrt::VisRRT::buildRRT)
@@ -102,6 +132,12 @@ BOOST_PYTHON_MODULE(rrtDemo) {
         .def("setOccupancyMap", static_cast<void (rrt::VisRRT::*)(std::vector<std::vector<double>>, std::vector<double>, std::vector<double>)>(&rrt::VisRRT::setOccupancyMap))
         .def("isComplete", &rrt::VisRRT::isComplete)
         .def("getNodeCount", &rrt::VisRRT::getNodeCount);
+
+    // Register converters (order matters: inner types first for nesting)
+    iterable_converter()
+      .from_python<std::vector<double>>()                  // For flat vectors like occp_widths, occp_interval
+      .from_python<std::vector<std::vector<double>>>()     // For nested like occp_coords
+      ;
 }
 /*
 int main() {
