@@ -310,6 +310,14 @@ namespace rrt
         void setOrigin(double _origin_x, double _origin_y);
 
         /**
+        * @brief   Updates/sets the geometric location of the origin node of the RRT
+        * 
+        * @param[in]    _origin_x  The x coordinate of the origin  
+        * @param[in]    _origin_y  The y coordinate of the origin 
+        */     
+        void setOrigin(double _origin_x, double _origin_y, double _origin_time);
+
+        /**
         * @brief   Updates/sets the geometric location of the destination node of the RRT
         * 
         * @param[in]    _dest  The coordinate of the destination  
@@ -323,6 +331,14 @@ namespace rrt
         * @param[in]    _dest_y  The y coordinate of the destination
         */ 
         void updateDestination(double _dest_x, double _dest_y);
+
+            /**
+        * @brief   Updates/sets the geometric location of the destination node of the RRT
+        * 
+        * @param[in]    _dest_x  The x coordinate of the destination  
+        * @param[in]    _dest_y  The y coordinate of the destination
+        */ 
+        void updateDestination(double _dest_x, double _dest_y, double _dest_time);
 
         /**
         * @brief   Updates/sets the geometric constraints for next-node placement

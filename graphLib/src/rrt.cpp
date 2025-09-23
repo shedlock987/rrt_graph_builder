@@ -146,6 +146,11 @@
     {
         adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, 0.0F);
     }
+
+    void RRT::setOrigin(double _origin_x, double _origin_y, double _origin_time)
+    {
+        adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, _origin_time);
+    }
           
     void RRT::updateDestination(Node::coordinate_t _dest)
     {
@@ -155,6 +160,18 @@
     void RRT::updateDestination(double _dest_x, double _dest_y)
     {
         dest_ = std::make_tuple(_dest_x, _dest_y, max_time_);
+    }
+
+    void RRT::updateDestination(double _dest_x, double _dest_y, double _dest_time)
+    {
+        if(_dest_time > max_time_)
+        {
+            dest_ = std::make_tuple(_dest_x, _dest_y, max_time_);
+        }
+        else
+        {
+            dest_ = std::make_tuple(_dest_x, _dest_y, _dest_time);
+        }
     }
 
     void RRT::updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval)

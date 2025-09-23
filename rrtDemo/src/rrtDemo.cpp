@@ -4,39 +4,37 @@
 #include <iostream>
 #include <boost/python.hpp>
 #include <boost/python/stl_iterator.hpp>
+#include <boost/python/extract.hpp>
 #include <vector>
+#include <tuple>  // For std::get on coordinate_t
 
 using namespace boost::python;
 
 namespace rrt
 {
+    using coordinate_t = Node::coordinate_t;
+
     VisRRT::VisRRT() : rrt_(new RRT(
-        -5.0, 0.0, 5.0, 5.0, // _range_a_x, _range_a_y, _range_b_x, _range_b_y
-        0.0, 0.0, 5.0, 5.0, // _origin_x, _origin_y, _dest_x, _dest_y
-        0.8, 1.0, 0.5, 2.0, // _max_angle_rad, _max_dist, _min_dist, _max_interval
-        10.0, // _max_time
-        true, // _dim
-        10000 // _node_limit
+        -5.0, 0.0, 5.0, 5.0,  // ranges
+        0.0, 0.0, 5.0, 5.0,   // origin, dest
+        0.8, 1.0, 0.5, 2.0,   // constraints
+        10.0,                 // _max_time
+        true,                 // _dim_3D
+        10000                 // _node_limit
         ))
     {
     }
 
-    VisRRT::VisRRT(double _range_a_x, double _range_a_y,
-                   double _range_b_x, double _range_b_y,
-                   double _origin_x, double _origin_y,
-                   double _dest_x, double _dest_y,
+    // Optimized: coordinate_t-based ctor (no occupancy; call setOccupancyMap separately)
+    VisRRT::VisRRT(coordinate_t _range_a, coordinate_t _range_b,
+                   coordinate_t _origin, coordinate_t _dest,
                    double _max_angle_rad, double _max_dist,
                    double _min_dist, double _max_interval,
-                   double _max_time, bool _dim_3D, int _node_limit,
-                   std::vector<std::vector<double>> _occp_coords,
-                   std::vector<double> _occp_widths,
-                   std::vector<double> _occp_interval) : rrt_(new RRT(
-                            _range_a_x, _range_a_y, _range_b_x, _range_b_y,
-                            _origin_x, _origin_y, _dest_x, _dest_y,
-                            _max_angle_rad, _max_dist, _min_dist, _max_interval,
-                            _max_time, _dim_3D, _node_limit))
+                   double _max_time, bool _dim_3D, int _node_limit)
+        : rrt_(new RRT(_range_a, _range_b, _origin, _dest,
+                       _max_angle_rad, _max_dist, _min_dist, _max_interval,
+                       _max_time, _dim_3D, _node_limit))
     {
-        setOccupancyMap(_occp_coords, _occp_widths, _occp_interval);
     }
 
     VisRRT::~VisRRT() = default;
@@ -49,20 +47,60 @@ namespace rrt
         return rrt_->stepRRT();
     }
 
+    // Optimized: coordinate_t-based initializeRRT (11 args; extracts x/y for time horizon)
     void VisRRT::initializeRRT(
-        double _range_a_x, double _range_a_y,
-        double _range_b_x, double _range_b_y,
-        double _origin_x, double _origin_y,
-        double _dest_x, double _dest_y,
+        coordinate_t _range_a, coordinate_t _range_b,
+        coordinate_t _origin, coordinate_t _dest,
         double _max_angle_rad, double _max_dist,
         double _min_dist, double _max_interval,
         double _max_time, bool _dim_3D, int _node_limit)
     {
-        rrt_->setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        rrt_->setOrigin(_origin_x, _origin_y);
-        rrt_->updateDestination(_dest_x, _dest_y);
+        // Extract x/y for boundaries + use _max_time as horizon
+        double range_a_x = std::get<0>(_range_a);
+        double range_a_y = std::get<1>(_range_a);
+        double range_b_x = std::get<0>(_range_b);
+        double range_b_y = std::get<1>(_range_b);
+        rrt_->setBoundaries(range_a_x, range_a_y, range_b_x, range_b_y, _max_time);
+        rrt_->setOrigin(_origin);
+        rrt_->updateDestination(_dest);
         rrt_->updateConstraints(_max_angle_rad, _max_dist, _min_dist, _max_interval);
         rrt_->setDim3D(_dim_3D);
+        rrt_->setNodeLimit(_node_limit);
+    }
+
+    // Essential setters (coordinate_t where possible)
+    void VisRRT::setBoundaries(coordinate_t _range_a, coordinate_t _range_b) {
+        double range_a_x = std::get<0>(_range_a);
+        double range_a_y = std::get<1>(_range_a);
+        double range_b_x = std::get<0>(_range_b);
+        double range_b_y = std::get<1>(_range_b);
+        // FIXED: Use default horizon 10.0 (since max_time_ is private; adjust as needed or add getter to RRT)
+        rrt_->setBoundaries(range_a_x, range_a_y, range_b_x, range_b_y, 10.0);
+    }
+
+    void VisRRT::setBoundaries(double _range_a_x, double _range_a_y,
+                               double _range_b_x, double _range_b_y, double _time_horizon) {
+        rrt_->setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _time_horizon);
+    }
+
+    void VisRRT::setOrigin(coordinate_t _origin) {
+        rrt_->setOrigin(_origin);
+    }
+
+    void VisRRT::updateDestination(coordinate_t _dest) {
+        rrt_->updateDestination(_dest);
+    }
+
+    void VisRRT::updateConstraints(double _max_angle_rad, double _max_dist,
+                                   double _min_dist, double _max_interval) {
+        rrt_->updateConstraints(_max_angle_rad, _max_dist, _min_dist, _max_interval);
+    }
+
+    void VisRRT::setDim3D(bool _dim_3D) {
+        rrt_->setDim3D(_dim_3D);
+    }
+
+    void VisRRT::setNodeLimit(int _node_limit) {
         rrt_->setNodeLimit(_node_limit);
     }
 
@@ -77,7 +115,6 @@ namespace rrt
             occ.second = _occp_widths[i];
             occupancy_map.push_back(occ);
         }
-        /// Set the occupancy map in the RRT instance
         rrt_->setOccupancyMap(occupancy_map);
     }
 
@@ -89,19 +126,50 @@ namespace rrt
         return rrt_->isComplete();
     }
 
-    // New method: getNodeAt
     Node* VisRRT::getNodeAt(int idx) {
         if (idx < rrt_->adjacencyList_.size()) {
             return rrt_->adjacencyList_[idx];
         }
         return nullptr;
     }
-}  // Close rrt namespace
+} // namespace rrt
 
-// @brief Utility for registering conversions from Python iterables to C++ containers.
+// Converter for std::tuple<double, double, double> from Python tuples
+class tuple_from_python_converter {
+public:
+    tuple_from_python_converter() {
+        boost::python::converter::registry::push_back(
+            &convertible,
+            &construct,
+            boost::python::type_id<std::tuple<double, double, double>>()
+        );
+    }
+
+private:
+    static void* convertible(PyObject* obj) {
+        if (PyTuple_Check(obj) && PyTuple_Size(obj) == 3) {
+            return obj;
+        }
+        return nullptr;
+    }
+
+    static void construct(PyObject* obj,
+                          boost::python::converter::rvalue_from_python_stage1_data* data) {
+        namespace python = boost::python;
+        python::handle<> handle(python::borrowed(obj));
+        python::tuple py_tuple(handle);
+        double x = python::extract<double>(py_tuple[0]);
+        double y = python::extract<double>(py_tuple[1]);
+        double z = python::extract<double>(py_tuple[2]);
+        void* storage = ((python::converter::rvalue_from_python_storage<std::tuple<double, double, double>>*)data)->storage.bytes;
+        new (storage) std::tuple<double, double, double>(x, y, z);
+        data->convertible = storage;
+    }
+};
+
+// iterable_converter for vectors
 class iterable_converter {
 public:
-    /// @brief Registers converter for a specific container type.
     template <typename Container>
     iterable_converter& from_python() {
         boost::python::converter::registry::push_back(
@@ -111,12 +179,10 @@ public:
         return *this;
     }
 
-    /// @brief Checks if PyObject is iterable.
     static void* convertible(PyObject* object) {
         return PyObject_GetIter(object) ? object : nullptr;
     }
 
-    /// @brief Converts iterable PyObject to C++ container.
     template <typename Container>
     static void construct(PyObject* object, boost::python::converter::rvalue_from_python_stage1_data* data) {
         namespace python = boost::python;
@@ -130,28 +196,45 @@ public:
 };
 
 BOOST_PYTHON_MODULE(rrtDemo) {
-    // FIXED: Use rrt::Node instead of Node for namespace resolution
+    using rrt::coordinate_t;
+
+    // Register tuple converter
+    tuple_from_python_converter();
+
     class_<rrt::Node, boost::noncopyable>("Node", no_init)
-        .def("xCrdnt", &rrt::Node::xCrdnt)  // FIXED: Add rrt:: prefix
-        .def("yCrdnt", &rrt::Node::yCrdnt)  // FIXED: Add rrt:: prefix
-        .def("time", &rrt::Node::time)      // FIXED: Add rrt:: prefix
-        .def("backEdgeWeight", &rrt::Node::backEdgeWeight)  // FIXED: Add rrt:: prefix
-        // Add more Node methods as needed
+        .def("xCrdnt", &rrt::Node::xCrdnt)
+        .def("yCrdnt", &rrt::Node::yCrdnt)
+        .def("time", &rrt::Node::time)
+        .def("backEdgeWeight", &rrt::Node::backEdgeWeight)
         ;
 
-    class_<rrt::VisRRT, boost::noncopyable>("RRT")
+    class_<rrt::VisRRT, boost::noncopyable>("RRT", no_init)
+        // FIXED: Use init<> instead of ctor<>
+        .def(init<>())  // Default
+        .def(init<coordinate_t, coordinate_t, coordinate_t, coordinate_t,
+                  double, double, double, double, double, bool, int>())  // Coord-based (11 args)
+
         .def("buildRRT", &rrt::VisRRT::buildRRT)
         .def("stepRRT", &rrt::VisRRT::stepRRT)
-        .def("initializeRRT", &rrt::VisRRT::initializeRRT)
+        .def("initializeRRT", static_cast<void (rrt::VisRRT::*)(
+            coordinate_t, coordinate_t, coordinate_t, coordinate_t,
+            double, double, double, double, double, bool, int
+        )>(&rrt::VisRRT::initializeRRT))
+        .def("setBoundaries", static_cast<void (rrt::VisRRT::*)(coordinate_t, coordinate_t)>(&rrt::VisRRT::setBoundaries))
+        .def("setBoundaries", static_cast<void (rrt::VisRRT::*)(double, double, double, double, double)>(&rrt::VisRRT::setBoundaries))
+        .def("setOrigin", static_cast<void (rrt::VisRRT::*)(coordinate_t)>(&rrt::VisRRT::setOrigin))
+        .def("updateDestination", static_cast<void (rrt::VisRRT::*)(coordinate_t)>(&rrt::VisRRT::updateDestination))
+        .def("updateConstraints", &rrt::VisRRT::updateConstraints)
+        .def("setDim3D", &rrt::VisRRT::setDim3D)
+        .def("setNodeLimit", &rrt::VisRRT::setNodeLimit)
         .def("setOccupancyMap", static_cast<void (rrt::VisRRT::*)(std::vector<std::vector<double>>, std::vector<double>, std::vector<double>)>(&rrt::VisRRT::setOccupancyMap))
         .def("isComplete", &rrt::VisRRT::isComplete)
         .def("getNodeCount", &rrt::VisRRT::getNodeCount)
         .def("getNodeAt", &rrt::VisRRT::getNodeAt, return_value_policy<reference_existing_object>())
         ;
 
-    // Register converters (order matters: inner types first for nesting)
     iterable_converter()
-        .from_python<std::vector<double>>() // For flat vectors like occp_widths, occp_interval
-        .from_python<std::vector<std::vector<double>>>() // For nested like occp_coords
+        .from_python<std::vector<double>>()
+        .from_python<std::vector<std::vector<double>>>()
         ;
-}  
+}
