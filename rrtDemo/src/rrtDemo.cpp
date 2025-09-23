@@ -6,7 +6,8 @@
 #include <boost/python/stl_iterator.hpp>
 #include <boost/python/extract.hpp>
 #include <vector>
-#include <tuple>  // For std::get on coordinate_t
+#include <tuple> // For std::get on coordinate_t
+#include <algorithm> // For std::find if needed, but using getIndex
 
 using namespace boost::python;
 
@@ -15,12 +16,12 @@ namespace rrt
     using coordinate_t = Node::coordinate_t;
 
     VisRRT::VisRRT() : rrt_(new RRT(
-        -5.0, 0.0, 5.0, 5.0,  // ranges
-        0.0, 0.0, 5.0, 5.0,   // origin, dest
-        0.8, 1.0, 0.5, 2.0,   // constraints
-        10.0,                 // _max_time
-        true,                 // _dim_3D
-        10000                 // _node_limit
+        -5.0, 0.0, 5.0, 5.0, // ranges
+        0.0, 0.0, 5.0, 5.0, // origin, dest
+        0.8, 1.0, 0.5, 2.0, // constraints
+        10.0, // _max_time
+        true, // _dim_3D
+        10000 // _node_limit
         ))
     {
     }
@@ -132,6 +133,22 @@ namespace rrt
         }
         return nullptr;
     }
+
+    // NEW: Get forward neighbor indices for a node at given idx
+    std::vector<int> VisRRT::getForwardIndices(int idx) {
+        Node* node = getNodeAt(idx);
+        if (!node) {
+            return {};
+        }
+        std::vector<int> indices;
+        for (Node* fwd : node->fwd_node_) {
+            int fwd_idx = rrt_->getIndex(fwd);
+            if (fwd_idx >= 0) {  // Assuming getIndex returns -1 or similar for invalid
+                indices.push_back(fwd_idx);
+            }
+        }
+        return indices;
+    }
 } // namespace rrt
 
 // Converter for std::tuple<double, double, double> from Python tuples
@@ -210,9 +227,9 @@ BOOST_PYTHON_MODULE(rrtDemo) {
 
     class_<rrt::VisRRT, boost::noncopyable>("RRT", no_init)
         // FIXED: Use init<> instead of ctor<>
-        .def(init<>())  // Default
+        .def(init<>()) // Default
         .def(init<coordinate_t, coordinate_t, coordinate_t, coordinate_t,
-                  double, double, double, double, double, bool, int>())  // Coord-based (11 args)
+                  double, double, double, double, double, bool, int>()) // Coord-based (11 args)
 
         .def("buildRRT", &rrt::VisRRT::buildRRT)
         .def("stepRRT", &rrt::VisRRT::stepRRT)
@@ -231,6 +248,8 @@ BOOST_PYTHON_MODULE(rrtDemo) {
         .def("isComplete", &rrt::VisRRT::isComplete)
         .def("getNodeCount", &rrt::VisRRT::getNodeCount)
         .def("getNodeAt", &rrt::VisRRT::getNodeAt, return_value_policy<reference_existing_object>())
+        // NEW: Expose getForwardIndices to return list of int indices
+        .def("getForwardIndices", &rrt::VisRRT::getForwardIndices)
         ;
 
     iterable_converter()

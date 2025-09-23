@@ -181,6 +181,8 @@ public:
 
     Node* getNodeAt(int idx);
 
+    std::vector<int> getForwardIndices(int idx);
+
 private:
     std::unique_ptr<RRT> rrt_; /**< Pointer to the RRT object */
 };
