@@ -83,6 +83,7 @@ namespace rrt
             void setOccupancyMap(std::vector<RRT::occupancy_t> &_occupancy_map);
             int getNodeCount();
             bool isComplete();
+            Node* getNodeAt(int idx);
         private:
         std::unique_ptr<RRT> rrt_; /**< Pointer to the RRT object */
             
