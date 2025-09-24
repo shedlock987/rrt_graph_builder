@@ -67,9 +67,9 @@ namespace rrt
         rrt_->updateConstraints(_max_angle_rad, _max_dist, _min_dist, _max_interval);
         rrt_->setDim3D(_dim_3D);
         rrt_->setNodeLimit(_node_limit);
-    }    
-    
-    void VisRRT::setBoundaries(coordinate_t _range_a, coordinate_t _range_b) 
+    }
+
+    void VisRRT::setBoundaries(coordinate_t _range_a, coordinate_t _range_b)
     {
         rrt_->setBoundaries(_range_a, _range_b);
     }
@@ -124,19 +124,20 @@ namespace rrt
         return nullptr;
     }
 
-    std::vector<int> VisRRT::getForwardIndices(int idx) {
+    // UPDATED: Return boost::python::list for seamless Python conversion
+    boost::python::list VisRRT::getForwardIndices(int idx) {
         Node* node = getNodeAt(idx);
         if (!node) {
-            return {};
+            return boost::python::list();
         }
-        std::vector<int> indices;
+        boost::python::list py_list;
         for (Node* fwd : node->fwd_node_) {
             int fwd_idx = rrt_->getIndex(fwd);
-            if (fwd_idx >= 0) {  // Assuming getIndex returns -1 or similar for invalid
-                indices.push_back(fwd_idx);
+            if (fwd_idx >= 0) { // Assuming getIndex returns -1 or similar for invalid
+                py_list.append(fwd_idx);
             }
         }
-        return indices;
+        return py_list;
     }
 } // namespace rrt
 
@@ -236,7 +237,7 @@ BOOST_PYTHON_MODULE(rrtDemo) {
         .def("isComplete", &rrt::VisRRT::isComplete)
         .def("getNodeCount", &rrt::VisRRT::getNodeCount)
         .def("getNodeAt", &rrt::VisRRT::getNodeAt, return_value_policy<reference_existing_object>())
-        // NEW: Expose getForwardIndices to return list of int indices
+        // UPDATED: Binding now works with returned list
         .def("getForwardIndices", &rrt::VisRRT::getForwardIndices)
         ;
 

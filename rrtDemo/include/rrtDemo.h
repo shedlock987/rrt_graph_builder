@@ -32,6 +32,7 @@
 
 #include <memory>
 #include <vector>
+#include <boost/python/list.hpp>  // For boost::python::list
 #include "rrt.h"
 
 namespace rrt
@@ -154,7 +155,12 @@ public:
 
     Node* getNodeAt(int idx);
 
-    std::vector<int> getForwardIndices(int idx);
+    /**
+     * @brief Gets the indices of forward connected nodes for the node at the given index
+     * @param idx The index of the node in the adjacency list
+     * @return A Python list of forward neighbor indices
+     */
+    boost::python::list getForwardIndices(int idx);
 
 private:
     std::unique_ptr<RRT> rrt_; /**< Pointer to the RRT object */
