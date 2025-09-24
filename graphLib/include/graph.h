@@ -45,10 +45,10 @@ namespace rrt
     class Node
         {
             public: 
-                typedef std::tuple<double, double, double> coordinate_t; /**< custom type used for 2D eculidan coordinate with a time component */
-            
-                std::vector<Node *> fwd_node_; /**< Public for testing, Vector of forward connected Nodes/Vertices */
-                
+                typedef std::tuple<double, double, double> coordinate_t;
+
+                std::vector<Node *> fwd_node_;
+
                 /**
                  * @brief   Constructs a new Node/Vertex
                  */   
@@ -118,21 +118,21 @@ namespace rrt
                  *
                  * @return  x-axis coordinate
                  */
-                double xCrdnt();
+                double xCrdnt() const;
 
                 /**
                  * @brief   Returns the x-axis coordinate of the node/vertex 
                  *
                  * @return  y-axis coordinate
                  */
-                double yCrdnt();
+                double yCrdnt() const;
 
                 /**
                  * @brief   Returns the time/temporal component of the node/vertex 
                  *
                  * @return  timestamp
                  */
-                double time();
+                double time() const;
 
                 /**
                  * @brief   Sets/updates the coordinates for the Node/Vertex
@@ -155,14 +155,14 @@ namespace rrt
                  * 
                  * @return  The Coordinates of type coordinate_t
                  */
-                coordinate_t Crdnts();
+                coordinate_t Crdnts() const;
 
                 /**
                  * @brief   Gets the Pointer to the Backward-connected Node/Vertex aka Back-Edge
                  *
                  * @return  Pointer to Backward-connected Node/Vertex aka Back-Edge
                  */
-                Node* BackCnnctn();
+                Node* BackCnnctn() const;
 
                 /**
                  * @brief  Sets/Updates the Pointer to the Backward-connected Node/Vertex aka Back-Edge
@@ -176,7 +176,7 @@ namespace rrt
                  *
                  * @return  Weight of the Node/Vertex's Back Connection
                  */
-                double backEdgeWeight();
+                double backEdgeWeight() const;
 
                 /**
                  * @brief  Sets/Updates the weight of the Backward-connected Node/Vertex aka Back-Edge
@@ -185,15 +185,15 @@ namespace rrt
                  */
                 void setBackEdgeWeight(double _back_edge_weight);
 
-                private:
-                Node* back_node_; /**< Pointer to the backward connected Node/Vertex aka back-edge*/
-                coordinate_t crdnts_; /**< Coordinates of the Node/Vertex */
-                double back_edge_weight_; /**< Weight of the backward-connected Edge */
+            private:
+                Node* back_node_;
+                coordinate_t crdnts_;
+                double back_edge_weight_;
         };
 
 class Graph {
     private:
-        bool initCmplt_ = false; /**< Flag to indicate the Graph is initialized */
+        bool initCmplt_ = false;
     public:
 
         /**
@@ -219,12 +219,12 @@ class Graph {
         * 
         * @return   The Coordinates of type coordinate_t
         */
-        Node::coordinate_t getCoordinate(Node* _handle);
+        Node::coordinate_t getCoordinate(Node* _handle) const;
 
         /**
         * @brief    Console prints the Graph, used for debugging
         */
-        void printGraph();
+        void printGraph() const;
 
         /**
         * @brief    Inserts a new Node/Vertex into the Graph connected to the last node
@@ -256,7 +256,7 @@ class Graph {
         * @param[in]    _handle Pointer of the Node/Vertex we want removed
         * @return   The Pointer to a node which corresponds to an index of the adjacency list
         */          
-        int getIndex(Node* _handle);
+        int getIndex(Node* _handle) const;
 
          /**
         * @brief    Creates a new connection/edge between two existing nodes/vertices in the adajacency list
@@ -266,8 +266,7 @@ class Graph {
         */   
         void addEdge(Node* _src, Node* _dest);
     
-        std::vector<Node *> adjacencyList_; /**< The Adjacency List which represents our graph */
-
+        std::vector<Node *> adjacencyList_;
     };
 }
 

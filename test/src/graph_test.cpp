@@ -2,6 +2,7 @@
 #include <cmath>
 #include <vector>
 #include "graph.h"
+#include "rrt.h"
 
 namespace rrt
 {
@@ -219,6 +220,31 @@ namespace rrt
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->backEdgeWeight(), 3.0);
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->backEdgeWeight(), 5.0);
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0);
+    }
+
+    TEST(RRTTest, ForwardNodeTimeIsGreaterOrEqualToParent) {
+    // Create a simple RRT with known parameters
+    RRT rrt(
+        -5.0, 0.0, 5.0, 5.0,   // range_a_x, range_a_y, range_b_x, range_b_y
+        0.0, 0.0, 5.0, 5.0,    // origin_x, origin_y, dest_x, dest_y
+        0.8, 1.0, 0.5, 2.0,    // max_angle_rad, max_dist, min_dist, max_interval
+        10.0,                  // max_time
+        true,                  // dim_3D
+        100                    // node_limit
+    );
+
+    // Build a small RRT
+    for (int i = 0; i < 10; ++i) {
+        rrt.stepRRT();
+    }
+
+    // For each node, check that all forward-connected nodes have time >= this node's time
+    for (const Node* parent : rrt.adjacencyList_) {
+        double parent_time = parent->time();
+        for (const Node* child : parent->fwd_node_) {
+            EXPECT_GE(child->time(), parent_time)
+                << "Child node time is less than parent node time";
+        }
     }
 };
 

@@ -128,17 +128,17 @@ namespace rrt
         std::cout << std::endl;
     }
 
-    double Node::xCrdnt()
+    double Node::xCrdnt() const
     {
         return std::get<0>(crdnts_);
     }
 
-    double Node::yCrdnt()
+    double Node::yCrdnt() const
     {
         return std::get<1>(crdnts_);
     }
 
-    double Node::time()
+    double Node::time() const
     {
         return std::get<2>(crdnts_);
     }
@@ -153,12 +153,12 @@ namespace rrt
         crdnts_ = _crdnts;
     }
 
-    coordinate_t Node::Crdnts()
+    coordinate_t Node::Crdnts() const
     {
         return crdnts_;
     }
 
-    Node* Node::BackCnnctn()
+    Node* Node::BackCnnctn() const
     {
         return back_node_;
     }
@@ -168,7 +168,7 @@ namespace rrt
         back_node_ = _cnnctn;;
     }
 
-    double Node::backEdgeWeight()
+    double Node::backEdgeWeight() const
     {
         return back_edge_weight_;
     }
@@ -302,7 +302,7 @@ namespace rrt
         }
     }
 
-    int Graph::getIndex(Node* _handle)
+    int Graph::getIndex(Node* _handle) const
     {
         int idx = 0;
         if(_handle != nullptr)
@@ -313,7 +313,7 @@ namespace rrt
         return idx;
     }
 
-    Node::coordinate_t Graph::getCoordinate(Node* _handle)
+    Node::coordinate_t Graph::getCoordinate(Node* _handle) const
     {
 
         auto idx = getIndex(_handle);
@@ -339,7 +339,7 @@ namespace rrt
     }
 
     /// Function to print the adjacency list of the graph
-    void Graph::printGraph()
+    void Graph::printGraph() const
     {
         for(const auto &iter : adjacencyList_)
         {
