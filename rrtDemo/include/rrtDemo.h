@@ -106,43 +106,16 @@ public:
     void setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b);
 
     /**
-     * @brief Sets the boundaries of where the RRT will build (double overload)
-     * @param _range_a_x X Coordinate Lower Left Corner of the Operating Region
-     * @param _range_a_y Y Coordinate Lower Left Corner of the Operating Region
-     * @param _range_b_x X Coordinate Upper Right Corner of the Operating Region
-     * @param _range_b_y Y Coordinate Upper Right Corner of the Operating Region
-     * @param _time_horizon Maximum time horizon for the RRT
-     */
-    void setBoundaries(double _range_a_x, double _range_a_y,
-                       double _range_b_x, double _range_b_y, double _time_horizon);
-
-    /**
      * @brief Updates/sets the geometric location of the origin node of the RRT (coordinate_t overload)
      * @param _origin The coordinate of the origin
      */
     void setOrigin(Node::coordinate_t _origin);
 
     /**
-     * @brief Updates/sets the geometric location of the origin node of the RRT (double overload)
-     * @param _origin_x The x coordinate of the origin
-     * @param _origin_y The y coordinate of the origin
-     * @param _origin_time The time coordinate of the origin
-     */
-    void setOrigin(double _origin_x, double _origin_y, double _origin_time);
-
-    /**
      * @brief Updates/sets the geometric location of the destination node of the RRT (coordinate_t overload)
      * @param _dest The coordinate of the destination
      */
     void updateDestination(Node::coordinate_t _dest);
-
-    /**
-     * @brief Updates/sets the geometric location of the destination node of the RRT (double overload)
-     * @param _dest_x The x coordinate of the destination
-     * @param _dest_y The y coordinate of the destination
-     * @param _dest_time The time coordinate of the destination
-     */
-    void updateDestination(double _dest_x, double _dest_y, double _dest_time);
 
     /**
      * @brief Updates/sets the geometric constraints for next-node placement

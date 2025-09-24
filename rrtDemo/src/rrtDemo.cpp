@@ -67,21 +67,11 @@ namespace rrt
         rrt_->updateConstraints(_max_angle_rad, _max_dist, _min_dist, _max_interval);
         rrt_->setDim3D(_dim_3D);
         rrt_->setNodeLimit(_node_limit);
-    }
-
-    // Essential setters (coordinate_t where possible)
-    void VisRRT::setBoundaries(coordinate_t _range_a, coordinate_t _range_b) {
-        double range_a_x = std::get<0>(_range_a);
-        double range_a_y = std::get<1>(_range_a);
-        double range_b_x = std::get<0>(_range_b);
-        double range_b_y = std::get<1>(_range_b);
-        // FIXED: Use default horizon 10.0 (since max_time_ is private; adjust as needed or add getter to RRT)
-        rrt_->setBoundaries(range_a_x, range_a_y, range_b_x, range_b_y, 10.0);
-    }
-
-    void VisRRT::setBoundaries(double _range_a_x, double _range_a_y,
-                               double _range_b_x, double _range_b_y, double _time_horizon) {
-        rrt_->setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _time_horizon);
+    }    
+    
+    void VisRRT::setBoundaries(coordinate_t _range_a, coordinate_t _range_b) 
+    {
+        rrt_->setBoundaries(_range_a, _range_b);
     }
 
     void VisRRT::setOrigin(coordinate_t _origin) {
@@ -134,7 +124,6 @@ namespace rrt
         return nullptr;
     }
 
-    // NEW: Get forward neighbor indices for a node at given idx
     std::vector<int> VisRRT::getForwardIndices(int idx) {
         Node* node = getNodeAt(idx);
         if (!node) {
@@ -238,7 +227,6 @@ BOOST_PYTHON_MODULE(rrtDemo) {
             double, double, double, double, double, bool, int
         )>(&rrt::VisRRT::initializeRRT))
         .def("setBoundaries", static_cast<void (rrt::VisRRT::*)(coordinate_t, coordinate_t)>(&rrt::VisRRT::setBoundaries))
-        .def("setBoundaries", static_cast<void (rrt::VisRRT::*)(double, double, double, double, double)>(&rrt::VisRRT::setBoundaries))
         .def("setOrigin", static_cast<void (rrt::VisRRT::*)(coordinate_t)>(&rrt::VisRRT::setOrigin))
         .def("updateDestination", static_cast<void (rrt::VisRRT::*)(coordinate_t)>(&rrt::VisRRT::updateDestination))
         .def("updateConstraints", &rrt::VisRRT::updateConstraints)
