@@ -290,9 +290,10 @@
         double tm = _handle->time();
 
         /// Apply Scaling Constraints 
-        if(std::abs(angle) > max_angle_rad_)
+        /// Ensure angle change is within limits relative to the previous node's heading/pose
+        if((std::abs(angle) - std::abs(nearest->heading()) > max_angle_rad_))
         {
-            angle = (angle / std::abs(angle)) * max_angle_rad_;
+            angle = ((angle / std::abs(angle)) * max_angle_rad_) + nearest->heading();
         }
 
         if(std::abs(dist) > max_dist_)
