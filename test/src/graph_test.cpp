@@ -64,7 +64,7 @@ namespace rrt
 
     TEST_F(Graph_test, ADDNODE_CREATE_WITH_BASE_CONSTRUCTOR_TEST)
     {
-        underTest_->addNode(std::make_tuple(4.1, 5, 0), 2.2);
+        underTest_->addNode(std::make_tuple(4.1, 5, 0, 0), 2.2);
         EXPECT_EQ(underTest_->adjacencyList_.size(), 2);
         EXPECT_EQ(underTest_->adjacencyList_.front()->xCrdnt(),10.0); 
         EXPECT_EQ(underTest_->adjacencyList_.front()->yCrdnt(),10.0);
@@ -79,8 +79,8 @@ namespace rrt
 
     TEST_F(Graph_test, ADDNODE_LINK_WITH_BASE_CONSTRUCTOR_TEST)
     {
-        underTest_->addNode(std::make_tuple(4.1, 5, 0), 2.2F);
-        underTest_->addNode(underTest_->adjacencyList_.back(), std::make_tuple(8.2F, 10.0F ,1.0F), 4.4F);
+        underTest_->addNode(std::make_tuple(4.1, 5, 0, 0), 2.2F);
+        underTest_->addNode(underTest_->adjacencyList_.back(), std::make_tuple(8.2F, 10.0F ,1.0F, 0.0F), 4.4F);
 
         //Ensure proper assignment
         EXPECT_NEAR(underTest_->adjacencyList_.back()->xCrdnt(),8.2F, 0.00001F);
@@ -110,13 +110,13 @@ namespace rrt
 
         /* Build Test Graph */
         Node* handle;
-        underTest_->addNode(std::make_tuple(1.1, 2.1, 0), 1.0F);
+        underTest_->addNode(std::make_tuple(1.1, 2.1, 0, 0), 1.0F);
         handle = underTest_->adjacencyList_.back();
-        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0), 3.0F);
+        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0, 0), 3.0F);
         handle = underTest_->adjacencyList_.front();
-        underTest_->addNode(handle, std::make_tuple(2.1, 1.1, 0), 2.0F);
-        underTest_->addNode(std::make_tuple(2.2, 1.2, 0), 4.0F);
-        underTest_->addNode(handle, std::make_tuple(3.1F, 3.2F, 0), 5.0F);
+        underTest_->addNode(handle, std::make_tuple(2.1, 1.1, 0, 0), 2.0F);
+        underTest_->addNode(std::make_tuple(2.2, 1.2, 0, 0), 4.0F);
+        underTest_->addNode(handle, std::make_tuple(3.1F, 3.2F, 0, 0), 5.0F);
 
         /* Test Head-to-Tail */
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
@@ -155,15 +155,15 @@ namespace rrt
 
         /* Build Test Graph */
         Node *handle, *prev, *next;
-        underTest_->addNode(std::make_tuple(1.1, 2.1, 0), 1.0F);
+        underTest_->addNode(std::make_tuple(1.1, 2.1, 0, 0), 1.0F);
         handle = underTest_->adjacencyList_.back();
-        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0), 3.0F); //Left Tree Complete
+        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0, 0), 3.0F); //Left Tree Complete
         handle = underTest_->adjacencyList_.front(); //Go back to the head
-        underTest_->addNode(handle, std::make_tuple(2.1, 1.1, 0), 2.0F);
-        underTest_->addNode(std::make_tuple(2.2, 1.2, 0), 4.0F);
-        underTest_->addNode(handle, std::make_tuple( 3.1F, 3.2F, 0), 5.0F);
+        underTest_->addNode(handle, std::make_tuple(2.1, 1.1, 0, 0), 2.0F);
+        underTest_->addNode(std::make_tuple(2.2, 1.2, 0, 0), 4.0F);
+        underTest_->addNode(handle, std::make_tuple(3.1F, 3.2F, 0, 0), 5.0F);
         handle = underTest_->adjacencyList_.at(3);
-        underTest_->addNode(handle, std::make_tuple( 2.3F, 1.3F, 0), 6.0F);
+        underTest_->addNode(handle, std::make_tuple(2.3F, 1.3F, 0, 0), 6.0F);
 
         /* Sanity Check Test Graph */
         EXPECT_EQ(underTest_->adjacencyList_.size(), 7);
@@ -218,13 +218,13 @@ namespace rrt
         /* Build Test Graph */
         Node *handle, *head, *temp;
         head = underTest_->adjacencyList_.front();
-        underTest_->addNode(std::make_tuple(1.1, 2.1, 0), 1.0F);
+        underTest_->addNode(std::make_tuple(1.1, 2.1, 0, 0), 1.0F);
         handle = underTest_->adjacencyList_.back();
-        underTest_->addNode(handle, std::make_tuple( 1.2, 2.2, 0), 3.0F);
+        underTest_->addNode(handle, std::make_tuple( 1.2, 2.2, 0, 0), 3.0F);
         handle = underTest_->adjacencyList_.front();
-        underTest_->addNode(handle, std::make_tuple( 2.1, 1.1, 0), 2.0F);
-        underTest_->addNode(std::make_tuple(2.2, 1.2, 0), 4.0F);
-        underTest_->addNode(handle,std::make_tuple( 3.1F, 3.2F, 0), 5.0F);
+        underTest_->addNode(handle, std::make_tuple( 2.1, 1.1, 0, 0), 2.0F);
+        underTest_->addNode(std::make_tuple(2.2, 1.2, 0, 0), 4.0F);
+        underTest_->addNode(handle,std::make_tuple( 3.1F, 3.2F, 0, 0), 5.0F);
 
         /* Sanity Check Test Graph */
         EXPECT_EQ(underTest_->adjacencyList_.size(), 6);

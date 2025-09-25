@@ -4,8 +4,8 @@
 #include "rrt.h"
 #include "graph.h"
 
-#ifndef rtDemo_H_
-#define rtDemo_H_
+#ifndef rrtDemo_H_
+#define rrtDemo_H_
 
 namespace rrt
 {

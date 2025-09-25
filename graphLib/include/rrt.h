@@ -55,10 +55,10 @@ namespace rrt
         int dest_cnnctn_limit = 10; 
         Node* endNode;
 
-        Node::pose_t range_a_; /**< Lower Left Corner of the Operating Region */
-        Node::pose_t range_b_; /**< Upper Right Corner of the Operating Region */
-        Node::pose_t origin_; /**< Origin of the RRT */
-        Node::pose_t dest_; /**< Destination of the RRT */
+        pose_t range_a_; /**< Lower Left Corner of the Operating Region */
+        pose_t range_b_; /**< Upper Right Corner of the Operating Region */
+        pose_t origin_; /**< Origin of the RRT */
+        pose_t dest_; /**< Destination of the RRT */
 
         /**
         * @brief   Searches the adjacency list for the nearest node to the given node
@@ -202,8 +202,8 @@ namespace rrt
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */     
         RRT(std::vector<occupancy_t> _occupancy_map,
-        Node::pose_t _range_a, Node::pose_t _range_b,
-        Node::pose_t _origin, Node::pose_t _dest,
+        pose_t _range_a, pose_t _range_b,
+        pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit);
 
@@ -223,8 +223,8 @@ namespace rrt
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */           
-        RRT(Node::pose_t _range_a, Node::pose_t _range_b,
-            Node::pose_t _origin, Node::pose_t _dest,
+        RRT(pose_t _range_a, pose_t _range_b,
+            pose_t _origin, pose_t _dest,
             double _max_angle_rad, double _max_dist, double _min_dist,
             double _max_interval, double _max_time, 
             bool _dim, int _node_limit);
@@ -280,7 +280,7 @@ namespace rrt
         * @param[in]    _range_a  Lower Left Corner of the Operating Region
         * @param[in]    _range_b  Upper Right Corner of the Operating Region
         */
-        void setBoundaries(Node::pose_t _range_a, Node::pose_t _range_b);
+        void setBoundaries(pose_t _range_a, pose_t _range_b);
 
         /**
         * @brief   Sets the boundaries of where the RRT will build
@@ -299,7 +299,7 @@ namespace rrt
         * 
         * @param[in]    _origin  The coordinate of the origin  
         */       
-        void setOrigin(Node::pose_t _origin);
+        void setOrigin(pose_t _origin);
 
         /**
         * @brief   Updates/sets the geometric location of the origin node of the RRT
@@ -322,7 +322,7 @@ namespace rrt
         * 
         * @param[in]    _dest  The coordinate of the destination  
         */            
-        void updateDestination(Node::pose_t _dest);
+        void updateDestination(pose_t _dest);
 
         /**
         * @brief   Updates/sets the geometric location of the destination node of the RRT

@@ -13,7 +13,7 @@ using namespace boost::python;
 
 namespace rrt
 {
-    using pose_t = Node::pose_t;
+    using pose_t = pose_t;
 
     VisRRT::VisRRT() : rrt_(new RRT(
         -5.0, 0.0, 5.0, 5.0, // ranges
@@ -102,7 +102,7 @@ namespace rrt
         std::vector<RRT::occupancy_t> occupancy_map;
         for (size_t i = 0; i < _occp_coords.size(); ++i) {
             RRT::occupancy_t occ;
-            occ.first = std::make_tuple(_occp_coords[i][0], _occp_coords[i][1], _occp_interval[i]);
+            occ.first = std::make_tuple(_occp_coords[i][0], _occp_coords[i][1], _occp_interval[i], 0.0F);
             occ.second = _occp_widths[i];
             occupancy_map.push_back(occ);
         }

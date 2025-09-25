@@ -54,18 +54,18 @@
             double _max_angle_rad, double _max_dist, double _min_dist,
             double _max_interval, double _max_time, bool _dim, int _node_limit) : 
                 occupancy_map_(_occupancy_map), 
-                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F)),
-                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time)),
-                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F)),
-                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F)),
+                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
+                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
+                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
+                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
     {
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
-        Node::pose_t _range_a, Node::pose_t _range_b,
-        Node::pose_t _origin, Node::pose_t _dest,
+        pose_t _range_a, pose_t _range_b,
+        pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit) :
                 occupancy_map_(_occupancy_map), 
@@ -76,8 +76,8 @@
     {
     }
 
-    RRT::RRT(Node::pose_t _range_a, Node::pose_t _range_b,
-        Node::pose_t _origin, Node::pose_t _dest,
+    RRT::RRT(pose_t _range_a, pose_t _range_b,
+        pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
@@ -91,10 +91,10 @@
         double _origin_x, double _origin_y, double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit) :
-                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F)),
-                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time)),
-                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F)),
-                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F)),
+                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
+                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
+                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
+                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
                 node_limit_(_node_limit)   
@@ -104,7 +104,7 @@
 
     RRT::~RRT() = default;
 
-    void RRT::setBoundaries(Node::pose_t _range_a, Node::pose_t _range_b)
+    void RRT::setBoundaries(pose_t _range_a, pose_t _range_b)
     {
         range_a_ = _range_a;
         range_b_ = _range_b;
@@ -124,8 +124,8 @@
                            double _range_b_x, double _range_b_y, double _time_horizon)
     {
         max_time_ = _time_horizon;
-        range_a_ = std::make_tuple(_range_a_x, _range_a_y, 0.0F);
-        range_b_ = std::make_tuple(_range_b_x, _range_b_y, _time_horizon);
+        range_a_ = std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F);
+        range_b_ = std::make_tuple(_range_b_x, _range_b_y, _time_horizon, 0.0F);
         if(_time_horizon > 0.0F)
         {
             setDim3D(true); // If the z-axis is not zero, we are in 3D
@@ -137,40 +137,40 @@
     }
 
      
-    void RRT::setOrigin(Node::pose_t _origin)
+    void RRT::setOrigin(pose_t _origin)
     {
-        adjacencyList_.front()->setCrdnts(_origin);
+        adjacencyList_.front()->setPose(_origin);
     }
  
     void RRT::setOrigin(double _origin_x, double _origin_y)
     {
-        adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, 0.0F);
+        adjacencyList_.front()->setPose(_origin_x, _origin_y, 0.0F, 0.0F);
     }
 
     void RRT::setOrigin(double _origin_x, double _origin_y, double _origin_time)
     {
-        adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, _origin_time);
+        adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, 0.0F);
     }
           
-    void RRT::updateDestination(Node::pose_t _dest)
+    void RRT::updateDestination(pose_t _dest)
     {
         dest_ = _dest;
     }
 
     void RRT::updateDestination(double _dest_x, double _dest_y)
     {
-        dest_ = std::make_tuple(_dest_x, _dest_y, max_time_);
+        dest_ = std::make_tuple(_dest_x, _dest_y, max_time_, 0.0F);
     }
 
     void RRT::updateDestination(double _dest_x, double _dest_y, double _dest_time)
     {
         if(_dest_time > max_time_)
         {
-            dest_ = std::make_tuple(_dest_x, _dest_y, max_time_);
+            dest_ = std::make_tuple(_dest_x, _dest_y, max_time_, 0.0F);
         }
         else
         {
-            dest_ = std::make_tuple(_dest_x, _dest_y, _dest_time);
+            dest_ = std::make_tuple(_dest_x, _dest_y, _dest_time, 0.0F);
         }
     }
 
@@ -317,7 +317,7 @@
         double y = (dist * std::sin(angle)) + nearest->yCrdnt();
 
         /// Update the Node with the new coordinates
-        _handle->setCrdnts(x,y,tm);
+        _handle->setPose(x,y,tm, 0.0F); //NEED TO UPDATE WITH HEADING CALC
         _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
 
     }
@@ -335,7 +335,7 @@
             Node *nearest = findNearest(end);
 
             /// Ensure our dummy end node is on the same time as the nearest node
-            end->setCrdnts(end->xCrdnt(), end->yCrdnt(), nearest->time());
+            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), 0.0F);
 
             /// Check if we're done 
             if(std::abs(calcDist(end, nearest)) < max_dist_ &&
@@ -442,7 +442,7 @@
 
     void RRT::buildRRT()
     {
-        Node::pose_t output;
+        pose_t output;
 
         while(!cmplt)
         {
@@ -452,7 +452,7 @@
 
     bool RRT::stepRRT()
     {
-        Node::pose_t output;
+        pose_t output;
         static auto i = 0;
         i++;
 
@@ -486,7 +486,7 @@
         while(occupied)
         {
             /// Generate Random Node within permissible range 
-            output = std::make_tuple(range_x(gen), range_y(gen), tm);
+            output = std::make_tuple(range_x(gen), range_y(gen), tm, 0.0F);
 
             /// Add the Node to the Graph 
             addNode(output, 0.0F);
