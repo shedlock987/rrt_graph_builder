@@ -303,8 +303,6 @@
         }
 
         /// Need to ensure time never runs backwards 
-        std::cout << "Parent: " << nearest << " Child: " << _handle << std::endl;
-        std::cout << "Parent Time: " << nearest->time() << " Child Init Time: " << _handle->time() << std::endl;
         if(tm < nearest->time()) 
         {
             tm = nearest->time() + 0.0001F;
@@ -313,14 +311,13 @@
         {
             tm = nearest->time() + max_interval_;
         }
-        std::cout << "Parent Time: " << nearest->time() << " Child Modified Time: " << tm << std::endl;
+
 
         double x = (dist * std::cos(angle)) + nearest->xCrdnt();
         double y = (dist * std::sin(angle)) + nearest->yCrdnt();
 
         /// Update the Node with the new coordinates
         _handle->setCrdnts(x,y,tm);
-        std::cout << "Parent Time: " << nearest->time() << " Child Updated Time: " << _handle->time() << std::endl;
         _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
 
     }
@@ -360,14 +357,15 @@
 
     bool RRT::isOccupied(Node *_handle)
     {
-        if(!occupancy_map_.has_value())
+        bool occupied = false;
+        if (!occupancy_map_.has_value())
         {
             return false; /// No occupancy map provided, assume not occupied
         }
-
-        for(const auto &occupancy : occupancy_map_.value())
+        /// Iterate through the occupied cubes (voxels)
+        for (const auto &occupancy : occupancy_map_.value())
         {
-
+            /// Occupied bounding corner locations
             auto half_width = occupancy.second / 2.0F;
             auto x_min = std::get<0>(occupancy.first) - half_width;
             auto x_max = std::get<0>(occupancy.first) + half_width;
@@ -376,14 +374,65 @@
             auto time_min = std::get<2>(occupancy.first);
             auto time_max = std::get<2>(occupancy.first) + max_interval_;
 
-            if(_handle->xCrdnt() >= x_min && _handle->xCrdnt() <= x_max &&
-               _handle->yCrdnt() >= y_min && _handle->yCrdnt() <= y_max &&
-               _handle->time() >= time_min && _handle->time() <= time_max)
+
+            /// Check that the node itself is not in occupied space
+            if (_handle->xCrdnt() >= x_min && _handle->xCrdnt() <= x_max &&
+                _handle->yCrdnt() >= y_min && _handle->yCrdnt() <= y_max &&
+                _handle->time() >= time_min && _handle->time() <= time_max)
             {
-                return true; /// Node is in occupied space
+                occupied = true;
+                break;
+            }
+
+
+            /// Check that the line segment (edge) between the node and the back link
+            /// is not passing through occupied space
+            auto line_x1 = _handle->BackCnnctn()->xCrdnt();
+            auto line_y1 = _handle->BackCnnctn()->yCrdnt();
+            auto line_z1 = _handle->BackCnnctn()->time();
+            auto line_x2 = _handle->xCrdnt();
+            auto line_y2 = _handle->yCrdnt();
+            auto line_z2 = _handle->time();
+
+            /// Line segment intersection check
+            double t_min = 0.0;
+            double t_max = 1.0;
+            double dir_x = line_x2 - line_x1;
+            double dir_y = line_y2 - line_y1;
+            double dir_z = line_z2 - line_z1;
+
+            /// Check each axis (x, y, z/time)
+            for (int i = 0; i < 3; i++) {
+                double min_val = (i == 0) ? x_min : (i == 1) ? y_min : time_min;
+                double max_val = (i == 0) ? x_max : (i == 1) ? y_max : time_max;
+                double p = (i == 0) ? line_x1 : (i == 1) ? line_y1 : line_z1;
+                double d = (i == 0) ? dir_x : (i == 1) ? dir_y : dir_z;
+
+                if (std::abs(d) < 1e-10) { /// Line parallel to axis
+                    if (p < min_val || p > max_val) {
+                        continue; /// Line is outside cube bounds on this axis
+                    }
+                } else {
+                    double t1 = (min_val - p) / d;
+                    double t2 = (max_val - p) / d;
+                    if (t1 > t2) {
+                        std::swap(t1, t2);
+                    }
+                    t_min = std::max(t_min, t1);
+                    t_max = std::min(t_max, t2);
+                    if (t_min > t_max) {
+                        continue; /// No intersection on this axis
+                    }
+                }
+            }
+            /// Check if the valid t range overlaps with [0, 1]
+            if (t_min <= t_max && t_min <= 1.0 && t_max >= 0.0) {
+                occupied = true;
+                break;
             }
         }
-        return false; /// Node is not in occupied space
+        /// Return true if the node or its connecting edge is in occupied space
+        return occupied;
     }
 
     bool RRT::isComplete() 
@@ -441,13 +490,10 @@
 
             /// Add the Node to the Graph 
             addNode(output, 0.0F);
-            std::cout << "Parent: " << adjacencyList_.back()->BackCnnctn() << " Child: " << adjacencyList_.back() << std::endl;
-            std::cout << "Parent Time: " << adjacencyList_.back()->BackCnnctn()->time() << " Child Origin Time: " << adjacencyList_.back()->time() << std::endl;
+
             /// Apply Constraints, This effectively implements the RRT
             /// and also implements kinematic constraints 
             applyConstraints(adjacencyList_.back());
-            std::cout << "Parent: " << adjacencyList_.back()->BackCnnctn() << " Child: " << adjacencyList_.back() << std::endl;
-            std::cout << "Parent Time: " << adjacencyList_.back()->BackCnnctn()->time() << " Child Main Time: " << adjacencyList_.back()->time() << std::endl << std::endl;
 
             /// Check if the new node is in occupied space
             if(isOccupied(adjacencyList_.back()))
