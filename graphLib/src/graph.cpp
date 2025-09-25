@@ -41,7 +41,7 @@ namespace rrt
         setCrdnts(0.0F, 0.0F , 0.0F);
     }
 
-    Node::Node(coordinate_t _crdnts)
+    Node::Node(pose_t _crdnts)
     {
         /// Ensure real value
         setBackEdgeWeight(1.0F); 
@@ -49,7 +49,7 @@ namespace rrt
 
     }
 
-    Node::Node(coordinate_t _crdnts, double _back_edge_weight)
+    Node::Node(pose_t _crdnts, double _back_edge_weight)
     {
         setBackEdgeWeight(_back_edge_weight);
         setCrdnts(_crdnts);
@@ -148,12 +148,12 @@ namespace rrt
         crdnts_ = std::make_tuple(_x, _y, _tm);
     }
 
-    void Node::setCrdnts(coordinate_t _crdnts)
+    void Node::setCrdnts(pose_t _crdnts)
     {
         crdnts_ = _crdnts;
     }
 
-    coordinate_t Node::Crdnts() const
+    pose_t Node::Crdnts() const
     {
         return crdnts_;
     }
@@ -190,7 +190,7 @@ namespace rrt
         initCmplt_ = true;
     }
 
-    void Graph::addNode(Node::coordinate_t _point, double _back_edge_weight)
+    void Graph::addNode(Node::pose_t _point, double _back_edge_weight)
     {
         int size;
         size = adjacencyList_.size();
@@ -209,7 +209,7 @@ namespace rrt
 
     }
 
-    void Graph::addNode(Node* _link, Node::coordinate_t _point, double _back_edge_weight)
+    void Graph::addNode(Node* _link, Node::pose_t _point, double _back_edge_weight)
     {
         if(initCmplt_)
         {
@@ -313,7 +313,7 @@ namespace rrt
         return idx;
     }
 
-    Node::coordinate_t Graph::getCoordinate(Node* _handle) const
+    Node::pose_t Graph::getCoordinate(Node* _handle) const
     {
 
         auto idx = getIndex(_handle);

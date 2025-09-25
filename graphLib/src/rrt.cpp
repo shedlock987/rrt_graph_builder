@@ -64,8 +64,8 @@
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
-        Node::coordinate_t _range_a, Node::coordinate_t _range_b,
-        Node::coordinate_t _origin, Node::coordinate_t _dest,
+        Node::pose_t _range_a, Node::pose_t _range_b,
+        Node::pose_t _origin, Node::pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit) :
                 occupancy_map_(_occupancy_map), 
@@ -76,8 +76,8 @@
     {
     }
 
-    RRT::RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
-        Node::coordinate_t _origin, Node::coordinate_t _dest,
+    RRT::RRT(Node::pose_t _range_a, Node::pose_t _range_b,
+        Node::pose_t _origin, Node::pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
@@ -104,7 +104,7 @@
 
     RRT::~RRT() = default;
 
-    void RRT::setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b)
+    void RRT::setBoundaries(Node::pose_t _range_a, Node::pose_t _range_b)
     {
         range_a_ = _range_a;
         range_b_ = _range_b;
@@ -137,7 +137,7 @@
     }
 
      
-    void RRT::setOrigin(Node::coordinate_t _origin)
+    void RRT::setOrigin(Node::pose_t _origin)
     {
         adjacencyList_.front()->setCrdnts(_origin);
     }
@@ -152,7 +152,7 @@
         adjacencyList_.front()->setCrdnts(_origin_x, _origin_y, _origin_time);
     }
           
-    void RRT::updateDestination(Node::coordinate_t _dest)
+    void RRT::updateDestination(Node::pose_t _dest)
     {
         dest_ = _dest;
     }
@@ -442,7 +442,7 @@
 
     void RRT::buildRRT()
     {
-        Node::coordinate_t output;
+        Node::pose_t output;
 
         while(!cmplt)
         {
@@ -452,7 +452,7 @@
 
     bool RRT::stepRRT()
     {
-        Node::coordinate_t output;
+        Node::pose_t output;
         static auto i = 0;
         i++;
 

@@ -55,10 +55,10 @@ namespace rrt
         int dest_cnnctn_limit = 10; 
         Node* endNode;
 
-        Node::coordinate_t range_a_; /**< Lower Left Corner of the Operating Region */
-        Node::coordinate_t range_b_; /**< Upper Right Corner of the Operating Region */
-        Node::coordinate_t origin_; /**< Origin of the RRT */
-        Node::coordinate_t dest_; /**< Destination of the RRT */
+        Node::pose_t range_a_; /**< Lower Left Corner of the Operating Region */
+        Node::pose_t range_b_; /**< Upper Right Corner of the Operating Region */
+        Node::pose_t origin_; /**< Origin of the RRT */
+        Node::pose_t dest_; /**< Destination of the RRT */
 
         /**
         * @brief   Searches the adjacency list for the nearest node to the given node
@@ -134,16 +134,16 @@ namespace rrt
          * @brief An custom type representing a single voxel in an occupancy map.
          *
          * @details This is represented as a pair containing:
-         *          - coordinate_t: The coordinates of the voxel (x, y, time). Where Time is a physical dimension
+         *          - pose_t: The coordinates of the voxel (x, y, time). Where Time is a physical dimension
          *          - double: A double representing the size of the voxel in meters.
          * @note    The coordinate is at the 2D (x,y) geometric center of the grid cell, and extends vertical by 1 unit time
          */
-        typedef std::pair<coordinate_t, double> occupancy_t; 
+        typedef std::pair<pose_t, double> occupancy_t; 
 
         /**
          * @brief An Occupancy Map (Grid) represented as a simple list of occupied voxels
          *
-         * @details This is represented as a vector of occupancy_t, where each element (coordinate_t)
+         * @details This is represented as a vector of occupancy_t, where each element (pose_t)
          *          present in the list implies occupied space/time. Space is assumed to be free if 
          *          not present in the list. 
          */
@@ -186,7 +186,7 @@ namespace rrt
 
        /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
-        * @note     Constuctor where boundaries are of the type coordinate_t, incluides occupancy map
+        * @note     Constuctor where boundaries are of the type pose_t, incluides occupancy map
         * 
         * @param[in]    _occupancy_map  Optional occupancy map, if provided, will be used to check for freespace
         * @param[in]    _range_a  Lower Left Corner of the Operating Region
@@ -202,14 +202,14 @@ namespace rrt
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */     
         RRT(std::vector<occupancy_t> _occupancy_map,
-        Node::coordinate_t _range_a, Node::coordinate_t _range_b,
-        Node::coordinate_t _origin, Node::coordinate_t _dest,
+        Node::pose_t _range_a, Node::pose_t _range_b,
+        Node::pose_t _origin, Node::pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
         double _max_interval, double _max_time, bool _dim, int _node_limit);
 
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
-        * @note     Constuctor where boundaries are of the type coordinate_t
+        * @note     Constuctor where boundaries are of the type pose_t
         * 
         * @param[in]    _range_a  Lower Left Corner of the Operating Region
         * @param[in]    _range_b  Upper Right Corner of the Operating Region
@@ -223,8 +223,8 @@ namespace rrt
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
         */           
-        RRT(Node::coordinate_t _range_a, Node::coordinate_t _range_b,
-            Node::coordinate_t _origin, Node::coordinate_t _dest,
+        RRT(Node::pose_t _range_a, Node::pose_t _range_b,
+            Node::pose_t _origin, Node::pose_t _dest,
             double _max_angle_rad, double _max_dist, double _min_dist,
             double _max_interval, double _max_time, 
             bool _dim, int _node_limit);
@@ -280,7 +280,7 @@ namespace rrt
         * @param[in]    _range_a  Lower Left Corner of the Operating Region
         * @param[in]    _range_b  Upper Right Corner of the Operating Region
         */
-        void setBoundaries(Node::coordinate_t _range_a, Node::coordinate_t _range_b);
+        void setBoundaries(Node::pose_t _range_a, Node::pose_t _range_b);
 
         /**
         * @brief   Sets the boundaries of where the RRT will build
@@ -299,7 +299,7 @@ namespace rrt
         * 
         * @param[in]    _origin  The coordinate of the origin  
         */       
-        void setOrigin(Node::coordinate_t _origin);
+        void setOrigin(Node::pose_t _origin);
 
         /**
         * @brief   Updates/sets the geometric location of the origin node of the RRT
@@ -322,7 +322,7 @@ namespace rrt
         * 
         * @param[in]    _dest  The coordinate of the destination  
         */            
-        void updateDestination(Node::coordinate_t _dest);
+        void updateDestination(Node::pose_t _dest);
 
         /**
         * @brief   Updates/sets the geometric location of the destination node of the RRT

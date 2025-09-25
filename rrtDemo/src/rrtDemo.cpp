@@ -6,14 +6,14 @@
 #include <boost/python/stl_iterator.hpp>
 #include <boost/python/extract.hpp>
 #include <vector>
-#include <tuple> // For std::get on coordinate_t
+#include <tuple> // For std::get on pose_t
 #include <algorithm> // For std::find if needed, but using getIndex
 
 using namespace boost::python;
 
 namespace rrt
 {
-    using coordinate_t = Node::coordinate_t;
+    using pose_t = Node::pose_t;
 
     VisRRT::VisRRT() : rrt_(new RRT(
         -5.0, 0.0, 5.0, 5.0, // ranges
@@ -26,9 +26,9 @@ namespace rrt
     {
     }
 
-    // Optimized: coordinate_t-based ctor (no occupancy; call setOccupancyMap separately)
-    VisRRT::VisRRT(coordinate_t _range_a, coordinate_t _range_b,
-                   coordinate_t _origin, coordinate_t _dest,
+    // Optimized: pose_t-based ctor (no occupancy; call setOccupancyMap separately)
+    VisRRT::VisRRT(pose_t _range_a, pose_t _range_b,
+                   pose_t _origin, pose_t _dest,
                    double _max_angle_rad, double _max_dist,
                    double _min_dist, double _max_interval,
                    double _max_time, bool _dim_3D, int _node_limit)
@@ -48,10 +48,10 @@ namespace rrt
         return rrt_->stepRRT();
     }
 
-    // Optimized: coordinate_t-based initializeRRT (11 args; extracts x/y for time horizon)
+    // Optimized: pose_t-based initializeRRT (11 args; extracts x/y for time horizon)
     void VisRRT::initializeRRT(
-        coordinate_t _range_a, coordinate_t _range_b,
-        coordinate_t _origin, coordinate_t _dest,
+        pose_t _range_a, pose_t _range_b,
+        pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist,
         double _min_dist, double _max_interval,
         double _max_time, bool _dim_3D, int _node_limit)
@@ -69,16 +69,16 @@ namespace rrt
         rrt_->setNodeLimit(_node_limit);
     }
 
-    void VisRRT::setBoundaries(coordinate_t _range_a, coordinate_t _range_b)
+    void VisRRT::setBoundaries(pose_t _range_a, pose_t _range_b)
     {
         rrt_->setBoundaries(_range_a, _range_b);
     }
 
-    void VisRRT::setOrigin(coordinate_t _origin) {
+    void VisRRT::setOrigin(pose_t _origin) {
         rrt_->setOrigin(_origin);
     }
 
-    void VisRRT::updateDestination(coordinate_t _dest) {
+    void VisRRT::updateDestination(pose_t _dest) {
         rrt_->updateDestination(_dest);
     }
 
@@ -203,7 +203,7 @@ public:
 };
 
 BOOST_PYTHON_MODULE(rrtDemo) {
-    using rrt::coordinate_t;
+    using rrt::pose_t;
 
     // Register tuple converter
     tuple_from_python_converter();
@@ -218,18 +218,18 @@ BOOST_PYTHON_MODULE(rrtDemo) {
     class_<rrt::VisRRT, boost::noncopyable>("RRT", no_init)
         // FIXED: Use init<> instead of ctor<>
         .def(init<>()) // Default
-        .def(init<coordinate_t, coordinate_t, coordinate_t, coordinate_t,
+        .def(init<pose_t, pose_t, pose_t, pose_t,
                   double, double, double, double, double, bool, int>()) // Coord-based (11 args)
 
         .def("buildRRT", &rrt::VisRRT::buildRRT)
         .def("stepRRT", &rrt::VisRRT::stepRRT)
         .def("initializeRRT", static_cast<void (rrt::VisRRT::*)(
-            coordinate_t, coordinate_t, coordinate_t, coordinate_t,
+            pose_t, pose_t, pose_t, pose_t,
             double, double, double, double, double, bool, int
         )>(&rrt::VisRRT::initializeRRT))
-        .def("setBoundaries", static_cast<void (rrt::VisRRT::*)(coordinate_t, coordinate_t)>(&rrt::VisRRT::setBoundaries))
-        .def("setOrigin", static_cast<void (rrt::VisRRT::*)(coordinate_t)>(&rrt::VisRRT::setOrigin))
-        .def("updateDestination", static_cast<void (rrt::VisRRT::*)(coordinate_t)>(&rrt::VisRRT::updateDestination))
+        .def("setBoundaries", static_cast<void (rrt::VisRRT::*)(pose_t, pose_t)>(&rrt::VisRRT::setBoundaries))
+        .def("setOrigin", static_cast<void (rrt::VisRRT::*)(pose_t)>(&rrt::VisRRT::setOrigin))
+        .def("updateDestination", static_cast<void (rrt::VisRRT::*)(pose_t)>(&rrt::VisRRT::updateDestination))
         .def("updateConstraints", &rrt::VisRRT::updateConstraints)
         .def("setDim3D", &rrt::VisRRT::setDim3D)
         .def("setNodeLimit", &rrt::VisRRT::setNodeLimit)
