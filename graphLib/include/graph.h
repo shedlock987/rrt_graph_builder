@@ -265,6 +265,14 @@ class Graph {
         * @param[in]    _dest Pointer to the destination Node/Vertex we want the directed edge to point to
         */   
         void addEdge(Node* _src, Node* _dest);
+
+        /**
+        * @brief    Reassigns the back connection/edge and does housekeeping to remove the fwd link in the old back node
+        *
+        * @param[in]    _src Pointer of the Node/Vertex of the NEW source
+        * @param[in]    _fwd Pointer to the destination Node/Vertex we want the directed edge to point to
+        */   
+        void updateEdge(Node* _src, Node* _fwd);
     
         std::vector<Node *> adjacencyList_;
     };

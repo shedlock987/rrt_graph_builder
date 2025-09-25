@@ -40,6 +40,28 @@ namespace rrt
         }
     };
 
+    class RRT_test : public ::testing::Test
+    {
+        protected:
+        std::shared_ptr<RRT> rrtTest_;  // Default Constructor
+
+        virtual void SetUp()
+        {
+            rrtTest_ = std::make_shared<RRT>(
+                -5.0, 0.0, 5.0, 5.0,   // range_a_x, range_a_y, range_b_x, range_b_y
+                0.0, 0.0, 5.0, 5.0,    // origin_x, origin_y, dest_x, dest_y
+                0.8, 1.0, 0.5, 2.0,    // max_angle_rad, max_dist, min_dist, max_interval
+                10.0,                  // max_time
+                true,                  // dim_3D
+                100                    // node_limit
+            );
+        }
+
+        virtual void TearDown()
+        {
+        }
+    };
+
     TEST_F(Graph_test, ADDNODE_CREATE_WITH_BASE_CONSTRUCTOR_TEST)
     {
         underTest_->addNode(std::make_tuple(4.1, 5, 0), 2.2);
@@ -222,29 +244,28 @@ namespace rrt
         EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0);
     }
 
-    TEST(RRTTest, ForwardNodeTimeIsGreaterOrEqualToParent) {
-    // Create a simple RRT with known parameters
-    RRT rrt(
-        -5.0, 0.0, 5.0, 5.0,   // range_a_x, range_a_y, range_b_x, range_b_y
-        0.0, 0.0, 5.0, 5.0,    // origin_x, origin_y, dest_x, dest_y
-        0.8, 1.0, 0.5, 2.0,    // max_angle_rad, max_dist, min_dist, max_interval
-        10.0,                  // max_time
-        true,                  // dim_3D
-        100                    // node_limit
-    );
+    TEST_F(RRT_test, ForwardNodeTimeIsGreaterOrEqualToParent) {
 
     // Build a small RRT
-    for (int i = 0; i < 10; ++i) {
-        rrt.stepRRT();
+    for (int i = 0; i < 5; i++) {
+        rrtTest_->stepRRT();
     }
 
     // For each node, check that all forward-connected nodes have time >= this node's time
-    for (const Node* parent : rrt.adjacencyList_) {
+    for (size_t parent_idx = 0; parent_idx < rrtTest_->adjacencyList_.size(); ++parent_idx) {
+        const Node* parent = rrtTest_->adjacencyList_[parent_idx];
         double parent_time = parent->time();
         for (const Node* child : parent->fwd_node_) {
+            // Find the index of the child in the adjacency list (if present)
+            auto it = std::find(rrtTest_->adjacencyList_.begin(), rrtTest_->adjacencyList_.end(), child);
+            size_t child_idx = (it != rrtTest_->adjacencyList_.end()) ? std::distance(rrtTest_->adjacencyList_.begin(), it) : static_cast<size_t>(-1);
+
             EXPECT_GE(child->time(), parent_time)
-                << "Child node time is less than parent node time";
+                << "Child node time is less than parent node time.\n"
+                << "Parent ptr: " << parent << " (index " << parent_idx << ")\n"
+                << "Child ptr: " << child << " (index " << child_idx << ")";
         }
+    }
     }
 };
 

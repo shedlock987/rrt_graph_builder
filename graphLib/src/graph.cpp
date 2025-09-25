@@ -338,6 +338,19 @@ namespace rrt
         _dest->setBackCnnctn(_src);
     }
 
+    void Graph::updateEdge(Node* _src, Node* _fwd)
+    {
+        // Remove _fwd from its current back connection's fwd_node_ list
+        Node* old_back = _fwd->BackCnnctn();
+        if (old_back) {
+            auto& fwd_list = old_back->fwd_node_;
+            auto it = std::remove(fwd_list.begin(), fwd_list.end(), _fwd);
+            fwd_list.erase(it, fwd_list.end());
+        }
+        _src->fwd_node_.push_back(_fwd);
+        _fwd->setBackCnnctn(_src);
+    }
+
     /// Function to print the adjacency list of the graph
     void Graph::printGraph() const
     {

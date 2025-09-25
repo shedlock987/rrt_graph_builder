@@ -278,10 +278,14 @@
     void RRT::applyConstraints(Node *_handle)
     {
         Node *nearest = findNearest(_handle);
+
+        /// connects our new node to the nearest while also destroying the fwd 
+        /// connection in the old back link to prevent loop-back in RRT
+        updateEdge(nearest, _handle);
+
         double dist = calcDist(_handle, nearest);
         double angle = calcAngle(_handle, nearest);
         double tm = _handle->time();
-        bool cnstrnts_met = checkConstraints(_handle);
 
         /// Apply Scaling Constraints 
         if(std::abs(angle) > max_angle_rad_)
@@ -299,23 +303,26 @@
         }
 
         /// Need to ensure time never runs backwards 
-        if(tm <= nearest->time()) 
+        std::cout << "Parent: " << nearest << " Child: " << _handle << std::endl;
+        std::cout << "Parent Time: " << nearest->time() << " Child Init Time: " << _handle->time() << std::endl;
+        if(tm < nearest->time()) 
         {
-            tm = nearest->time();
+            tm = nearest->time() + 0.0001F;
         }
-        else if((tm - nearest->time()) > max_interval_)
+        else if(std::abs(tm - nearest->time()) > max_interval_)
         {
             tm = nearest->time() + max_interval_;
         }
+        std::cout << "Parent Time: " << nearest->time() << " Child Modified Time: " << tm << std::endl;
 
         double x = (dist * std::cos(angle)) + nearest->xCrdnt();
         double y = (dist * std::sin(angle)) + nearest->yCrdnt();
 
         /// Update the Node with the new coordinates
         _handle->setCrdnts(x,y,tm);
+        std::cout << "Parent Time: " << nearest->time() << " Child Updated Time: " << _handle->time() << std::endl;
         _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
 
-        cnstrnts_met = checkConstraints(_handle);
     }
 
     void RRT::checkDone()
@@ -434,10 +441,13 @@
 
             /// Add the Node to the Graph 
             addNode(output, 0.0F);
-
+            std::cout << "Parent: " << adjacencyList_.back()->BackCnnctn() << " Child: " << adjacencyList_.back() << std::endl;
+            std::cout << "Parent Time: " << adjacencyList_.back()->BackCnnctn()->time() << " Child Origin Time: " << adjacencyList_.back()->time() << std::endl;
             /// Apply Constraints, This effectively implements the RRT
             /// and also implements kinematic constraints 
             applyConstraints(adjacencyList_.back());
+            std::cout << "Parent: " << adjacencyList_.back()->BackCnnctn() << " Child: " << adjacencyList_.back() << std::endl;
+            std::cout << "Parent Time: " << adjacencyList_.back()->BackCnnctn()->time() << " Child Main Time: " << adjacencyList_.back()->time() << std::endl << std::endl;
 
             /// Check if the new node is in occupied space
             if(isOccupied(adjacencyList_.back()))
