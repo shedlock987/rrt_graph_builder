@@ -52,7 +52,8 @@ namespace rrt
         bool dim_3D_ = false; /**< Specifies if the RRT is 2D or 3D, initialized to 2D, no temporal */
         bool cmplt = false; /**< Flag to indicate the RRT is complete */
         int node_limit_; /**< Maximum number of nodes permitted in the RRT */
-        int dest_cnnctn_limit = 10; 
+        int dest_cnnctn_limit = 10; /**< Maximum number of connections to the destination node */
+        double initial_heading_ = 0.0F; /**< Initial heading of the RRT at the origin node */
         Node* endNode;
 
         pose_t range_a_; /**< Lower Left Corner of the Operating Region */
@@ -248,11 +249,12 @@ namespace rrt
         * @param[in]    _max_time Absolute temporal boundary/limit for the RRT
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _node_limit  Maximum number of nodes permittedin the RRT
+        * @param[in]    _initial_heading  Initial heading of the RRT at the origin node
         */        
         RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval, 
-            double _max_time, bool _dim, int _node_limit);
+            double _max_time, bool _dim, int _node_limit, double _initial_heading);
 
         /**
         * @brief    Destroys the RRT Graph 

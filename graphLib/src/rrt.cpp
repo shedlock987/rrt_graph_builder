@@ -74,6 +74,7 @@
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
     {
+        initial_heading_ = std::get<3>(_origin);
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
@@ -85,19 +86,20 @@
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
     {
+        initial_heading_ = std::get<3>(_origin);
     }
 
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
         double _origin_x, double _origin_y, double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _node_limit) :
+        double _max_interval, double _max_time, bool _dim, int _node_limit, double _initial_heading) :
                 range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
                 range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
                 origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                node_limit_(_node_limit)   
+                node_limit_(_node_limit), initial_heading_(_initial_heading)  
     {
     }
 
