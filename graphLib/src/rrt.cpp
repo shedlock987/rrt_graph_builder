@@ -320,7 +320,7 @@
         double y = (dist * std::sin(angle)) + nearest->yCrdnt();
 
         /// Update the Node with the new coordinates
-        _handle->setPose(x,y,tm, 0.0F); //NEED TO UPDATE WITH HEADING CALC
+        _handle->setPose(x,y,tm, angle); 
         _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
 
     }
