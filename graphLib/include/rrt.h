@@ -120,6 +120,9 @@ namespace rrt
         * */
         void checkDone();
 
+
+
+        public:
         /**
         * @brief   Compares a node (coordinates) against the occupancy map to determine if it is occupied
         * 
@@ -128,9 +131,6 @@ namespace rrt
         */
         bool isOccupied(Node *_handle);
 
-
-
-        public:
         /**
          * @brief An custom type representing a single voxel in an occupancy map.
          *

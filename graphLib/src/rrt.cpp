@@ -384,6 +384,7 @@
                 _handle->time() >= time_min && _handle->time() <= time_max)
             {
                 occupied = true;
+                std::cout << "Node in occupied space"<< std::endl;
                 break;
             }
 
@@ -431,6 +432,7 @@
             /// Check if the valid t range overlaps with [0, 1]
             if (t_min <= t_max && t_min <= 1.0 && t_max >= 0.0) {
                 occupied = true;
+                std::cout << "Edge in occupied space" << std::endl << std::endl;
                 break;
             }
         }
@@ -457,7 +459,6 @@
     {
         pose_t output;
         static auto i = 0;
-        i++;
 
         if(cmplt)
         {
@@ -488,6 +489,9 @@
         auto occupied = true;
         while(occupied)
         {
+            /// increment node count
+            i++;
+
             /// Generate Random Node within permissible range 
             output = std::make_tuple(range_x(gen), range_y(gen), tm, 0.0F);
 
