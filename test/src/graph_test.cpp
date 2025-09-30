@@ -48,13 +48,14 @@ namespace rrt
         virtual void SetUp()
         {
             rrtTest_ = std::make_shared<RRT>(
-                -5.0, -5.0, 5.0, 5.0,   // range_a_x, range_a_y, range_b_x, range_b_y
-                0.0, 0.0, 5.0, 5.0,    // origin_x, origin_y, dest_x, dest_y
-                0.8, 1.0, 0.5, 2.0,    // max_angle_rad, max_dist, min_dist, max_interval
-                10.0,                  // max_time
-                true,                  // dim_3D
-                100,                   // node_limit
-                0.7854                 // initial_heading
+                std::vector<RRT::occupancy_t>(),      // optional occupancy map
+                -5.0, -5.0, 5.0, 5.0,                // range_a_x, range_a_y, range_b_x, range_b_y
+                0.0, 0.0, 5.0, 5.0,                  // origin_x, origin_y, dest_x, dest_y
+                0.8, 1.0, 0.5, 2.0,                  // max_angle_rad, max_dist, min_dist, max_interval
+                10.0,                                // max_time
+                true,                                // dim_3D
+                100,                                 // node_limit
+                0.7854                               // initial_heading
             );
         }
 
@@ -319,6 +320,8 @@ namespace rrt
 
         rrtTest_->addNode(rrtTest_->adjacencyList_.front(), edge_in_node_out, 0.0F);
         EXPECT_TRUE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
+
+
 
 
 

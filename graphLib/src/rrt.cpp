@@ -46,45 +46,36 @@
         updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
         setDim3D(false);
         node_limit_ = 50;
+        initial_heading_ = 0.0F;
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _node_limit) : 
+            double _max_interval, double _max_time, bool _dim, int _node_limit,
+            double _initial_heading) : 
                 occupancy_map_(_occupancy_map), 
                 range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
                 range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
                 origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
+                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
+                node_limit_(_node_limit), initial_heading_(_initial_heading)
     {
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
         pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
-        double _max_angle_rad, double _max_dist, double _min_dist, 
+        double _max_angle_rad, double _max_dist, double _min_dist,
         double _max_interval, double _max_time, bool _dim, int _node_limit) :
-                occupancy_map_(_occupancy_map), 
-                range_a_(_range_a), range_b_(_range_b), 
-                origin_(_origin), dest_(_dest),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
-    {
-        initial_heading_ = std::get<3>(_origin);
-    }
-
-    RRT::RRT(pose_t _range_a, pose_t _range_b,
-        pose_t _origin, pose_t _dest,
-        double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _node_limit) :
-                range_a_(_range_a), range_b_(_range_b), 
-                origin_(_origin), dest_(_dest),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
+        occupancy_map_(_occupancy_map),
+        range_a_(_range_a), range_b_(_range_b),
+        origin_(_origin), dest_(_dest),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
     {
         initial_heading_ = std::get<3>(_origin);
     }
@@ -101,6 +92,18 @@
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
                 node_limit_(_node_limit), initial_heading_(_initial_heading)  
     {
+    }
+
+    RRT::RRT(pose_t _range_a, pose_t _range_b,
+        pose_t _origin, pose_t _dest,
+        double _max_angle_rad, double _max_dist, double _min_dist, 
+        double _max_interval, double _max_time, bool _dim, int _node_limit) :
+                range_a_(_range_a), range_b_(_range_b), 
+                origin_(_origin), dest_(_dest),
+                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
+                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
+    {
+        initial_heading_ = std::get<3>(_origin);
     }
 
 
@@ -376,7 +379,6 @@
             auto y_max = std::get<1>(occupancy.first) + half_width;
             auto time_min = std::get<2>(occupancy.first);
             auto time_max = std::get<2>(occupancy.first) + max_interval_;
-
 
             /// Check that the node itself is not in occupied space
             if (_handle->xCrdnt() >= x_min && _handle->xCrdnt() <= x_max &&
