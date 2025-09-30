@@ -38,37 +38,37 @@ namespace rrt
     Node::Node() 
     {
         setBackEdgeWeight(0.0F);
-        setCrdnts(0.0F, 0.0F , 0.0F);
+        setPose(0.0F, 0.0F , 0.0F, 0.0F);
     }
 
-    Node::Node(pose_t _crdnts)
+    Node::Node(pose_t _pose)
     {
         /// Ensure real value
         setBackEdgeWeight(1.0F); 
-        setCrdnts(_crdnts);
+        setPose(_pose);
 
     }
 
-    Node::Node(pose_t _crdnts, double _back_edge_weight)
+    Node::Node(pose_t _pose, double _back_edge_weight)
     {
         setBackEdgeWeight(_back_edge_weight);
-        setCrdnts(_crdnts);
+        setPose(_pose);
     }
 
     Node::Node(double _x, double _y, double _time, double _back_edge_weight) 
     {
         setBackEdgeWeight(_back_edge_weight);
-        setCrdnts(_x, _y, _time);
+        setPose(_x, _y, _time, 0.0F);
     }
 
     Node::Node(double _x, double _y, double _back_edge_weight)
     {
         setBackEdgeWeight(_back_edge_weight);
-        setCrdnts(_x, _y, 0.0F);
+        setPose(_x, _y, 0.0F, 0.0F);
     }
 
     Node::Node(const Node &_copy) : back_edge_weight_(_copy.back_edge_weight_), back_node_(_copy.back_node_),
-                                    crdnts_(_copy.crdnts_), fwd_node_(_copy.fwd_node_)
+                                    pose_(_copy.pose_), fwd_node_(_copy.fwd_node_)
     {
     }
 
@@ -89,7 +89,7 @@ namespace rrt
 
         std::cout << std::endl;
 
-        std::cout << this << " X:" << std::get<0>(crdnts_) << " Y:" << std::get<1>(crdnts_)  << " time:" << std::get<2>(crdnts_) 
+        std::cout << this << " X:" << std::get<0>(pose_) << " Y:" << std::get<1>(pose_)  << " time:" << std::get<2>(pose_) 
                   << " Back Weight:" << backEdgeWeight() << std::endl;
         std::cout << "Connections:" << std::endl << std::endl;
 
@@ -130,32 +130,37 @@ namespace rrt
 
     double Node::xCrdnt() const
     {
-        return std::get<0>(crdnts_);
+        return std::get<0>(pose_);
     }
 
     double Node::yCrdnt() const
     {
-        return std::get<1>(crdnts_);
+        return std::get<1>(pose_);
     }
 
     double Node::time() const
     {
-        return std::get<2>(crdnts_);
+        return std::get<2>(pose_);
     }
 
-    void Node::setCrdnts(double _x, double _y, double _tm)
+    double Node::heading() const
     {
-        crdnts_ = std::make_tuple(_x, _y, _tm);
+        return std::get<3>(pose_);
     }
 
-    void Node::setCrdnts(pose_t _crdnts)
+    void Node::setPose(double _x, double _y, double _tm, double _hdng)
     {
-        crdnts_ = _crdnts;
+        pose_ = std::make_tuple(_x, _y, _tm, _hdng);
     }
 
-    pose_t Node::Crdnts() const
+    void Node::setPose(pose_t _pose)
     {
-        return crdnts_;
+        pose_ = _pose;
+    }
+
+    pose_t Node::Pose() const
+    {
+        return pose_;
     }
 
     Node* Node::BackCnnctn() const
@@ -180,17 +185,17 @@ namespace rrt
 
     Graph::Graph()
     {      
-        addNode(std::make_tuple(0.0F, 0.0F, 0.0F), 0.0F);
+        addNode(std::make_tuple(0.0F, 0.0F, 0.0F, 0.0F), 0.0F);
         initCmplt_ = true;
     }
     
     Graph::Graph(double _xHead, double _yHead)
     {
-        addNode(std::make_tuple(_xHead, _yHead, 0.0F), 0.0F);
+        addNode(std::make_tuple(_xHead, _yHead, 0.0F, 0.0F), 0.0F);
         initCmplt_ = true;
     }
 
-    void Graph::addNode(Node::pose_t _point, double _back_edge_weight)
+    void Graph::addNode(pose_t _point, double _back_edge_weight)
     {
         int size;
         size = adjacencyList_.size();
@@ -209,7 +214,7 @@ namespace rrt
 
     }
 
-    void Graph::addNode(Node* _link, Node::pose_t _point, double _back_edge_weight)
+    void Graph::addNode(Node* _link, pose_t _point, double _back_edge_weight)
     {
         if(initCmplt_)
         {
@@ -313,11 +318,11 @@ namespace rrt
         return idx;
     }
 
-    Node::pose_t Graph::getCoordinate(Node* _handle) const
+    pose_t Graph::getCoordinate(Node* _handle) const
     {
 
         auto idx = getIndex(_handle);
-        return adjacencyList_.at(idx)->Crdnts();
+        return adjacencyList_.at(idx)->Pose();
     }
   
     Graph::~Graph()

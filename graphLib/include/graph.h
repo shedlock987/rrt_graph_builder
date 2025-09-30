@@ -41,12 +41,11 @@
 
 namespace rrt
 {
-    typedef std::tuple<double, double, double> pose_t;
+    /// @brief x,y,time,heading
+    typedef std::tuple<double, double, double, double> pose_t;
     class Node
         {
             public: 
-                typedef std::tuple<double, double, double> pose_t;
-
                 std::vector<Node *> fwd_node_;
 
                 /**
@@ -57,17 +56,17 @@ namespace rrt
                 /**
                  * @brief   Constructs a new Node/Vertex
                  *
-                 * @param[in]  _crdnts  Cordinates of the Node/Vertex
+                 * @param[in]  _pose  Cordinates of the Node/Vertex
                  */                
-                Node(pose_t _crdnts);
+                Node(pose_t _pose);
 
                 /**
                  * @brief   Constructs a new Node/Vertex
                  *
-                 * @param[in]  _crdnts Coordinates of the Node/Vertex
+                 * @param[in]  _pose Coordinates of the Node/Vertex
                  * * @param[in]  _back_edge_weight  The weight of the back-connected edge
                  */
-                Node(pose_t _crdnts, double _back_edge_weight);
+                Node(pose_t _pose, double _back_edge_weight);
 
                 /**
                  * @brief   Node/Vertex Copy Constructor
@@ -135,27 +134,35 @@ namespace rrt
                 double time() const;
 
                 /**
+                 * @brief   Returns the time/temporal component of the node/vertex 
+                 *
+                 * @return  timestamp
+                 */
+                double heading() const;
+
+                /**
                  * @brief   Sets/updates the coordinates for the Node/Vertex
                  * 
                  * @param[in]  _x   The x-axis cordinate of the Node/Vertex
                  * @param[in]  _y   The y-axis cordinate of the Node/Vertex
                  * @param[in]  _tm  The time/temporal component of the Node/Vertex (assumes 3D)
+                 * @param[in]  _hdng  The heading component of the Node/Vertex
                  */
-                void setCrdnts(double _x, double _y, double _tm);
+                void setPose(double _x, double _y, double _tm, double _hdng);
 
                 /**
                  * @brief   Sets/updates the coordinates for the Node/Vertex
                  * 
-                 * @param[in]  _crdnts   The desired Values for the coordinates
+                 * @param[in]  _pose   The desired Values for the coordinates
                  */
-                void setCrdnts(pose_t _crdnts);
+                void setPose(pose_t _pose);
 
                 /**
                  * @brief   Gets the coordinates for the Node/Vertex
                  * 
                  * @return  The Coordinates of type pose_t
                  */
-                pose_t Crdnts() const;
+                pose_t Pose() const;
 
                 /**
                  * @brief   Gets the Pointer to the Backward-connected Node/Vertex aka Back-Edge
@@ -187,7 +194,7 @@ namespace rrt
 
             private:
                 Node* back_node_;
-                pose_t crdnts_;
+                pose_t pose_;
                 double back_edge_weight_;
         };
 
@@ -219,7 +226,7 @@ class Graph {
         * 
         * @return   The Coordinates of type pose_t
         */
-        Node::pose_t getCoordinate(Node* _handle) const;
+        pose_t getCoordinate(Node* _handle) const;
 
         /**
         * @brief    Console prints the Graph, used for debugging
@@ -232,7 +239,7 @@ class Graph {
         * @param[in]    _point Coordinates of the new Node/Vertex
         * @param[in]    _back_edge_weight The weight of the back-connected edge
         */           
-        void addNode(Node::pose_t _point, double _back_edge_weight);
+        void addNode(pose_t _point, double _back_edge_weight);
 
          /**
         * @brief    Inserts a new Node/Vertex into the Graph connected to selected node
@@ -241,7 +248,7 @@ class Graph {
         * @param[in]    _point Coordinates of the new Node/Vertex
         * @param[in]    _back_edge_weight The weight of the back-connected edge
         */         
-        void addNode(Node* _link, Node::pose_t _point, double _back_edge_weight);
+        void addNode(Node* _link, pose_t _point, double _back_edge_weight);
 
          /**
         * @brief    Removes a specified Node/Vertex from the Graph, Deleted Node's forward links are migrated to the back-connected Node
