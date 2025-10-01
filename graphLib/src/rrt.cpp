@@ -363,7 +363,9 @@
 
     bool RRT::isOccupied(Node *_handle)
     {
+        static int sequential_check = 0;
         bool occupied = false;
+
         if (!occupancy_map_.has_value())
         {
             return false; /// No occupancy map provided, assume not occupied
@@ -434,11 +436,26 @@
             /// Check if the valid t range overlaps with [0, 1]
             if (t_min <= t_max && t_min <= 1.0 && t_max >= 0.0) {
                 occupied = true;
-                std::cout << "Edge in occupied space" << std::endl << std::endl;
                 break;
             }
         }
+        if(occupied)
+        {
+            sequential_check++;
+        }
+        else
+        {
+            sequential_check = 0;
+        }
+
         /// Return true if the node or its connecting edge is in occupied space
+        if (sequential_check > sequential_check_limit_)
+        {
+            std::cout << "Greater than " << sequential_check_limit_ << " Sequential Nodes in Occupied Space: possible non-admissible trajectory." << std::endl;
+
+            /// Exit RRT build if too many sequential occupied nodes
+            cmplt = true;
+        }
         return occupied;
     }
 
@@ -489,7 +506,7 @@
 
         /// Looping to ensure step call results in a new node in non-occupied space
         auto occupied = true;
-        while(occupied)
+        while(occupied && !cmplt)
         {
             /// increment iteration count
             i++;
@@ -522,13 +539,14 @@
 
         if(i > iteration_limit_)
         {
-            std::cout << "Iteration Limit of " << i-1 << " Reached, Stopping RRT" << std::endl;
+            std::cout << "Iteration Limit of " << i-1 << " Reached, Stopping RRT. " << std::endl;
+            std::cout << "ITS POSSIBLE THERE IS NOT AN ADMISSIBLE SOLUTION" << std::endl;
             cmplt = true;
         }
 
         if(cmplt && i <= iteration_limit_)
         {
-            std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes" << std::endl;
+            std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes and " << i << " Iterations." << std::endl;
         }
 
         return cmplt;

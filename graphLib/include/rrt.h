@@ -52,6 +52,7 @@ namespace rrt
         bool dim_3D_ = false; /**< Specifies if the RRT is 2D or 3D, initialized to 2D, no temporal */
         bool cmplt = false; /**< Flag to indicate the RRT is complete */
         int iteration_limit_; /**< Maximum number of of iterations, protect against infinite loops when no admissability */
+        static constexpr int sequential_check_limit_ = 15; /**< After this many sequential nodes in occupied space, we stop and assume a non-admissible trajectory*/
         int dest_cnnctn_limit = 10; /**< Maximum number of connections to the destination node */
         double initial_heading_ = 0.0F; /**< Initial heading of the RRT at the origin node */
         Node* endNode;
