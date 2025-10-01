@@ -327,8 +327,36 @@ namespace rrt
 
     
     }
-};
 
+
+TEST_F(RRT_test, WallOfFire) 
+{
+    // Redirect std::cout
+    std::streambuf* orig_buf = std::cout.rdbuf();
+    std::ostringstream capture;
+    std::cout.rdbuf(capture.rdbuf());
+
+    rrtTest_->setDim3D(false);
+
+    pose_t occupied_coord = std::make_tuple(3.1F, 0.0F, 0, 0.0F);
+    RRT::occupancy_t occupied_space;
+    occupied_space.first = occupied_coord;
+    occupied_space.second = 3.0F;
+    rrtTest_->occupancy_map_->push_back(occupied_space);
+
+    // Build Test Graph
+    rrtTest_->buildRRT();
+
+    // Restore std::cout
+    std::cout.rdbuf(orig_buf);
+
+    std::string output = capture.str();
+    EXPECT_TRUE(output.find("Greater than") != std::string::npos)
+        << "Expected warning about sequential nodes in occupied space not found in output:\n" << output;
+
+    EXPECT_TRUE(rrtTest_->isComplete());
+}
+};
 
 
 int main(int argc, char **argv) {
