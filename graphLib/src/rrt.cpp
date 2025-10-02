@@ -45,7 +45,7 @@
         updateDestination(5.0F, 5.0F);
         updateConstraints(1.05F, 1.0F, 0.5F, 0.0F);
         setDim3D(false);
-        node_limit_ = 50;
+        iteration_limit_ = 50;
         initial_heading_ = 0.0F;
     }
 
@@ -53,7 +53,7 @@
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _node_limit,
+            double _max_interval, double _max_time, bool _dim, int _iteration_limit,
             double _initial_heading) : 
                 occupancy_map_(_occupancy_map), 
                 range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
@@ -62,7 +62,7 @@
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                node_limit_(_node_limit), initial_heading_(_initial_heading)
+                iteration_limit_(_iteration_limit), initial_heading_(_initial_heading)
     {
     }
 
@@ -70,12 +70,12 @@
         pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist,
-        double _max_interval, double _max_time, bool _dim, int _node_limit) :
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
         occupancy_map_(_occupancy_map),
         range_a_(_range_a), range_b_(_range_b),
         origin_(_origin), dest_(_dest),
         max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
     {
         initial_heading_ = std::get<3>(_origin);
     }
@@ -83,25 +83,25 @@
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
         double _origin_x, double _origin_y, double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _node_limit, double _initial_heading) :
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit, double _initial_heading) :
                 range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
                 range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
                 origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                node_limit_(_node_limit), initial_heading_(_initial_heading)  
+                iteration_limit_(_iteration_limit), initial_heading_(_initial_heading)  
     {
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _node_limit) :
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
                 range_a_(_range_a), range_b_(_range_b), 
                 origin_(_origin), dest_(_dest),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), node_limit_(_node_limit)
+                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
     {
         initial_heading_ = std::get<3>(_origin);
     }
@@ -192,9 +192,9 @@
         dim_3D_ = _dim_3D;
     }
 
-    void RRT::setNodeLimit(int _node_limit)
+    void RRT::setIterationLimit(int _iteration_limit)
     {
-        node_limit_ = _node_limit;
+        iteration_limit_ = _iteration_limit;
     }
 
     void RRT::setOccupancyMap(std::vector<occupancy_t> &_occupancy_map)
@@ -363,7 +363,9 @@
 
     bool RRT::isOccupied(Node *_handle)
     {
+        static int sequential_check = 0;
         bool occupied = false;
+
         if (!occupancy_map_.has_value())
         {
             return false; /// No occupancy map provided, assume not occupied
@@ -434,11 +436,26 @@
             /// Check if the valid t range overlaps with [0, 1]
             if (t_min <= t_max && t_min <= 1.0 && t_max >= 0.0) {
                 occupied = true;
-                std::cout << "Edge in occupied space" << std::endl << std::endl;
                 break;
             }
         }
+        if(occupied)
+        {
+            sequential_check++;
+        }
+        else
+        {
+            sequential_check = 0;
+        }
+
         /// Return true if the node or its connecting edge is in occupied space
+        if (sequential_check > sequential_check_limit_)
+        {
+            std::cout << "Greater than " << sequential_check_limit_ << " Sequential Nodes in Occupied Space: possible non-admissible trajectory." << std::endl;
+
+            /// Exit RRT build if too many sequential occupied nodes
+            cmplt = true;
+        }
         return occupied;
     }
 
@@ -489,9 +506,9 @@
 
         /// Looping to ensure step call results in a new node in non-occupied space
         auto occupied = true;
-        while(occupied)
+        while(occupied && !cmplt)
         {
-            /// increment node count
+            /// increment iteration count
             i++;
 
             /// Generate Random Node within permissible range 
@@ -520,15 +537,16 @@
         /// Check to see if the new node is within range of the destination 
         checkDone();
 
-        if(i > node_limit_)
+        if(i > iteration_limit_)
         {
-            std::cout << "Node Limit of " << i-1 << " Reached, Stopping RRT" << std::endl;
+            std::cout << "Iteration Limit of " << i-1 << " Reached, Stopping RRT. " << std::endl;
+            std::cout << "ITS POSSIBLE THERE IS NOT AN ADMISSIBLE SOLUTION" << std::endl;
             cmplt = true;
         }
 
-        if(cmplt && i <= node_limit_)
+        if(cmplt && i <= iteration_limit_)
         {
-            std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes" << std::endl;
+            std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes and " << i << " Iterations." << std::endl;
         }
 
         return cmplt;

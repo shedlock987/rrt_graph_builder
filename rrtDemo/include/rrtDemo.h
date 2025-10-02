@@ -9,37 +9,46 @@
 
 namespace rrt
 {
+
+using pose_t = std::tuple<double, double, double, double>;
+
 class VisRRT
 {
 public:
     VisRRT();
+    VisRRT(std::vector<RRT::occupancy_t> _occupancy_map,
+           pose_t _range_a, pose_t _range_b,
+           pose_t _origin, pose_t _dest,
+           double _max_angle_rad, double _max_dist,
+           double _min_dist, double _max_interval,
+           double _max_time, bool _dim_3D, int _iteration_limit,
+           double _initial_heading);
     VisRRT(pose_t _range_a, pose_t _range_b,
            pose_t _origin, pose_t _dest,
            double _max_angle_rad, double _max_dist,
            double _min_dist, double _max_interval,
-           double _max_time, bool _dim_3D, int _node_limit);
-
+           double _max_time, bool _dim_3D, int _iteration_limit,
+           double _initial_heading);
     ~VisRRT();
 
     void buildRRT();
     bool stepRRT();
-
     void initializeRRT(
         pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist,
         double _min_dist, double _max_interval,
-        double _max_time, bool _dim_3D, int _node_limit);
-
+        double _max_time, bool _dim_3D, int _iteration_limit,
+        double _initial_heading);
     void setBoundaries(pose_t _range_a, pose_t _range_b);
     void setOrigin(pose_t _origin);
     void updateDestination(pose_t _dest);
     void updateConstraints(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval);
     void setDim3D(bool _dim_3D);
-    void setNodeLimit(int _node_limit);
+    void setIterationLimit(int _iteration_limit);
     void setOccupancyMap(std::vector<std::vector<double>> _occp_coords,
-                         std::vector<double> _occp_widths,
-                         std::vector<double> _occp_interval);
+                        std::vector<double> _occp_widths,
+                        std::vector<double> _occp_interval);
     int getNodeCount();
     bool isComplete();
     Node* getNodeAt(int idx);
@@ -48,5 +57,7 @@ public:
 private:
     std::unique_ptr<RRT> rrt_;
 };
-}
+
+} // namespace rrt
+
 #endif /* rrtDemo_H_ */
