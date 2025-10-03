@@ -52,6 +52,8 @@ public:
     int getNodeCount();
     bool isComplete();
     Node* getNodeAt(int idx);
+    bool isAdmissible(Node* node);
+    void updateInitialHeading(double _initial_heading);
     boost::python::list getForwardIndices(int idx);
 
 private:

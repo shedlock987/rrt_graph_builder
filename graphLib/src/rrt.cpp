@@ -470,6 +470,12 @@
         return admissible_;
     }
 
+    void RRT::updateInitialHeading(double _initial_heading)
+    {
+        initial_heading_ = _initial_heading;
+        adjacencyList_.front()->setPose(std::get<0>(origin_), std::get<1>(origin_), std::get<2>(origin_), initial_heading_);
+    }
+
     void RRT::buildRRT()
     {
         pose_t output;

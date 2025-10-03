@@ -39,11 +39,11 @@ VisRRT::VisRRT(std::vector<RRT::occupancy_t> _occupancy_map,
     double _max_time, bool _dim_3D, int _iteration_limit,
     double _initial_heading)
     : rrt_(new RRT(_occupancy_map,
-        std::get<0>(_range_a), std::get<1>(_range_a), std::get<0>(_range_b), std::get<1>(_range_b),
-        std::get<0>(_origin), std::get<1>(_origin), std::get<0>(_dest), std::get<1>(_dest),
+        _range_a, _range_b, _origin, _dest,
         _max_angle_rad, _max_dist, _min_dist, _max_interval,
-        _max_time, _dim_3D, _iteration_limit, _initial_heading))
-{}
+        _max_time, _dim_3D, _iteration_limit))
+{
+}
 
 VisRRT::VisRRT(pose_t _range_a, pose_t _range_b,
     pose_t _origin, pose_t _dest,
@@ -51,12 +51,11 @@ VisRRT::VisRRT(pose_t _range_a, pose_t _range_b,
     double _min_dist, double _max_interval,
     double _max_time, bool _dim_3D, int _iteration_limit,
     double _initial_heading)
-    : rrt_(new RRT(std::vector<RRT::occupancy_t>{},
-        std::get<0>(_range_a), std::get<1>(_range_a), std::get<0>(_range_b), std::get<1>(_range_b),
-        std::get<0>(_origin), std::get<1>(_origin), std::get<0>(_dest), std::get<1>(_dest),
+    : rrt_(new RRT(_range_a, _range_b, _origin, _dest,
         _max_angle_rad, _max_dist, _min_dist, _max_interval,
-        _max_time, _dim_3D, _iteration_limit, _initial_heading))
-{}
+        _max_time, _dim_3D, _iteration_limit))
+{
+}
 
 VisRRT::~VisRRT() = default;
 
@@ -144,6 +143,16 @@ int VisRRT::getNodeCount()
 bool VisRRT::isComplete()
 {
     return rrt_->isComplete();
+}
+
+bool VisRRT::isAdmissible(Node* node)
+{
+    return rrt_->isAdmissible();
+}
+
+void VisRRT::updateInitialHeading(double _initial_heading)
+{
+    rrt_->updateInitialHeading(_initial_heading);
 }
 
 Node* VisRRT::getNodeAt(int idx)
@@ -275,6 +284,7 @@ BOOST_PYTHON_MODULE(rrtDemo) {
     class_<rrt::Node, boost::noncopyable>("Node", no_init)
         .def("xCrdnt", &rrt::Node::xCrdnt)
         .def("yCrdnt", &rrt::Node::yCrdnt)
+        .def("heading", &rrt::Node::heading)
         .def("time", &rrt::Node::time)
         .def("backEdgeWeight", &rrt::Node::backEdgeWeight)
         // Optionally add .def("heading", &rrt::Node::heading) if Node has a heading() method exposed
@@ -303,6 +313,8 @@ BOOST_PYTHON_MODULE(rrtDemo) {
         .def("getNodeCount", &rrt::VisRRT::getNodeCount)
         .def("getNodeAt", &rrt::VisRRT::getNodeAt, return_value_policy<reference_existing_object>())
         .def("getForwardIndices", &rrt::VisRRT::getForwardIndices)
+        .def("isAdmissible", &rrt::VisRRT::isAdmissible)
+        .def("updateInitialHeading", &rrt::VisRRT::updateInitialHeading)
         ;
 
     iterable_converter()

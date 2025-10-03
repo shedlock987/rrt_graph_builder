@@ -388,6 +388,11 @@ namespace rrt
          * @return   Returns true if the RRT has an admissible solution to the destination node with the set constraints
          */
         bool isAdmissible();
+
+        /**
+         * @brief   Overrides the initial heading of the RRT
+         */
+        void updateInitialHeading(double _initial_heading);
     };
 }
 
