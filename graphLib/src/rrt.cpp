@@ -349,6 +349,7 @@
             (end->time() - nearest->time()) <= max_interval_)
             {
                 /// We're at the end, connect the end node to the nearest 
+                admissible_ = true;
                 cmplt = true;
                 addEdge(nearest, end);
                 endNode = end;
@@ -462,6 +463,11 @@
     bool RRT::isComplete() 
     {
         return cmplt;
+    }
+
+    bool RRT::isAdmissible() 
+    {
+        return admissible_;
     }
 
     void RRT::buildRRT()

@@ -351,9 +351,7 @@ TEST_F(RRT_test, WallOfFire)
     std::cout.rdbuf(orig_buf);
 
     std::string output = capture.str();
-    EXPECT_TRUE(output.find("Greater than") != std::string::npos)
-        << "Expected warning about sequential nodes in occupied space not found in output:\n" << output;
-
+    EXPECT_FALSE(rrtTest_->isAdmissible());
     EXPECT_TRUE(rrtTest_->isComplete());
 }
 };

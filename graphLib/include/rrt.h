@@ -51,6 +51,7 @@ namespace rrt
         double max_time_;   /**< Constraint: maximum time */
         bool dim_3D_ = false; /**< Specifies if the RRT is 2D or 3D, initialized to 2D, no temporal */
         bool cmplt = false; /**< Flag to indicate the RRT is complete */
+        bool admissible_ = false; /**< An Admissible solution exists to the destination node */
         int iteration_limit_; /**< Maximum number of of iterations, protect against infinite loops when no admissability */
         static constexpr int sequential_check_limit_ = 15; /**< After this many sequential nodes in occupied space, we stop and assume a non-admissible trajectory*/
         int dest_cnnctn_limit = 10; /**< Maximum number of connections to the destination node */
@@ -381,6 +382,12 @@ namespace rrt
          * @return   Returns true if the RRT is complete, false otherwise
          */
         bool isComplete();
+
+        /**
+         * @brief   Returns the admissability state of the RRT
+         * @return   Returns true if the RRT has an admissible solution to the destination node with the set constraints
+         */
+        bool isAdmissible();
     };
 }
 
