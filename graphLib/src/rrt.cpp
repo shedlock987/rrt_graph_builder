@@ -202,7 +202,7 @@
         occupancy_map_ = _occupancy_map;
     }
 
-    Node* RRT::findNearest(Node *_handle)
+    Node* RRT::findNearest(Node *_handle, bool _temporal)
     {
         int idx;
         int i = 0;
@@ -212,7 +212,7 @@
         /// Need to optimize 
         for(const auto &iter : adjacencyList_)
         {
-            temp = calcDist(_handle, iter);
+            temp = calcDist(_handle, iter, _temporal);
 
             /// Make sure we're not comparing the handle to itself 
             if(temp < min && _handle != iter)
@@ -229,9 +229,9 @@
         return adjacencyList_.at(idx);
     }
 
-    double RRT::calcDist(Node *_handle, Node *_ref)
+    double RRT::calcDist(Node *_handle, Node *_ref, bool _temporal)
     {
-        if(dim_3D_)
+        if(_temporal && dim_3D_)
         {
             return std::sqrt(std::pow(_handle->xCrdnt() - _ref->xCrdnt(), 2) + 
                              std::pow(_handle->yCrdnt() - _ref->yCrdnt(), 2) +
@@ -259,8 +259,8 @@
 
     bool RRT::checkConstraints(Node *_handle)
     {
-        Node *nearest = findNearest(_handle);
-        double dist = calcDist(_handle, nearest);
+        Node *nearest = findNearest(_handle, true);
+        double dist = calcDist(_handle, nearest, true);
         double angle = calcAngle(_handle, nearest);
         double tm = _handle->time();
         auto eplison = 0.0001F;
@@ -282,19 +282,19 @@
 
     void RRT::applyConstraints(Node *_handle)
     {
-        Node *nearest = findNearest(_handle);
+        Node *nearest = findNearest(_handle, true);
 
         /// connects our new node to the nearest while also destroying the fwd 
         /// connection in the old back link to prevent loop-back in RRT
         updateEdge(nearest, _handle);
 
-        double dist = calcDist(_handle, nearest);
+        double dist = calcDist(_handle, nearest, true);
         double angle = calcAngle(_handle, nearest);
         double tm = _handle->time();
 
         /// Apply Scaling Constraints 
         /// Ensure angle change is within limits relative to the previous node's heading/pose
-        if((std::abs(angle) - std::abs(nearest->heading()) > max_angle_rad_))
+        if((std::abs(angle - nearest->heading()) > max_angle_rad_))
         {
             angle = ((angle / std::abs(angle)) * max_angle_rad_) + nearest->heading();
         }
@@ -330,7 +330,7 @@
 
     void RRT::checkDone()
     {
-        /// Make sure this graph isn't already complete 
+        /// Make sure this graph isn't already complete `
         if(!cmplt)
         {
             /// Insert Dummy end-node in graph
@@ -338,21 +338,20 @@
             Node *end = adjacencyList_.back();
 
             /// Find the nearest Node to end 
-            Node *nearest = findNearest(end);
+            Node *nearest = findNearest(end, false);
 
             /// Ensure our dummy end node is on the same time as the nearest node
-            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), 0.0F);
+            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), nearest->heading());
 
             /// Check if we're done 
-            if(std::abs(calcDist(end, nearest)) < max_dist_ &&
-            std::abs(calcAngle(end, nearest)) < max_angle_rad_ &&
-            (end->time() - nearest->time()) <= max_interval_)
+            if(std::abs(calcDist(end, nearest, false)) < max_dist_ &&
+            std::abs(calcAngle(end, nearest)) < max_angle_rad_)
             {
                 /// We're at the end, connect the end node to the nearest 
                 admissible_ = true;
                 cmplt = true;
                 addEdge(nearest, end);
-                endNode = end;
+                end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), nearest->heading());
             }
             else
             {

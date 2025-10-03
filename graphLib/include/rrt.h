@@ -67,18 +67,20 @@ namespace rrt
         * @brief   Searches the adjacency list for the nearest node to the given node
         * 
         * @param[in]    _handle  The given node we want to reference the search against 
+        * @param[in]    _temporal if true will return 3D nearest (z-plane beiing time). otherwise only cares about x,y
         * @return   Pointer to the Graph-Node which is nearest to the handle
         */
-        Node* findNearest(Node *_handle);
+        Node* findNearest(Node *_handle, bool _temporal);
 
         /**
         * @brief   Calculates the 2D eculidian distance between two nodes 
         * 
         * @param[in]    _ref  The first node
         * @param[in]    _handle  The second node
+        * @param[in]    _temporal if true will return 3D distance. Otherwise only cares about x,y
         * @return   Eculidian distance between the two nodes
         */
-        double calcDist(Node *_handle, Node *_ref);
+        double calcDist(Node *_handle, Node *_ref, bool _temporal);
 
         /**
         * @brief   Calculates the angle (in radians) between two nodes 
