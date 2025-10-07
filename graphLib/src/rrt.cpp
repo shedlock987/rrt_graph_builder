@@ -69,7 +69,7 @@
         addNode(dest_, 0.0F);
         Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
         initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        std::cout << "Initial Heading <constructor> (rad): " << initial_heading_ << std::endl;
+        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_); // Ensure origin is set correctly
         deleteNode(end);
     }
 
@@ -86,12 +86,6 @@
     {
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
-
-        addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
-        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        std::cout << "Initial Heading <constructor> (rad): " << initial_heading_ << std::endl;
-        deleteNode(end);
     }
 
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
@@ -112,7 +106,7 @@
         addNode(dest_, 0.0F);
         Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
         initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        std::cout << "Initial Heading <constructor> (rad): " << initial_heading_ << std::endl;
+        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_); // Ensure origin is set correctly
         deleteNode(end);
     }
 
@@ -127,11 +121,6 @@
     {
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
-        
-        addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
-        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        deleteNode(end);
     }
 
 
