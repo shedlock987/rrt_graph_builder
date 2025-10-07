@@ -369,12 +369,18 @@
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
 
+            /// Calculated dummy pose for end node based solely on geometry to nearest node
+            double delta_x = end->xCrdnt() - nearest->xCrdnt();
+            double delta_y = end->yCrdnt() - nearest->yCrdnt();
+            double angle = std::atan2(delta_y, delta_x);
+
             /// Ensure our dummy end node is on the same time as the nearest node
-            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), nearest->heading());
+            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), angle);
 
             /// Check if we're done 
-            if(std::abs(calcDist(end, nearest, false)) < max_dist_ &&
-            std::abs(calcAngle(end, nearest)) < max_angle_rad_)
+            if(std::abs(calcDist(end, nearest, false)) < max_dist_ 
+               /// && std::abs(calcAngle(end, nearest)) < max_angle_rad_ //removing
+            )
             {
                 /// We're at the end, connect the end node to the nearest 
                 admissible_ = true;
@@ -387,6 +393,8 @@
                 /// Destroy dummy end node
                 deleteNode(end);
             }
+
+            /// need to consider adjusting placement of second to last node to ensure admissability
         }  
     }
 
