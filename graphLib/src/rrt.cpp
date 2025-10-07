@@ -53,8 +53,7 @@
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _iteration_limit,
-            double _initial_heading) : 
+            double _max_interval, double _max_time, bool _dim, int _iteration_limit) : 
                 occupancy_map_(_occupancy_map), 
                 range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
                 range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
@@ -62,8 +61,16 @@
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                iteration_limit_(_iteration_limit), initial_heading_(_initial_heading)
+                iteration_limit_(_iteration_limit)
     {
+        setOrigin(_origin_x, _origin_y);
+        setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
+        
+        addNode(dest_, 0.0F);
+        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
+        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
+        std::cout << "Initial Heading <constructor> (rad): " << initial_heading_ << std::endl;
+        deleteNode(end);
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
@@ -77,21 +84,36 @@
         max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
         max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
     {
-        initial_heading_ = std::get<3>(_origin);
+        setOrigin(_origin);
+        setBoundaries(_range_a, _range_b);
+
+        addNode(dest_, 0.0F);
+        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
+        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
+        std::cout << "Initial Heading <constructor> (rad): " << initial_heading_ << std::endl;
+        deleteNode(end);
     }
 
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
         double _origin_x, double _origin_y, double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit, double _initial_heading) :
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
                 range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
                 range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
                 origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
                 dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                iteration_limit_(_iteration_limit), initial_heading_(_initial_heading)  
+                iteration_limit_(_iteration_limit)
     {
+        setOrigin(_origin_x, _origin_y);
+        setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
+        
+        addNode(dest_, 0.0F);
+        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
+        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
+        std::cout << "Initial Heading <constructor> (rad): " << initial_heading_ << std::endl;
+        deleteNode(end);
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
@@ -103,7 +125,13 @@
                 max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
                 max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
     {
-        initial_heading_ = std::get<3>(_origin);
+        setOrigin(_origin);
+        setBoundaries(_range_a, _range_b);
+        
+        addNode(dest_, 0.0F);
+        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
+        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
+        deleteNode(end);
     }
 
 
@@ -248,7 +276,18 @@
     {
         double delta_x = _handle->xCrdnt() - _ref->xCrdnt();
         double delta_y = _handle->yCrdnt() - _ref->yCrdnt();
-        return std::atan2(delta_y, delta_x);
+        double angle = std::atan2(delta_y, delta_x);
+
+        if(_ref->heading() > angle)
+        {
+            angle += _ref->heading();
+        }
+        else if (_ref->heading() < angle)
+        {
+            angle -= _ref->heading();
+        }
+        
+        return angle;
     }
 
     double RRT::calcKinematicEdge(Node *_handle, Node *_ref)
@@ -294,7 +333,7 @@
 
         /// Apply Scaling Constraints 
         /// Ensure angle change is within limits relative to the previous node's heading/pose
-        if((std::abs(angle - nearest->heading()) > max_angle_rad_))
+        if((std::abs(angle) > max_angle_rad_))
         {
             angle = ((angle / std::abs(angle)) * max_angle_rad_) + nearest->heading();
         }
@@ -313,6 +352,7 @@
         {
             tm = nearest->time() + 0.0001F;
         }
+    
         else if(std::abs(tm - nearest->time()) > max_interval_)
         {
             tm = nearest->time() + max_interval_;

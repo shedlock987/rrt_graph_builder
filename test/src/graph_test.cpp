@@ -54,8 +54,7 @@ namespace rrt
                 0.8, 1.0, 0.5, 2.0,                  // max_angle_rad, max_dist, min_dist, max_interval
                 10.0,                                // max_time
                 true,                                // dim_3D
-                100,                                 // node_limit
-                0.7854                               // initial_heading
+                100                                 // node_limit
             );
         }
 

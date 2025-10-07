@@ -182,14 +182,12 @@ namespace rrt
         * @param[in]    _max_time Absolute temporal boundary/limit for the RRT
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _iteration_limit  Maximum number of nodes permittedin the RRT
-        * @param[in]    _initial_heading  Initial heading of the RRT at the origin node
         */   
         RRT(std::vector<occupancy_t> _occupancy_map,
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _iteration_limit,
-            double _initial_heading);
+            double _max_interval, double _max_time, bool _dim, int _iteration_limit);
 
        /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
@@ -255,12 +253,11 @@ namespace rrt
         * @param[in]    _max_time Absolute temporal boundary/limit for the RRT
         * @param[in]    _dim     Specifies if the RRT is 2D or 3D
         * @param[in]    _iteration_limit  Maximum number of nodes permittedin the RRT
-        * @param[in]    _initial_heading  Initial heading of the RRT at the origin node
         */        
         RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval, 
-            double _max_time, bool _dim, int _iteration_limit, double _initial_heading);
+            double _max_time, bool _dim, int _iteration_limit);
 
         /**
         * @brief    Destroys the RRT Graph 
