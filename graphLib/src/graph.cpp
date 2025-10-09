@@ -268,14 +268,14 @@ namespace rrt
 
                 /// Delete Old-HEAD 
                 temp_head_idx = getIndex(_handle);
-                //std::cout << "Old Head Index: " << temp_head_idx << " Old Head: " << adjacencyList_.at(temp_head_idx] << std::endl;
+
                 //adjacencyList_.erase(adjacencyList_.begin() + temp_head_idx + 1); 
             }
             else 
             {
                 auto upstream = adjacencyList_.at(idx)->BackCnnctn();
                 auto upstream_idx = getIndex(upstream);
-                //std::cout << "INITIAL fwd connection size on upstream: " << upstream->fwd_node_.size() << std::endl;
+
                 /// Migrate Deleted Node's Forward Links to the new back link 
  
                 for(const auto &iter_b : adjacencyList_.at(idx)->fwd_node_)
@@ -285,7 +285,7 @@ namespace rrt
                         adjacencyList_.at(upstream_idx)->fwd_node_.push_back(iter_b);
                     }
                 }
-                //std::cout << "AFTER MIGRATION fwd connection size on upstream: " << upstream->fwd_node_.size() << std::endl;
+
                 /// Update Back Links for all the forward connections
                 /// aka do double linked list house keeping 
                 for(const auto &iter_f : adjacencyList_.at(idx)->fwd_node_)
@@ -300,7 +300,7 @@ namespace rrt
                     auto fwd_link = std::remove(upstream->fwd_node_.begin(), upstream->fwd_node_.end(), _handle);
                     upstream->fwd_node_.erase(fwd_link);
                 }
-                //std::cout << "AFTER fwd connection size on upstream: " << upstream->fwd_node_.size() << std::endl;
+
                 /// Finally, Delete the node from adjacency list 
                 adjacencyList_.erase(adjacencyList_.begin() + idx);
             }

@@ -369,33 +369,74 @@
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
 
-            /// Calculated dummy pose for end node based solely on geometry to nearest node
-            double delta_x = end->xCrdnt() - nearest->xCrdnt();
-            double delta_y = end->yCrdnt() - nearest->yCrdnt();
-            double angle = std::atan2(delta_y, delta_x);
+            /// Connect end to nearest
+            addEdge(nearest, end);
 
-            /// Ensure our dummy end node is on the same time as the nearest node
-            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), angle);
+            /// Grab the preceeding node to nearest
+            Node *second_nearest = nearest->BackCnnctn();
 
-            /// Check if we're done 
-            if(std::abs(calcDist(end, nearest, false)) < max_dist_ 
-               /// && std::abs(calcAngle(end, nearest)) < max_angle_rad_ //removing
-            )
+            /// Stash these in case the heuristic fails and we need to revert
+            pose_t original_pose_ = nearest->Pose();
+            double original_back_edge_weight_ = nearest->backEdgeWeight();
+
+            /// Calculate parameters between end and end/second_nearest
+            double dist = calcDist(end, second_nearest, false);
+            double angle = calcAngle(end, second_nearest);
+            auto epsilon  = 0.0001F;
+
+            /// Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)
+            if(std::abs(calcDist(end, nearest, false)) < max_dist_)
             {
-                /// We're at the end, connect the end node to the nearest 
-                admissible_ = true;
-                cmplt = true;
-                addEdge(nearest, end);
-                end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), nearest->heading());
+                /// Heuristic: lets smooth out the end and make a nice "landing path" to the destination
+
+                /// Check constraints against second nearest (doubling the constraints values (Assuming time is fine, if it werrent we wouldnt be in this method))
+                if((std::abs(angle) < 2 * max_angle_rad_ || std::abs(std::abs(angle) - 2 * max_angle_rad_) <= epsilon) &&
+                (std::abs(dist) < 2 * max_dist_ || std::abs(std::abs(dist) - 2 *max_dist_) <= epsilon) &&
+                (std::abs(dist) > 2 * min_dist_ || std::abs(std::abs(dist) - 2 *min_dist_) <= epsilon))
+                {   
+
+                    auto nearest_x = ((end->xCrdnt() - second_nearest->xCrdnt()) / 2.0F) + second_nearest->xCrdnt();
+                    auto nearest_y = ((end->yCrdnt() - second_nearest->yCrdnt()) / 2.0F) + second_nearest->yCrdnt();
+                    auto nearest_heading = (angle - second_nearest->heading()) / 2.0F + second_nearest->heading();
+
+                    /// Reposition nearest to be at the midpoint between the preceeding and the end node
+                    nearest->setPose(nearest_x, nearest_y, nearest->time(), nearest_heading);
+                    end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), angle);
+                    
+
+                    /// Double check that the second nearest node is still within constraints
+                    if(!isOccupied(nearest))
+                    //if(true)
+                    {
+                        admissible_ = true;
+                        cmplt = true;
+                    }
+                    else
+                    {
+                        /// Not good enough, destroy the dummy end node, try again
+                        deleteNode(end);
+
+                        /// Put humpty dumpty back together again
+                        nearest->setPose(original_pose_);
+                        nearest->setBackEdgeWeight(original_back_edge_weight_);
+                    }
+                }
+                else{
+                    /// Not good enough, destroy the dummy end node, try again
+                    deleteNode(end);
+
+                    /// Put humpty dumpty back together again
+                    nearest->setPose(original_pose_);
+                    nearest->setBackEdgeWeight(original_back_edge_weight_);
+                }
             }
             else
             {
                 /// Destroy dummy end node
                 deleteNode(end);
             }
-
-            /// need to consider adjusting placement of second to last node to ensure admissability
-        }  
+        }
+        
     }
 
     bool RRT::isOccupied(Node *_handle)
@@ -599,5 +640,4 @@
 
         return cmplt;
     }
-
- }
+}
