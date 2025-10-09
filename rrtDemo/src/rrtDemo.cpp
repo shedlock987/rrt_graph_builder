@@ -26,7 +26,8 @@ VisRRT::VisRRT()
         0.8, 1.0, 0.5, 2.0, // constraints
         10.0, // max_time
         true, // dim_3D
-        10000 // node_limit
+        10000, // node_limit
+        1      // max_admissible (default value)
     ))
 {}
 
@@ -35,11 +36,12 @@ VisRRT::VisRRT(std::vector<RRT::occupancy_t> _occupancy_map,
     pose_t _origin, pose_t _dest,
     double _max_angle_rad, double _max_dist,
     double _min_dist, double _max_interval,
-    double _max_time, bool _dim_3D, int _iteration_limit)
+    double _max_time, bool _dim_3D, int _iteration_limit,
+    int _max_admissible)
     : rrt_(new RRT(_occupancy_map,
         _range_a, _range_b, _origin, _dest,
         _max_angle_rad, _max_dist, _min_dist, _max_interval,
-        _max_time, _dim_3D, _iteration_limit))
+        _max_time, _dim_3D, _iteration_limit, _max_admissible))
 {
 }
 
@@ -47,10 +49,11 @@ VisRRT::VisRRT(pose_t _range_a, pose_t _range_b,
     pose_t _origin, pose_t _dest,
     double _max_angle_rad, double _max_dist,
     double _min_dist, double _max_interval,
-    double _max_time, bool _dim_3D, int _iteration_limit)
+    double _max_time, bool _dim_3D, int _iteration_limit,
+    int _max_admissible)
     : rrt_(new RRT(_range_a, _range_b, _origin, _dest,
         _max_angle_rad, _max_dist, _min_dist, _max_interval,
-        _max_time, _dim_3D, _iteration_limit))
+        _max_time, _dim_3D, _iteration_limit, _max_admissible))
 {
 }
 
@@ -289,10 +292,8 @@ BOOST_PYTHON_MODULE(rrtDemo) {
 
     class_<rrt::VisRRT, boost::noncopyable>("RRT", no_init)
         .def(init<>()) // Default
-        // UPDATED: With initial_heading (12 args, pose_t-based without occupancy map)
-        .def(init<pose_t, pose_t, pose_t, pose_t, double, double, double, double, double, bool, int>())
-        // UPDATED: With initial_heading (13 args, with occupancy map)
-        .def(init<std::vector<rrt::RRT::occupancy_t>, pose_t, pose_t, pose_t, pose_t, double, double, double, double, double, bool, int>())
+        .def(init<std::vector<rrt::RRT::occupancy_t>, pose_t, pose_t, pose_t, pose_t, double, double, double, double, double, bool, int, int>())
+        .def(init<pose_t, pose_t, pose_t, pose_t, double, double, double, double, double, bool, int, int>())
         .def("buildRRT", &rrt::VisRRT::buildRRT)
         .def("stepRRT", &rrt::VisRRT::stepRRT)
         .def("initializeRRT", static_cast<void (rrt::VisRRT::*)(

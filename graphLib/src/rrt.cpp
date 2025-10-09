@@ -36,10 +36,8 @@
  namespace rrt 
  {
     RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map) : 
-                occupancy_map_(_occupancy_map)
+        occupancy_map_(_occupancy_map)
     {
-        
-        /// Defaults
         setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
         setOrigin(0.0F, -5.0F);
         updateDestination(5.0F, 5.0F);
@@ -47,29 +45,30 @@
         setDim3D(false);
         iteration_limit_ = 50;
         initial_heading_ = 0.0F;
+        max_admissible_ = 1;
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _iteration_limit) : 
-                occupancy_map_(_occupancy_map), 
-                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
-                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
-                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
-                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                iteration_limit_(_iteration_limit)
+            double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+            int _max_admissible) : 
+        occupancy_map_(_occupancy_map), 
+        range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
+        range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
+        origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
+        dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        
         addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
-        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_); // Ensure origin is set correctly
+        Node *end = adjacencyList_.back();
+        initial_heading_ = calcAngle(adjacencyList_.front(), end);
+        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
         deleteNode(end);
     }
 
@@ -77,12 +76,14 @@
         pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist,
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+        int _max_admissible) :
         occupancy_map_(_occupancy_map),
         range_a_(_range_a), range_b_(_range_b),
         origin_(_origin), dest_(_dest),
         max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim),
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
@@ -91,33 +92,35 @@
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
         double _origin_x, double _origin_y, double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
-                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
-                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
-                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
-                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                iteration_limit_(_iteration_limit)
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+        int _max_admissible) :
+        range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
+        range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
+        origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
+        dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        
         addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
-        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_); // Ensure origin is set correctly
+        Node *end = adjacencyList_.back();
+        initial_heading_ = calcAngle(adjacencyList_.front(), end);
+        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
         deleteNode(end);
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
-                range_a_(_range_a), range_b_(_range_b), 
-                origin_(_origin), dest_(_dest),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+        int _max_admissible) :
+        range_a_(_range_a), range_b_(_range_b), 
+        origin_(_origin), dest_(_dest),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim),
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
