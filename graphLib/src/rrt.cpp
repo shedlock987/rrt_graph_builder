@@ -369,25 +369,20 @@
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
 
+            /// Connect end to nearest
+            addEdge(nearest, end);
+
             /// Grab the preceeding node to nearest
             Node *second_nearest = nearest->BackCnnctn();
 
             /// Stash these in case the heuristic fails and we need to revert
-            auto original_x_ = nearest->xCrdnt();
-            auto original_y_ = nearest->yCrdnt();
-            auto original_time_ = nearest->time();
-            auto original_heading_ = nearest->heading();
+            pose_t original_pose_ = nearest->Pose();
+            double original_back_edge_weight_ = nearest->backEdgeWeight();
 
-            /// Calculated dummy pose for end node based solely on geometry to nearest node
-            //double delta_x = end->xCrdnt() - nearest->xCrdnt();
-            //double delta_y = end->yCrdnt() - nearest->yCrdnt();
-            //double angle = std::atan2(delta_y, delta_x);
+            /// Calculate parameters between end and end/second_nearest
             double dist = calcDist(end, second_nearest, false);
             double angle = calcAngle(end, second_nearest);
             auto epsilon  = 0.0001F;
-
-            /// Ensure our dummy end node is on the same time as the nearest node
-            end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), angle);
 
             /// Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)
             if(std::abs(calcDist(end, nearest, false)) < max_dist_)
@@ -407,12 +402,12 @@
                     /// Reposition nearest to be at the midpoint between the preceeding and the end node
                     nearest->setPose(nearest_x, nearest_y, nearest->time(), nearest_heading);
                     end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), angle);
-                    addEdge(nearest, end);
+                    
 
                     /// Double check that the second nearest node is still within constraints
-                    if(true) /*&& checkConstraints(end)*/
+                    //if(checkConstraints(end) && checkConstraints(nearest) && !isOccupied(nearest) && !isOccupied(end) )
+                    if(true)
                     {
-                        
                         admissible_ = true;
                         cmplt = true;
                     }
@@ -422,8 +417,17 @@
                         deleteNode(end);
 
                         /// Put humpty dumpty back together again
-                        nearest->setPose(original_x_, original_y_, original_time_, original_heading_);
+                        nearest->setPose(original_pose_);
+                        nearest->setBackEdgeWeight(original_back_edge_weight_);
                     }
+                }
+                else{
+                    /// Not good enough, destroy the dummy end node, try again
+                    deleteNode(end);
+
+                    /// Put humpty dumpty back together again
+                    nearest->setPose(original_pose_);
+                    nearest->setBackEdgeWeight(original_back_edge_weight_);
                 }
             }
             else
