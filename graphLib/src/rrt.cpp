@@ -405,8 +405,8 @@
                     
 
                     /// Double check that the second nearest node is still within constraints
-                    //if(checkConstraints(end) && checkConstraints(nearest) && !isOccupied(nearest) && !isOccupied(end) )
-                    if(true)
+                    if(!isOccupied(nearest))
+                    //if(true)
                     {
                         admissible_ = true;
                         cmplt = true;
