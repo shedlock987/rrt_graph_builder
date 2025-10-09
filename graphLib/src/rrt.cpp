@@ -369,6 +369,12 @@
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
 
+            /// Stash these in case the heuristic fails and we need to revert
+            auto original_x_ = nearest->xCrdnt();
+            auto original_y_ = nearest->yCrdnt();
+            auto original_time_ = nearest->time();
+            auto original_heading_ = nearest->heading();
+
             /// Calculated dummy pose for end node based solely on geometry to nearest node
             double delta_x = end->xCrdnt() - nearest->xCrdnt();
             double delta_y = end->yCrdnt() - nearest->yCrdnt();
@@ -377,16 +383,41 @@
             /// Ensure our dummy end node is on the same time as the nearest node
             end->setPose(end->xCrdnt(), end->yCrdnt(), nearest->time(), angle);
 
-            /// Check if we're done 
-            if(std::abs(calcDist(end, nearest, false)) < max_dist_ 
-               /// && std::abs(calcAngle(end, nearest)) < max_angle_rad_ //removing
-            )
+            /// Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)
+            if(std::abs(calcDist(end, nearest, false)) < max_dist_)
             {
-                /// We're at the end, connect the end node to the nearest 
-                admissible_ = true;
-                cmplt = true;
+                /// Heuristic: lets smooth out the end and make a nice "landing path" to the destination
+
+                /// Grab the preceeding node to nearest
+                Node *second_nearest = nearest->BackCnnctn();
+
                 addEdge(nearest, end);
-                end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), nearest->heading());
+                
+                /// Calculate midpoint between preceeding node and end
+                auto second_dist = calcDist(end, second_nearest, false);
+                auto second_angle = calcAngle(end, second_nearest);
+                auto nearest_x = ((end->xCrdnt() - nearest->xCrdnt()) / 2.0F) + nearest->xCrdnt();
+                auto nearest_y = ((end->yCrdnt() - nearest->yCrdnt()) / 2.0F) + nearest->yCrdnt();
+                auto nearest_heading = second_angle / 2.0F;
+
+                /// Reposition nearest to be at the midpoint between the preceeding and the end node
+                nearest->setPose(nearest_x, nearest_y, nearest->time(), original_heading_);
+                end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), second_angle);
+
+                /// Double check that the second nearest node is still within constraints
+                if(true && checkConstraints(nearest) /*&& checkConstraints(end)*/)
+                {
+                    admissible_ = true;
+                    cmplt = true;
+                }
+                else
+                {
+                    /// Not good enough, destroy the dummy end node, try again
+                    deleteNode(end);
+
+                    /// Put humpty dumpty back together again
+                    nearest->setPose(original_x_, original_y_, original_time_, original_heading_);
+                }
             }
             else
             {
