@@ -448,7 +448,7 @@
                         addEdge(nearest, adjacencyList_.back());
 
                         /// list this node as an admissible destination node
-                        destNodes.push_back(end);
+                        destNodes.push_back(adjacencyList_.back());
                         admissible_ = true;
                         if(destNodes.size() >= max_admissible_)
                         {
