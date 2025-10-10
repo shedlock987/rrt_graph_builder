@@ -65,11 +65,9 @@
     {
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back();
+        Node *end = new Node(_dest_x, _dest_y, 0.0F, 0.0F);
         initial_heading_ = calcAngle(adjacencyList_.front(), end);
         adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
-        deleteNode(end);
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
@@ -104,11 +102,9 @@
     {
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back();
+        Node *end = new Node(_dest_x, _dest_y, 0.0F, 0.0F);
         initial_heading_ = calcAngle(adjacencyList_.front(), end);
         adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
-        deleteNode(end);
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
@@ -443,12 +439,6 @@
             /// Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)
             if(std::abs(calcDist(end, nearest, false)) < max_dist_)
             {
-                
-                    std::cout << "Max allowed distance: " << max_dist_ << "\n";
-                    std::cout << "dist between end and nearest: " << std::abs(calcDist(end, nearest, false)) << "\n";
-                    std::cout << "nearest coordinate: (" << nearest->xCrdnt() << ", " << nearest->yCrdnt() << ", " << nearest->time() << ", " << nearest->heading() << ")\n";
-                    std::cout << "end coordinate: (" << end->xCrdnt() << ", " << end->yCrdnt() << ", " << end->time() << ", " << end->heading() << ")\n";
-
                 /// Heuristic: lets smooth out the end and make a nice "landing path" to the destination
 
                 /// Check constraints against second nearest (doubling the constraints values (Assuming time is fine, if it werrent we wouldnt be in this method))
