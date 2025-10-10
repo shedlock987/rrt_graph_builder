@@ -21,12 +21,14 @@ public:
            pose_t _origin, pose_t _dest,
            double _max_angle_rad, double _max_dist,
            double _min_dist, double _max_interval,
-           double _max_time, bool _dim_3D, int _iteration_limit);
+           double _max_time, bool _dim_3D, int _iteration_limit,
+           int _max_admissible);
     VisRRT(pose_t _range_a, pose_t _range_b,
            pose_t _origin, pose_t _dest,
            double _max_angle_rad, double _max_dist,
            double _min_dist, double _max_interval,
-           double _max_time, bool _dim_3D, int _iteration_limit);
+           double _max_time, bool _dim_3D, int _iteration_limit,
+           int _max_admissible);
     ~VisRRT();
 
     void buildRRT();

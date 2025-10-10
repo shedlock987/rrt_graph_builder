@@ -36,10 +36,8 @@
  namespace rrt 
  {
     RRT::RRT(const std::optional<std::vector<occupancy_t>> _occupancy_map) : 
-                occupancy_map_(_occupancy_map)
+        occupancy_map_(_occupancy_map)
     {
-        
-        /// Defaults
         setBoundaries(-5.0F, -5.0F, 5.0F, 5.0F, 10.0F);
         setOrigin(0.0F, -5.0F);
         updateDestination(5.0F, 5.0F);
@@ -47,29 +45,30 @@
         setDim3D(false);
         iteration_limit_ = 50;
         initial_heading_ = 0.0F;
+        max_admissible_ = 1;
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
             double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
             double _origin_x, double _origin_y, double _dest_x, double _dest_y,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, bool _dim, int _iteration_limit) : 
-                occupancy_map_(_occupancy_map), 
-                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
-                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
-                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
-                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                iteration_limit_(_iteration_limit)
+            double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+            int _max_admissible) : 
+        occupancy_map_(_occupancy_map), 
+        range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
+        range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
+        origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
+        dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        
         addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
-        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_); // Ensure origin is set correctly
+        Node *end = adjacencyList_.back();
+        initial_heading_ = calcAngle(adjacencyList_.front(), end);
+        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
         deleteNode(end);
     }
 
@@ -77,12 +76,14 @@
         pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist,
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+        int _max_admissible) :
         occupancy_map_(_occupancy_map),
         range_a_(_range_a), range_b_(_range_b),
         origin_(_origin), dest_(_dest),
         max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim),
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
@@ -91,33 +92,35 @@
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
         double _origin_x, double _origin_y, double _dest_x, double _dest_y,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
-                range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
-                range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
-                origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
-                dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
-                iteration_limit_(_iteration_limit)
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+        int _max_admissible) :
+        range_a_(std::make_tuple(_range_a_x, _range_a_y, 0.0F, 0.0F)),
+        range_b_(std::make_tuple(_range_b_x, _range_b_y, _max_time, 0.0F)),
+        origin_(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F)),
+        dest_(std::make_tuple(_dest_x, _dest_y, 0.0F, 0.0F)),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist),
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
-        
         addNode(dest_, 0.0F);
-        Node *end = adjacencyList_.back(); // Temporary end node to calculate initial heading
-        initial_heading_ = calcAngle(adjacencyList_.front(), end); // Set initial heading towards destination
-        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_); // Ensure origin is set correctly
+        Node *end = adjacencyList_.back();
+        initial_heading_ = calcAngle(adjacencyList_.front(), end);
+        adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
         deleteNode(end);
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
         pose_t _origin, pose_t _dest,
         double _max_angle_rad, double _max_dist, double _min_dist, 
-        double _max_interval, double _max_time, bool _dim, int _iteration_limit) :
-                range_a_(_range_a), range_b_(_range_b), 
-                origin_(_origin), dest_(_dest),
-                max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
-                max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), iteration_limit_(_iteration_limit)
+        double _max_interval, double _max_time, bool _dim, int _iteration_limit,
+        int _max_admissible) :
+        range_a_(_range_a), range_b_(_range_b), 
+        origin_(_origin), dest_(_dest),
+        max_angle_rad_(_max_angle_rad), max_dist_(_max_dist), min_dist_(_min_dist), 
+        max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim),
+        iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
@@ -161,17 +164,46 @@
      
     void RRT::setOrigin(pose_t _origin)
     {
-        adjacencyList_.front()->setPose(_origin);
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin);
+        }
+        else
+        {
+            addNode(_origin, 0.0F);
+        }
     }
  
     void RRT::setOrigin(double _origin_x, double _origin_y)
     {
-        adjacencyList_.front()->setPose(_origin_x, _origin_y, 0.0F, 0.0F);
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin_x, _origin_y, 0.0F, 0.0F);
+        }
+        else
+        {
+            addNode(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F), 0.0F);
+        }
     }
 
     void RRT::setOrigin(double _origin_x, double _origin_y, double _origin_time)
     {
-        adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, 0.0F);
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, 0.0F);
+        }
+        else
+        {
+            addNode(std::make_tuple(_origin_x, _origin_y, _origin_time, 0.0F), 0.0F);
+        }
+    }
+
+    void RRT::setOrigin(double _origin_x, double _origin_y, double _origin_time, double _origin_heading)
+    {
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, _origin_heading);
+        }
+        else
+        {
+            addNode(std::make_tuple(_origin_x, _origin_y, _origin_time, 0.0F), 0.0F);
+        }
     }
           
     void RRT::updateDestination(pose_t _dest)
@@ -221,7 +253,7 @@
 
     Node* RRT::findNearest(Node *_handle, bool _temporal)
     {
-        int idx;
+        int idx = -1;
         int i = 0;
         double temp;
         double min = DBL_MAX;
@@ -229,6 +261,29 @@
         /// Need to optimize 
         for(const auto &iter : adjacencyList_)
         {
+            /// Ignore/do not consider any destination nodes or nodes with forward connections to destination nodes
+            if (std::find(destNodes.begin(), destNodes.end(), iter) != destNodes.end())
+            {
+                i++;
+                continue;
+            }
+
+            /// Check if this node has any forward connections to destination nodes
+            bool has_fwd_to_dest = false;
+            for (const auto& fwd : iter->fwd_node_)
+            {
+                if (std::find(destNodes.begin(), destNodes.end(), fwd) != destNodes.end())
+                {
+                    has_fwd_to_dest = true;
+                    break;
+                }
+            }
+            if (has_fwd_to_dest)
+            {
+                i++;
+                continue;
+            }
+
             temp = calcDist(_handle, iter, _temporal);
 
             /// Make sure we're not comparing the handle to itself 
@@ -236,13 +291,14 @@
             {
                 min = temp;
                 idx = i;
-                i++;
             }
-            else
-            {
-                i++;
-            }
+            i++;
         }
+
+        // If no valid nearest node found, return nullptr
+        if (idx == -1)
+            return nullptr;
+
         return adjacencyList_.at(idx);
     }
 
@@ -362,15 +418,15 @@
         /// Make sure this graph isn't already complete `
         if(!cmplt)
         {
-            /// Insert Dummy end-node in graph
-            addNode(dest_, 0.0F);
-            Node *end = adjacencyList_.back();
+            /// Create Dummy end-node with time of zero
+            Node *end = new Node();
+            end->setPose(std::get<0>(dest_), std::get<1>(dest_), 0.0F, std::get<3>(dest_));
 
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
 
-            /// Connect end to nearest
-            addEdge(nearest, end);
+            /// Update the destination time to be equal to the nearest node's time
+            end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), std::get<3>(dest_));
 
             /// Grab the preceeding node to nearest
             Node *second_nearest = nearest->BackCnnctn();
@@ -387,6 +443,12 @@
             /// Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)
             if(std::abs(calcDist(end, nearest, false)) < max_dist_)
             {
+                
+                    std::cout << "Max allowed distance: " << max_dist_ << "\n";
+                    std::cout << "dist between end and nearest: " << std::abs(calcDist(end, nearest, false)) << "\n";
+                    std::cout << "nearest coordinate: (" << nearest->xCrdnt() << ", " << nearest->yCrdnt() << ", " << nearest->time() << ", " << nearest->heading() << ")\n";
+                    std::cout << "end coordinate: (" << end->xCrdnt() << ", " << end->yCrdnt() << ", " << end->time() << ", " << end->heading() << ")\n";
+
                 /// Heuristic: lets smooth out the end and make a nice "landing path" to the destination
 
                 /// Check constraints against second nearest (doubling the constraints values (Assuming time is fine, if it werrent we wouldnt be in this method))
@@ -406,34 +468,31 @@
 
                     /// Double check that the second nearest node is still within constraints
                     if(!isOccupied(nearest))
-                    //if(true)
                     {
+                        /// Formally add the dummy destination node to the graph
+                        pushNode(end);
+                        addEdge(nearest, adjacencyList_.back());
+
+                        /// list this node as an admissible destination node
+                        destNodes.push_back(adjacencyList_.back());
                         admissible_ = true;
-                        cmplt = true;
+                        if(destNodes.size() >= max_admissible_)
+                        {
+                            cmplt = true;
+                        }
                     }
                     else
                     {
-                        /// Not good enough, destroy the dummy end node, try again
-                        deleteNode(end);
-
                         /// Put humpty dumpty back together again
                         nearest->setPose(original_pose_);
                         nearest->setBackEdgeWeight(original_back_edge_weight_);
                     }
                 }
                 else{
-                    /// Not good enough, destroy the dummy end node, try again
-                    deleteNode(end);
-
                     /// Put humpty dumpty back together again
                     nearest->setPose(original_pose_);
                     nearest->setBackEdgeWeight(original_back_edge_weight_);
                 }
-            }
-            else
-            {
-                /// Destroy dummy end node
-                deleteNode(end);
             }
         }
         
@@ -448,6 +507,15 @@
         {
             return false; /// No occupancy map provided, assume not occupied
         }
+
+        /// Check if the back connection exists; if not, assume not occupied
+        if (!_handle->BackCnnctn())
+        {
+            std::cerr << "Warning: Node has no back connection; cannot check edge occupancy. Terminating RRT" << std::endl;
+            cmplt = true; // Terminate RRT build
+            return true;
+        }
+
         /// Iterate through the occupied cubes (voxels)
         for (const auto &occupancy : occupancy_map_.value())
         {
@@ -466,14 +534,14 @@
                 _handle->time() >= time_min && _handle->time() <= time_max)
             {
                 occupied = true;
-                std::cout << "Node in occupied space"<< std::endl;
+                std::cout << "Node in occupied space" << std::endl;
                 break;
             }
 
 
             /// Check that the line segment (edge) between the node and the back link
             /// is not passing through occupied space
-            auto line_x1 = _handle->BackCnnctn()->xCrdnt();
+            auto line_x1 = _handle->BackCnnctn()->xCrdnt();  // Now safe
             auto line_y1 = _handle->BackCnnctn()->yCrdnt();
             auto line_z1 = _handle->BackCnnctn()->time();
             auto line_x2 = _handle->xCrdnt();
@@ -517,7 +585,7 @@
                 break;
             }
         }
-        if(occupied)
+        if (occupied)
         {
             sequential_check++;
         }
