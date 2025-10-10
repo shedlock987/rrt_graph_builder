@@ -68,7 +68,8 @@ namespace rrt
         * 
         * @param[in]    _handle  The given node we want to reference the search against 
         * @param[in]    _temporal if true will return 3D nearest (z-plane beiing time). otherwise only cares about x,y
-        * @return   Pointer to the Graph-Node which is nearest to the handle
+        * @note         Excludes/omits destination node from search
+        * @return       Pointer to the Graph-Node which is nearest to the handle
         */
         Node* findNearest(Node *_handle, bool _temporal);
 
@@ -88,6 +89,8 @@ namespace rrt
         * @param[in]    _ref  The first node
         * @param[in]    _handle  The second node
         * @return   Angle between the two nodes
+        * @note     The angle is calculated as the delta between the pose of the reference node and the eculidean position of the handle
+        * @note     It is assumed that setting of the pose of the handle will be done after/elsewhere
         */       
         double calcAngle(Node *_handle, Node *_ref);
 

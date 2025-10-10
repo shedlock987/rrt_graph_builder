@@ -224,7 +224,7 @@
 
     Node* RRT::findNearest(Node *_handle, bool _temporal)
     {
-        int idx;
+        int idx = -1;
         int i = 0;
         double temp;
         double min = DBL_MAX;
@@ -232,6 +232,13 @@
         /// Need to optimize 
         for(const auto &iter : adjacencyList_)
         {
+            /// Ignore/do not consider any destination nodes
+            if (std::find(destNodes.begin(), destNodes.end(), iter) != destNodes.end())
+            {
+                i++;
+                continue;
+            }
+
             temp = calcDist(_handle, iter, _temporal);
 
             /// Make sure we're not comparing the handle to itself 
@@ -239,13 +246,14 @@
             {
                 min = temp;
                 idx = i;
-                i++;
             }
-            else
-            {
-                i++;
-            }
+            i++;
         }
+
+        // If no valid nearest node found, return nullptr
+        if (idx == -1)
+            return nullptr;
+
         return adjacencyList_.at(idx);
     }
 
@@ -365,15 +373,11 @@
         /// Make sure this graph isn't already complete `
         if(!cmplt)
         {
-            /// Insert Dummy end-node in graph
-            addNode(dest_, 0.0F);
-            Node *end = adjacencyList_.back();
+            /// Create Dummy end-node 
+            Node *end = new Node(dest_, 0.0F);
 
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
-
-            /// Connect end to nearest
-            addEdge(nearest, end);
 
             /// Grab the preceeding node to nearest
             Node *second_nearest = nearest->BackCnnctn();
@@ -409,10 +413,18 @@
 
                     /// Double check that the second nearest node is still within constraints
                     if(!isOccupied(nearest))
-                    //if(true)
                     {
+                        /// Formalluy add the dummy destination node to the graph
+                        addEdge(nearest, end);
+                        addNode(end->Pose(), 0.0F);
+
+                        /// list this node as an admissible destination node
+                        destNodes.push_back(end);
                         admissible_ = true;
-                        cmplt = true;
+                        if(destNodes.size() >= max_admissible_)
+                        {
+                            cmplt = true;
+                        }
                     }
                     else
                     {
