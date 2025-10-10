@@ -210,8 +210,6 @@ namespace rrt
         {
             initCmplt_ = true;
         }
-        
-
     }
 
     void Graph::addNode(Node* _link, pose_t _point, double _back_edge_weight)
@@ -221,6 +219,23 @@ namespace rrt
             adjacencyList_.emplace_back(new Node(_point, _back_edge_weight));
             addEdge(_link, adjacencyList_.back());
         }
+    }
+
+    void Graph::pushNode(Node* _copy)
+    {
+        if(_copy != nullptr)
+        {
+            pose_t temp = _copy->Pose();
+            double weight = _copy->backEdgeWeight();
+            addNode(temp, weight);
+        }
+    }
+
+    void Graph::deleteEdge(Node* _src, Node* _dest)
+    {
+        auto fwd_link = std::remove(_src->fwd_node_.begin(), _src->fwd_node_.end(), _dest);
+        _src->fwd_node_.erase(fwd_link);
+        _dest->setBackCnnctn(nullptr);
     }
 
     void Graph::deleteNode(Node* _handle)

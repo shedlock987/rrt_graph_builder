@@ -329,8 +329,19 @@ namespace rrt
         * 
         * @param[in]    _origin_x  The x coordinate of the origin  
         * @param[in]    _origin_y  The y coordinate of the origin 
+        * @param[in]    _origin_time  The time coordinate of the origin
         */     
         void setOrigin(double _origin_x, double _origin_y, double _origin_time);
+
+        /**
+        * @brief   Updates/sets the geometric location of the origin node of the RRT
+        * 
+        * @param[in]    _origin_x  The x coordinate of the origin  
+        * @param[in]    _origin_y  The y coordinate of the origin 
+        * @param[in]    _origin_time  The time coordinate of the origin
+        * @param[in]    _initial_heading  The initial heading of the RRT at the origin node
+        */     
+        void setOrigin(double _origin_x, double _origin_y, double _origin_time, double _initial_heading);
 
         /**
         * @brief   Updates/sets the geometric location of the destination node of the RRT

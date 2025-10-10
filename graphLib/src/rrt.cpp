@@ -164,17 +164,46 @@
      
     void RRT::setOrigin(pose_t _origin)
     {
-        adjacencyList_.front()->setPose(_origin);
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin);
+        }
+        else
+        {
+            addNode(_origin, 0.0F);
+        }
     }
  
     void RRT::setOrigin(double _origin_x, double _origin_y)
     {
-        adjacencyList_.front()->setPose(_origin_x, _origin_y, 0.0F, 0.0F);
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin_x, _origin_y, 0.0F, 0.0F);
+        }
+        else
+        {
+            addNode(std::make_tuple(_origin_x, _origin_y, 0.0F, 0.0F), 0.0F);
+        }
     }
 
     void RRT::setOrigin(double _origin_x, double _origin_y, double _origin_time)
     {
-        adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, 0.0F);
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, 0.0F);
+        }
+        else
+        {
+            addNode(std::make_tuple(_origin_x, _origin_y, _origin_time, 0.0F), 0.0F);
+        }
+    }
+
+    void RRT::setOrigin(double _origin_x, double _origin_y, double _origin_time, double _origin_heading)
+    {
+        if (!adjacencyList_.empty()) {
+            adjacencyList_.front()->setPose(_origin_x, _origin_y, _origin_time, _origin_heading);
+        }
+        else
+        {
+            addNode(std::make_tuple(_origin_x, _origin_y, _origin_time, 0.0F), 0.0F);
+        }
     }
           
     void RRT::updateDestination(pose_t _dest)
@@ -414,9 +443,9 @@
                     /// Double check that the second nearest node is still within constraints
                     if(!isOccupied(nearest))
                     {
-                        /// Formalluy add the dummy destination node to the graph
-                        addEdge(nearest, end);
-                        addNode(end->Pose(), 0.0F);
+                        /// Formally add the dummy destination node to the graph
+                        pushNode(end);
+                        addEdge(nearest, adjacencyList_.back());
 
                         /// list this node as an admissible destination node
                         destNodes.push_back(end);
@@ -428,27 +457,16 @@
                     }
                     else
                     {
-                        /// Not good enough, destroy the dummy end node, try again
-                        deleteNode(end);
-
                         /// Put humpty dumpty back together again
                         nearest->setPose(original_pose_);
                         nearest->setBackEdgeWeight(original_back_edge_weight_);
                     }
                 }
                 else{
-                    /// Not good enough, destroy the dummy end node, try again
-                    deleteNode(end);
-
                     /// Put humpty dumpty back together again
                     nearest->setPose(original_pose_);
                     nearest->setBackEdgeWeight(original_back_edge_weight_);
                 }
-            }
-            else
-            {
-                /// Destroy dummy end node
-                deleteNode(end);
             }
         }
         
@@ -463,6 +481,15 @@
         {
             return false; /// No occupancy map provided, assume not occupied
         }
+
+        /// Check if the back connection exists; if not, assume not occupied
+        if (!_handle->BackCnnctn())
+        {
+            std::cerr << "Warning: Node has no back connection; cannot check edge occupancy. Terminating RRT" << std::endl;
+            cmplt = true; // Terminate RRT build
+            return true;
+        }
+
         /// Iterate through the occupied cubes (voxels)
         for (const auto &occupancy : occupancy_map_.value())
         {
@@ -481,14 +508,14 @@
                 _handle->time() >= time_min && _handle->time() <= time_max)
             {
                 occupied = true;
-                std::cout << "Node in occupied space"<< std::endl;
+                std::cout << "Node in occupied space" << std::endl;
                 break;
             }
 
 
             /// Check that the line segment (edge) between the node and the back link
             /// is not passing through occupied space
-            auto line_x1 = _handle->BackCnnctn()->xCrdnt();
+            auto line_x1 = _handle->BackCnnctn()->xCrdnt();  // Now safe
             auto line_y1 = _handle->BackCnnctn()->yCrdnt();
             auto line_z1 = _handle->BackCnnctn()->time();
             auto line_x2 = _handle->xCrdnt();
@@ -532,7 +559,7 @@
                 break;
             }
         }
-        if(occupied)
+        if (occupied)
         {
             sequential_check++;
         }

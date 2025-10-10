@@ -250,6 +250,13 @@ class Graph {
         */         
         void addNode(Node* _link, pose_t _point, double _back_edge_weight);
 
+        /**
+        * @brief    Takes a local-dynamic node, copies it, and appends it to the graph connected to the same node as the original
+        *
+        * @param[in]    _copy Pointer to the Graph-Node we want to copied and appended to the graph
+        */         
+        void pushNode(Node* _copy);
+
          /**
         * @brief    Removes a specified Node/Vertex from the Graph, Deleted Node's forward links are migrated to the back-connected Node
         *
@@ -266,12 +273,20 @@ class Graph {
         int getIndex(Node* _handle) const;
 
          /**
-        * @brief    Creates a new connection/edge between two existing nodes/vertices in the adajacency list
+        * @brief    Creates a new connection/edge between two existing nodes/vertices
         *
         * @param[in]    _src Pointer of the Node/Vertex we want the directed edge to originate from
         * @param[in]    _dest Pointer to the destination Node/Vertex we want the directed edge to point to
         */   
         void addEdge(Node* _src, Node* _dest);
+
+        /**
+        * @brief    Deletes an connection/edge between two existing nodes/vertices 
+        *
+        * @param[in]    _src Pointer of the Node/Vertex 
+        * @param[in]    _dest Pointer to the destination Node/Vertex 
+        */ 
+        void deleteEdge(Node* _src, Node* _dest);
 
         /**
         * @brief    Reassigns the back connection/edge and does housekeeping to remove the fwd link in the old back node
