@@ -261,8 +261,24 @@
         /// Need to optimize 
         for(const auto &iter : adjacencyList_)
         {
-            /// Ignore/do not consider any destination nodes
+            /// Ignore/do not consider any destination nodes or nodes with forward connections to destination nodes
             if (std::find(destNodes.begin(), destNodes.end(), iter) != destNodes.end())
+            {
+                i++;
+                continue;
+            }
+
+            /// Check if this node has any forward connections to destination nodes
+            bool has_fwd_to_dest = false;
+            for (const auto& fwd : iter->fwd_node_)
+            {
+                if (std::find(destNodes.begin(), destNodes.end(), fwd) != destNodes.end())
+                {
+                    has_fwd_to_dest = true;
+                    break;
+                }
+            }
+            if (has_fwd_to_dest)
             {
                 i++;
                 continue;
@@ -402,11 +418,15 @@
         /// Make sure this graph isn't already complete `
         if(!cmplt)
         {
-            /// Create Dummy end-node 
-            Node *end = new Node(dest_, 0.0F);
+            /// Create Dummy end-node with time of zero
+            Node *end = new Node();
+            end->setPose(std::get<0>(dest_), std::get<1>(dest_), 0.0F, std::get<3>(dest_));
 
             /// Find the nearest Node to end 
             Node *nearest = findNearest(end, false);
+
+            /// Update the destination time to be equal to the nearest node's time
+            end->setPose(std::get<0>(dest_), std::get<1>(dest_), nearest->time(), std::get<3>(dest_));
 
             /// Grab the preceeding node to nearest
             Node *second_nearest = nearest->BackCnnctn();
@@ -423,6 +443,12 @@
             /// Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)
             if(std::abs(calcDist(end, nearest, false)) < max_dist_)
             {
+                
+                    std::cout << "Max allowed distance: " << max_dist_ << "\n";
+                    std::cout << "dist between end and nearest: " << std::abs(calcDist(end, nearest, false)) << "\n";
+                    std::cout << "nearest coordinate: (" << nearest->xCrdnt() << ", " << nearest->yCrdnt() << ", " << nearest->time() << ", " << nearest->heading() << ")\n";
+                    std::cout << "end coordinate: (" << end->xCrdnt() << ", " << end->yCrdnt() << ", " << end->time() << ", " << end->heading() << ")\n";
+
                 /// Heuristic: lets smooth out the end and make a nice "landing path" to the destination
 
                 /// Check constraints against second nearest (doubling the constraints values (Assuming time is fine, if it werrent we wouldnt be in this method))
