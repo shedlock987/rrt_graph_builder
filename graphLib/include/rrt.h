@@ -45,6 +45,7 @@ namespace rrt
     {
         private:
         double max_angle_rad_; /**< Constraint: maximum permitted angle between 2 Nodes */
+        double max_kappa_rad_; /**< Constraint: maximum permitted curvature between 3 Nodes */
         double max_dist_; /**< Constraint: maximum permitted distance between 2 Nodes */
         double min_dist_; /**< Constraint: minimum permitted distance between 2 Nodes */
         double max_interval_; /**< Constraint: maximum time interval between 2 Nodes */
@@ -126,6 +127,22 @@ namespace rrt
         * @note    Sets this->cmplt = true if the destination is reached within constraints
         * */
         void checkDone();
+
+        /**
+        * @brief   Calculates the 2D (x,y) curvature between 3 Nodes using the Menger Curvature formula
+        * 
+        * @param[in]    _ref0  The first node
+        * @param[in]    _ref1  The second node
+        * @param[in]    _ref2  The third node
+        * */
+        double calcMengerCurature(Node* _ref0, Node* _ref1, Node* _ref2);
+
+        /**
+         * @brief   Calculates the maximum permitted curvature based on the previous 2 nodes and applies it to the current node
+         * 
+         * @param[in]    _handle  The current node we want to constrain
+         */
+        void constrainCurvature(Node* _handle);
 
 
 

@@ -488,6 +488,107 @@
         
     }
 
+    double RRT::calcMengerCurature(Node* _ref0, Node* _ref1, Node* _ref2)
+    {
+        /// Calculate the Menger Curature given three nodes
+        double a = calcDist(_ref0, _ref1, false);
+        double b = calcDist(_ref1, _ref2, false);
+        double c = calcDist(_ref2, _ref0, false);
+
+        double area = 0.25F * std::sqrt((a + (b + c)) * (c - (a - b)) * (c + (a - b)) * (a + (b - c)));
+
+        if(area < 1e-10)
+        {
+            return 0.0F; // Points are collinear or too close together
+        }
+
+        double curvature = (4 * area) / (a * b * c);
+        return curvature;
+    }
+
+    void RRT::constrainCurvature(Node* _handle)
+    {
+        /// Check that the handle has two sequential back connections via checking nullptr
+        if(!_handle->BackCnnctn() || !_handle->BackCnnctn()->BackCnnctn())
+        {
+            /// Not enough back connections to calculate curvature via menger
+            
+        }
+        else
+        {
+            if (max_kappa_rad_ <= 0) {
+                std::cerr << "Curvature must be positive." << std::endl;
+            }
+
+            /// Get coordinates
+            pose_t a_x = _handle->BackCnnctn()->BackCnnctn()->xCrdnt();
+            pose_t a_y = _handle->BackCnnctn()->BackCnnctn()->yCrdnt();
+            pose_t b_x = _handle->BackCnnctn()->xCrdnt();
+            pose_t b_y = _handle->BackCnnctn()->yCrdnt();
+
+            // 1. Calculate the radius (R) from the Menger curvature (k).
+            auto radius = 1.0 / max_kappa_rad_;
+
+            // Calc the distance between points a and b
+            double d = calcDist(_handle->BackCnnctn()->BackCnnctn(), _handle->BackCnnctn(), false);
+
+            // A circle can't pass through a and b if the distance is greater than the diameter.
+//            if (d > 2.0 * radius) {
+//                throw std::invalid_argument("The chord length (distance between a and b) is greater than the circle's diameter.");
+//            }
+
+            // 2. Find the center(s) of the circle.
+            // The a-b midpoint 
+            pose_t mid = std::make_tuple((a_x + b_x) / 2.0, (a_y + b_y) / 2.0, 0.0F, 0.0F);
+            
+            // The distance from the a-b midpoint to the circle center.
+            double h = std::sqrt(std::pow(radius, 2) - std::pow(d / 2.0, 2));
+
+            // The slope and perpendicular slope of a-b.
+            double slope_ab = (b_y - a_y) / (b_x - a_x);
+            double perp_slope_ab = -1.0 / slope_ab;
+
+            // Handle vertical line a-b (undefined slope).
+            double cx_offset, cy_offset;
+            if (std::isinf(perp_slope_ab)) { // a-b is horizontal
+                cx_offset = 0;
+                cy_offset = h;
+            } else if (std::isinf(slope_ab)) { // a-b is vertical
+                cx_offset = h;
+                cy_offset = 0;
+            } else {
+                double angle = std::atan(perp_slope_ab);
+                cx_offset = h * std::cos(angle);
+                cy_offset = h * std::sin(angle);
+            }
+            
+            // Calculate the two possible circle centers.
+            pose_t center1 = std::make_tuple(mid.x + cx_offset, mid.y + cy_offset, 0.0F, 0.0F);
+            pose_t center2 = std::make_tuple(mid.x - cx_offset, mid.y -
+
+            // 3. Solve for a third point (c).
+            // The third point is any point on the circle. We can choose one, for example,
+            // by rotating point 'a' around the center by some angle.
+            // This example finds a point on the circle with the same y-coordinate as the center.
+            std::vector<Point> solutions;
+            
+            // Solution from center1.
+            double c1_x = std::get<0>(center1) + std::sqrt(std::pow(radius, 2) - std::pow(std::get<1>(mid) - std::get<1>(center1), 2));
+            double c1_y = std::get<1>(center1) + (std::get<1>(mid)-std::get<1>(center1));
+            //double c1_x = center1.x + std::sqrt(std::pow(r, 2) - std::pow(a.y - center1.y, 2));
+            //double c1_y = center1.y + (a.y-center1.y);
+            //solutions.push_back({c1_x, c1_y});
+
+            // Solution from center2.
+            double c2_x = std::get<0>(center2) + std::sqrt(std::pow(radius, 2) - std::pow(std::get<1>(mid) - std::get<1>(center2), 2));
+            double c2_y = std::get<1>(center2) + (std::get<1>(mid)-std::get<1>(center2));
+            //solutions.push_back({c2_x, c2_y});
+            //double c2_x = center2.x + std::sqrt(std::pow(r, 2) - std::pow(a.y - center2.y, 2));
+            //double c2_y = center2.y + (a.y-center2.y);
+            //solutions.push_back({c2_x, c2_y});
+        }
+    }
+
     bool RRT::isOccupied(Node *_handle)
     {
         static int sequential_check = 0;
