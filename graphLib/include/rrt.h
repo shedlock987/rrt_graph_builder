@@ -140,7 +140,7 @@ namespace rrt
         double calcMengerCurvature(Node* _ref0, Node* _ref1, Node* _ref2);
 
         /**
-         * @brief   Calculates the maximum permitted curvature based on the previous 2 nodes and applies it to the current node
+         * @brief   Adjusts spataial parameters of the current node to ensure curvature constraints are satisfied
          * 
          * @param[in]    _handle  The current node we want to constrain
          */
@@ -180,6 +180,13 @@ namespace rrt
          * @return   The longitudinal jerk between the two nodes (units per time per time^3)
          */
         double calcLongJerk(Node* _handle, Node* _ref);
+
+        /**
+         * @brief   Adjusts spataial and temporal parameters of the current node to ensure longitudinal dynamic constraints are satisfied
+         * 
+         * @param[in]    _handle  The current node
+         */
+        void constrainLongitudinal(Node* _handle);
 
         public:
         /**

@@ -656,6 +656,51 @@
         }
     }
 
+    void RRT::constrainLongitudinal(Node* _handle)
+    {
+        double jerk = calcLongJerk(_handle, _handle->BackCnnctn());
+        double accel = calcLongAccel(_handle, _handle->BackCnnctn());
+        double dist = calcDist(_handle, _handle->BackCnnctn(), false);
+        double dist0 = calcDist(_handle->BackCnnctn(), _handle->BackCnnctn()->BackCnnctn(), false);
+        double v0 = dist0 / (_handle->BackCnnctn()->time() - _handle->BackCnnctn()->BackCnnctn()->time());
+        double time = _handle->time() - _handle->BackCnnctn()->time(); // initialize
+
+        if(dim_3D_)
+        {
+            if(std::abs(jerk) > max_long_jerk_ && std::abs(accel) > max_long_accel_)
+            {
+                /// Recompute time to satisfy Acceleration constraint
+                /// Δt = [v - sqrt(v² - 2as)] / a
+                time = (v0 - std::sqrt(v0 * v0 - 2 * accel * dist)) / max_long_accel_;
+                _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
+
+                /// Recompute jerk after adjusting time
+                jerk = calcLongJerk(_handle, _handle->BackCnnctn());
+                if(std::abs(jerk) > max_long_jerk_)
+                {
+                    /// Recompute time to satisfy Jerk constraint
+                    /// Δt = [a - sqrt(a² - 2js)] / j
+                    time = (accel - std::sqrt(accel * accel - 2 * jerk * dist)) / max_long_jerk_;
+                    _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
+                }
+            }
+            else if (std::abs(jerk) <= max_long_jerk_ && std::abs(accel) > max_long_accel_)
+            {
+                /// Recompute time to satisfy Acceleration constraint
+                /// Δt = [v - sqrt(v² - 2as)] / a
+                time = (v0 - std::sqrt(v0 * v0 - 2 * accel * dist)) / max_long_accel_;
+                _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
+            }
+            else if (std::abs(jerk) > max_long_jerk_ && std::abs(accel) <= max_long_accel_)
+            {
+                /// Recompute time to satisfy Jerk constraint
+                /// Δt = [a - sqrt(a² - 2js)] / j
+                time = (accel - std::sqrt(accel * accel - 2 * jerk * dist)) / max_long_jerk_;
+                _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
+            }
+        }
+    }
+
     bool RRT::isOccupied(Node *_handle)
     {
         static int sequential_check = 0;
