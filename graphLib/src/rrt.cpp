@@ -663,6 +663,8 @@
         double dist = calcDist(_handle, _handle->BackCnnctn(), false);
         double dist0 = calcDist(_handle->BackCnnctn(), _handle->BackCnnctn()->BackCnnctn(), false);
         double v0 = dist0 / (_handle->BackCnnctn()->time() - _handle->BackCnnctn()->BackCnnctn()->time());
+        double accel0 = calcLongAccel(_handle->BackCnnctn(), _handle->BackCnnctn()->BackCnnctn());
+
         double time = _handle->time() - _handle->BackCnnctn()->time(); // initialize
 
         if(dim_3D_)
@@ -671,7 +673,7 @@
             {
                 /// Recompute time to satisfy Acceleration constraint
                 /// Δt = [v - sqrt(v² - 2as)] / a
-                time = (v0 - std::sqrt(v0 * v0 - 2 * accel * dist)) / max_long_accel_;
+                time = (v0 - std::sqrt(v0 * v0 - 2 * max_long_accel_ * dist)) / max_long_accel_;
                 _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
 
                 /// Recompute jerk after adjusting time
@@ -679,8 +681,8 @@
                 if(std::abs(jerk) > max_long_jerk_)
                 {
                     /// Recompute time to satisfy Jerk constraint
-                    /// Δt = [a - sqrt(a² - 2js)] / j
-                    time = (accel - std::sqrt(accel * accel - 2 * jerk * dist)) / max_long_jerk_;
+                    /// Δt = [sqrt(3j² + 12a₀²) - 3a₀]/j for given jerk j, initial acceleration a₀, displacement s
+                    time = (std::sqrt(3 * max_long_jerk_ * max_long_jerk_ + 12 * accel0 * accel0) - 3 * accel0) / max_long_jerk_;
                     _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
                 }
             }
@@ -688,14 +690,14 @@
             {
                 /// Recompute time to satisfy Acceleration constraint
                 /// Δt = [v - sqrt(v² - 2as)] / a
-                time = (v0 - std::sqrt(v0 * v0 - 2 * accel * dist)) / max_long_accel_;
+                time = (v0 - std::sqrt(v0 * v0 - 2 * max_long_accel_ * dist)) / max_long_accel_;
                 _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
             }
             else if (std::abs(jerk) > max_long_jerk_ && std::abs(accel) <= max_long_accel_)
             {
                 /// Recompute time to satisfy Jerk constraint
-                /// Δt = [a - sqrt(a² - 2js)] / j
-                time = (accel - std::sqrt(accel * accel - 2 * jerk * dist)) / max_long_jerk_;
+                /// Δt = [sqrt(3j² + 12a₀²) - 3a₀]/j for given jerk j, initial acceleration a₀, displacement s
+                time = (std::sqrt(3 * max_long_jerk_ * max_long_jerk_ + 12 * accel0 * accel0) - 3 * accel0) / max_long_jerk_;
                 _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
             }
         }
