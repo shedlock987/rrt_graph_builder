@@ -368,44 +368,18 @@
         /// connection in the old back link to prevent loop-back in RRT
         updateEdge(nearest, _handle);
 
-        double dist = calcDist(_handle, nearest, true);
-        double angle = calcAngle(_handle, nearest);
-        double tm = _handle->time();
+        ///Impose Spatial Absolute constraints (Angle and Distance)
+        applyAbsoluteConstraints(_handle, nearest);
 
-        /// Apply Scaling Constraints 
-        /// Ensure angle change is within limits relative to the previous node's heading/pose
-        if((std::abs(angle) > max_angle_rad_))
+        ///Impose Dynamic constraints (Curvature)
+        double kappa = calcMengerCurvature(_handle, nearest, nearest->BackCnnctn());
+
+        if(std::abs(kappa) > max_kappa_rad_)
         {
-            angle = ((angle / std::abs(angle)) * max_angle_rad_) + nearest->heading();
+            constrainCurvature(_handle);
         }
 
-        if(std::abs(dist) > max_dist_)
-        {
-            dist = (dist / std::abs(dist)) * max_dist_;
-        }
-        else if (std::abs(dist) < min_dist_)
-        {
-            dist = (dist / std::abs(dist)) * min_dist_;
-        }
-
-        /// Need to ensure time never runs backwards 
-        if(tm < nearest->time()) 
-        {
-            tm = nearest->time() + 0.0001F;
-        }
-    
-        else if(std::abs(tm - nearest->time()) > max_interval_)
-        {
-            tm = nearest->time() + max_interval_;
-        }
-
-
-        double x = (dist * std::cos(angle)) + nearest->xCrdnt();
-        double y = (dist * std::sin(angle)) + nearest->yCrdnt();
-
-        /// Update the Node with the new coordinates
-        _handle->setPose(x,y,tm, angle); 
-        _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
+        ///Impose Dynamic Temporal Constraints (Longitudinal Acceleration/Jerk) - Not implemented yet
 
     }
 
@@ -488,7 +462,7 @@
         
     }
 
-    double RRT::calcMengerCurature(Node* _ref0, Node* _ref1, Node* _ref2)
+    double RRT::calcMengerCurvature(Node* _ref0, Node* _ref1, Node* _ref2)
     {
         /// Calculate the Menger Curature given three nodes
         double a = calcDist(_ref0, _ref1, false);
@@ -509,33 +483,28 @@
     void RRT::constrainCurvature(Node* _handle)
     {
         /// Check that the handle has two sequential back connections via checking nullptr
-        if(!_handle->BackCnnctn() || !_handle->BackCnnctn()->BackCnnctn())
-        {
-            /// Not enough back connections to calculate curvature via menger
-            
-        }
-        else
+        /// If we do not have 2 back connections, we're by the origin and only the max angle constraint applies
+        if(_handle->BackCnnctn() || _handle->BackCnnctn()->BackCnnctn())
         {
             if (max_kappa_rad_ <= 0) {
                 std::cerr << "Curvature must be positive." << std::endl;
+                max_kappa_rad_ = std::abs(max_kappa_rad_);
             }
 
+            /// Determine the sign of the curvature
+            int curvature_sign = calcAngle(_handle, _handle->BackCnnctn()) >= 0 ? 1 : -1;
+
             /// Get coordinates
-            pose_t a_x = _handle->BackCnnctn()->BackCnnctn()->xCrdnt();
-            pose_t a_y = _handle->BackCnnctn()->BackCnnctn()->yCrdnt();
-            pose_t b_x = _handle->BackCnnctn()->xCrdnt();
-            pose_t b_y = _handle->BackCnnctn()->yCrdnt();
+            double a_x = _handle->BackCnnctn()->BackCnnctn()->xCrdnt();
+            double a_y = _handle->BackCnnctn()->BackCnnctn()->yCrdnt();
+            double b_x = _handle->BackCnnctn()->xCrdnt();
+            double b_y = _handle->BackCnnctn()->yCrdnt();
 
             // 1. Calculate the radius (R) from the Menger curvature (k).
             auto radius = 1.0 / max_kappa_rad_;
 
             // Calc the distance between points a and b
             double d = calcDist(_handle->BackCnnctn()->BackCnnctn(), _handle->BackCnnctn(), false);
-
-            // A circle can't pass through a and b if the distance is greater than the diameter.
-//            if (d > 2.0 * radius) {
-//                throw std::invalid_argument("The chord length (distance between a and b) is greater than the circle's diameter.");
-//            }
 
             // 2. Find the center(s) of the circle.
             // The a-b midpoint 
@@ -563,29 +532,127 @@
             }
             
             // Calculate the two possible circle centers.
-            pose_t center1 = std::make_tuple(mid.x + cx_offset, mid.y + cy_offset, 0.0F, 0.0F);
-            pose_t center2 = std::make_tuple(mid.x - cx_offset, mid.y -
+            pose_t center1 = std::make_tuple(std::get<0>(mid) + cx_offset, std::get<1>(mid) + cy_offset, 0.0F, 0.0F);
+            pose_t center2 = std::make_tuple(std::get<0>(mid) - cx_offset, std::get<1>(mid) - cy_offset, 0.0F, 0.0F);
 
             // 3. Solve for a third point (c).
             // The third point is any point on the circle. We can choose one, for example,
             // by rotating point 'a' around the center by some angle.
             // This example finds a point on the circle with the same y-coordinate as the center.
-            std::vector<Point> solutions;
             
             // Solution from center1.
             double c1_x = std::get<0>(center1) + std::sqrt(std::pow(radius, 2) - std::pow(std::get<1>(mid) - std::get<1>(center1), 2));
             double c1_y = std::get<1>(center1) + (std::get<1>(mid)-std::get<1>(center1));
-            //double c1_x = center1.x + std::sqrt(std::pow(r, 2) - std::pow(a.y - center1.y, 2));
-            //double c1_y = center1.y + (a.y-center1.y);
-            //solutions.push_back({c1_x, c1_y});
 
             // Solution from center2.
             double c2_x = std::get<0>(center2) + std::sqrt(std::pow(radius, 2) - std::pow(std::get<1>(mid) - std::get<1>(center2), 2));
             double c2_y = std::get<1>(center2) + (std::get<1>(mid)-std::get<1>(center2));
-            //solutions.push_back({c2_x, c2_y});
-            //double c2_x = center2.x + std::sqrt(std::pow(r, 2) - std::pow(a.y - center2.y, 2));
-            //double c2_y = center2.y + (a.y-center2.y);
-            //solutions.push_back({c2_x, c2_y});
+
+            if(curvature_sign >= 0)
+            {
+                alignHeadingToTangent(_handle, c1_x, c1_y);
+                _handle->setPose(c1_x, c1_y, _handle->time(), _handle->heading());
+            }
+            else
+            {
+                alignHeadingToTangent(_handle, c2_x, c2_y);
+                _handle->setPose(c2_x, c2_y, _handle->time(), _handle->heading());
+            }
+        }
+    }
+
+    void RRT::applyAbsoluteConstraints(Node* _handle, Node* _nearest)
+    {
+        double dist = calcDist(_handle, _nearest, true);
+        double angle = calcAngle(_handle, _nearest);
+        double tm = _handle->time();
+
+        /// Apply Absolute Scaling Constraints 
+        /// Ensure angle change is within limits relative to the previous node's heading/pose
+        if((std::abs(angle) > max_angle_rad_))
+        {
+            angle = ((angle / std::abs(angle)) * max_angle_rad_) + _nearest->heading();
+        }
+
+        if(std::abs(dist) > max_dist_)
+        {
+            dist = (dist / std::abs(dist)) * max_dist_;
+        }
+        else if (std::abs(dist) < min_dist_)
+        {
+            dist = (dist / std::abs(dist)) * min_dist_;
+        }
+
+        /// Need to ensure time never runs backwards 
+        if(tm < _nearest->time()) 
+        {
+            tm = _nearest->time() + 0.0001F;
+        }
+    
+        else if(std::abs(tm - _nearest->time()) > max_interval_)
+        {
+            tm = _nearest->time() + max_interval_;
+        }
+
+        double x = (dist * std::cos(angle)) + _nearest->xCrdnt();
+        double y = (dist * std::sin(angle)) + _nearest->yCrdnt();
+
+        /// Update the Node with the new coordinates which meet absolute constraints
+        _handle->setPose(x,y,tm, angle); 
+        _handle->setBackEdgeWeight(dist); //Update this with Lat Acceleration
+    }
+
+    void RRT::alignHeadingToTangent(Node* _handle, double _center_x, double _center_y)
+    {
+        /// Calculate the tangent heading at the node given the center of curvature
+        double delta_x = _handle->xCrdnt() - _center_x;
+        double delta_y = _handle->yCrdnt() - _center_y;
+
+        /// Tangent is perpendicular to radius vector
+        double tangent_angle = std::atan2(delta_y, delta_x) + (M_PI / 2.0F);
+
+        _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->time(), tangent_angle);
+    }
+
+    double RRT::calcLongAccel(Node* _handle, Node* _ref)
+    {
+        /// Calculate the longitudinal acceleration based on back connection nodes
+        double dist1 = calcDist(_handle, _ref, false);
+        double dist2 = calcDist(_ref, _ref->BackCnnctn(), false);
+        double delta_time1 = _handle->time() - _ref->time();
+        double delta_time2 = _handle->time() - _ref->BackCnnctn()->time();
+
+        if (delta_time1 > 0 && delta_time2 > 0)
+        {
+            double velocity1 = dist1 / delta_time1;
+            double velocity2 = dist2 / delta_time2;
+            return (velocity1 - velocity2) / delta_time1;
+        }
+        else if (delta_time1 > 0 && delta_time2 <= 0)
+        {
+            double velocity1 = dist1 / delta_time1;
+            return velocity1 / delta_time1; // Assuming initial velocity is zero
+        }
+        else 
+        {
+            return 0;
+        }
+    }
+
+    double RRT::calcLongJerk(Node* _handle, Node* _ref)
+    {
+        /// Calculate the longitudinal jerk based on back connection nodes
+        double accel1 = calcLongAccel(_handle, _ref);
+        double accel2 = calcLongAccel(_ref, _ref->BackCnnctn());
+        double delta_time = _handle->time() - _ref->time();
+
+        if (delta_time > 0)
+        {
+            return (accel1 - accel2) / delta_time;
+        }
+        else
+        {
+            return 0;
         }
     }
 
