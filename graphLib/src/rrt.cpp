@@ -46,6 +46,9 @@
         iteration_limit_ = 50;
         initial_heading_ = 0.0F;
         max_admissible_ = 1;
+        max_long_accel_ = 3.0F;
+        max_long_jerk_ = 1.0F;
+        max_kappa_rad_ = 1.0F;
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
@@ -63,6 +66,10 @@
         max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
         iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
+        max_long_accel_ = 3.0F;
+        max_long_jerk_ = 1.0F;
+        max_kappa_rad_ = calcMengerCurvature(max_dist_, max_dist_, std::sqrt(2 * max_dist_ * max_dist_ * (1-std::cos(max_angle_rad_)))); // Approximate max curvature based on max distance
+
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
         Node *end = new Node(_dest_x, _dest_y, 0.0F, 0.0F);
@@ -83,6 +90,9 @@
         max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim),
         iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
+        max_long_accel_ = 3.0F;
+        max_long_jerk_ = 1.0F;
+        max_kappa_rad_ = calcMengerCurvature(max_dist_, max_dist_, std::sqrt(2 * max_dist_ * max_dist_ * (1-std::cos(max_angle_rad_)))); // Approximate max curvature based on max distance
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
     }
@@ -100,6 +110,9 @@
         max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim), 
         iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
+        max_long_accel_ = 3.0F;
+        max_long_jerk_ = 1.0F;
+        max_kappa_rad_ = calcMengerCurvature(max_dist_, max_dist_, std::sqrt(2 * max_dist_ * max_dist_ * (1-std::cos(max_angle_rad_)))); // Approximate max curvature based on max distance
         setOrigin(_origin_x, _origin_y);
         setBoundaries(_range_a_x, _range_a_y, _range_b_x, _range_b_y, _max_time);
         Node *end = new Node(_dest_x, _dest_y, 0.0F, 0.0F);
@@ -118,6 +131,9 @@
         max_interval_(_max_interval), max_time_(_max_time), dim_3D_(_dim),
         iteration_limit_(_iteration_limit), max_admissible_(_max_admissible)
     {
+        max_long_accel_ = 3.0F;
+        max_long_jerk_ = 1.0F;
+        max_kappa_rad_ = calcMengerCurvature(max_dist_, max_dist_, std::sqrt(2 * max_dist_ * max_dist_ * (1-std::cos(max_angle_rad_)))); // Approximate max curvature based on max distance
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
     }
@@ -373,7 +389,6 @@
 
         ///Impose Dynamic constraints (Curvature)
         double kappa = calcMengerCurvature(_handle, nearest, nearest->BackCnnctn());
-
         if(std::abs(kappa) > max_kappa_rad_)
         {
             constrainCurvature(_handle);
@@ -464,19 +479,50 @@
 
     double RRT::calcMengerCurvature(Node* _ref0, Node* _ref1, Node* _ref2)
     {
+        /// Null-pointer guard: if any input is null, return 0
+        if (!_ref0 || !_ref1 || !_ref2) {
+            return 0.0;
+        }
+
         /// Calculate the Menger Curature given three nodes
+        
         double a = calcDist(_ref0, _ref1, false);
         double b = calcDist(_ref1, _ref2, false);
         double c = calcDist(_ref2, _ref0, false);
 
         double area = 0.25F * std::sqrt((a + (b + c)) * (c - (a - b)) * (c + (a - b)) * (a + (b - c)));
 
-        if(area < 1e-10)
+        if(area < 1e-10 || a == 0.0F || b == 0.0F || c == 0.0F)
         {
             return 0.0F; // Points are collinear or too close together
         }
+        else 
+        {
+            double curvature = (4 * area) / (a * b * c);
+            return curvature;
+        }
+    }
 
-        double curvature = (4 * area) / (a * b * c);
+    // Provide the missing member overload so the constructor's call to
+    // RRT::calcMengerCurvature(double,double,double) is defined.
+    double RRT::calcMengerCurvature(double _ab, double _bc, double _ac)
+    {
+        double a = _ab;
+        double b = _bc;
+        double c = _ac;
+
+        // Heron's-like formula for triangle area from sides a,b,c (Menger)
+        double area_term = (a + (b + c)) * (c - (a - b)) * (c + (a - b)) * (a + (b - c));
+        if (area_term <= 0.0) {
+            return 0.0;
+        }
+        double area = 0.25 * std::sqrt(area_term);
+
+        if (area < 1e-10 || a == 0.0 || b == 0.0 || c == 0.0)
+        {
+            return 0.0;
+        }
+        double curvature = (4.0 * area) / (a * b * c);
         return curvature;
     }
 
@@ -689,7 +735,7 @@
             else if (std::abs(jerk) <= max_long_jerk_ && std::abs(accel) > max_long_accel_)
             {
                 /// Recompute time to satisfy Acceleration constraint
-                /// Δt = [v - sqrt(v² - 2as)] / a
+                /// Δt = [v - sqrt(v² - 2as] / a
                 time = (v0 - std::sqrt(v0 * v0 - 2 * max_long_accel_ * dist)) / max_long_accel_;
                 _handle->setPose(_handle->xCrdnt(), _handle->yCrdnt(), _handle->BackCnnctn()->time() + time, _handle->heading());
             }

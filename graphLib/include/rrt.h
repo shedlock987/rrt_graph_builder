@@ -133,11 +133,22 @@ namespace rrt
         /**
         * @brief   Calculates the 2D (x,y) curvature between 3 Nodes using the Menger Curvature formula
         * 
+        * @note         Returns 0.0F if the points are collinear or any pointer is null
         * @param[in]    _ref0  The first node
         * @param[in]    _ref1  The second node
         * @param[in]    _ref2  The third node
         * */
         double calcMengerCurvature(Node* _ref0, Node* _ref1, Node* _ref2);
+
+        /**
+        * @brief   Calculates the 2D (x,y) curvature between 3 Points using the Menger Curvature formula
+        * 
+        * @note         Returns 0.0F if the points are collinear or any pointer is null
+        * @param[in]    _ab  distance between first and second node
+        * @param[in]    _bc  distance between second and third node
+        * @param[in]    _ac  distance between first and third node
+        * */
+        double calcMengerCurvature(double _ab, double _bc, double _ac);
 
         /**
          * @brief   Adjusts spataial parameters of the current node to ensure curvature constraints are satisfied
