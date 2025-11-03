@@ -45,6 +45,9 @@ namespace rrt
     {
         private:
         double max_angle_rad_; /**< Constraint: maximum permitted angle between 2 Nodes */
+        double max_kappa_rad_; /**< Constraint: maximum permitted curvature between 3 Nodes */
+        double max_long_accel_; /**< Constraint: maximum permitted longitudinal acceleration between 2 Nodes */
+        double max_long_jerk_; /**< Constraint: maximum permitted longitudinal jerk between 3 Nodes */
         double max_dist_; /**< Constraint: maximum permitted distance between 2 Nodes */
         double min_dist_; /**< Constraint: minimum permitted distance between 2 Nodes */
         double max_interval_; /**< Constraint: maximum time interval between 2 Nodes */
@@ -127,7 +130,74 @@ namespace rrt
         * */
         void checkDone();
 
+        /**
+        * @brief   Calculates the 2D (x,y) curvature between 3 Nodes using the Menger Curvature formula
+        * 
+        * @note         Returns 0.0F if the points are collinear or any pointer is null
+        * @param[in]    _ref0  The first node
+        * @param[in]    _ref1  The second node
+        * @param[in]    _ref2  The third node
+        * */
+        double calcMengerCurvature(Node* _ref0, Node* _ref1, Node* _ref2);
 
+        /**
+        * @brief   Calculates the 2D (x,y) curvature between 3 Points using the Menger Curvature formula
+        * 
+        * @note         Returns 0.0F if the points are collinear or any pointer is null
+        * @param[in]    _ab  distance between first and second node
+        * @param[in]    _bc  distance between second and third node
+        * @param[in]    _ac  distance between first and third node
+        * */
+        double calcMengerCurvature(double _ab, double _bc, double _ac);
+
+        /**
+         * @brief   Adjusts spataial parameters of the current node to ensure curvature constraints are satisfied
+         * 
+         * @param[in]    _handle  The current node we want to constrain
+         */
+        void constrainCurvature(Node* _handle);
+
+        /**
+         * @brief   Calculates the maximum permitted spatial constraints based on absolute limit params and applies it to the current node
+         * 
+         * @param[in]    _handle  The current node we want to constrain
+         * @param[in]    _nearest  The nearest node to the current node
+         */
+        void applyAbsoluteConstraints(Node* _handle, Node* _nearest);
+
+        /**
+         * @brief   Aligns the heading of the current node to be tangent to the menger curvature from the previous 2 nodes
+         * 
+         * @param[in]    _handle  The current node we want to align
+         * @param[in]    _center_x  The x coordinate of the center of curvature
+         * @param[in]    _center_y  The y coordinate of the center of curvature
+         */
+        void alignHeadingToTangent(Node* _handle, double _center_x, double _center_y);
+
+        /**
+         * @brief   Calculates the longitudinal acceleration between two nodes
+         * 
+         * @param[in]    _handle  The current node
+         * @param[in]    _ref  The reference node
+         * @return   The longitudinal acceleration between the two nodes (units per time^2)
+         */
+        double calcLongAccel(Node* _handle, Node* _ref);
+
+        /**
+         * @brief   Calculates the longitudinal jerk between two nodes
+         * 
+         * @param[in]    _handle  The current node
+         * @param[in]    _ref0  The first reference node
+         * @return   The longitudinal jerk between the two nodes (units per time per time^3)
+         */
+        double calcLongJerk(Node* _handle, Node* _ref);
+
+        /**
+         * @brief   Adjusts spataial and temporal parameters of the current node to ensure longitudinal dynamic constraints are satisfied
+         * 
+         * @param[in]    _handle  The current node
+         */
+        void constrainLongitudinal(Node* _handle);
 
         public:
         /**
