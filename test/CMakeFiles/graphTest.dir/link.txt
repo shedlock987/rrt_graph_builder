@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/graphTest.dir/src/graph_test.cpp.o -o graphTest  /opt/homebrew/lib/libgtest.a /opt/homebrew/lib/libgtest_main.a ../graphLib/libgraphLib.a ../graphLib/librrtLib.a /opt/homebrew/lib/libgtest.a ../graphLib/libgraphLib.a

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null && pwd)"
+BUILD_DIR="$REPO_ROOT/build"
+
+echo "Cleaning build artifacts under: $REPO_ROOT"
+
+# Remove top-level build directory created by cmake
+if [[ -d "$BUILD_DIR" ]]; then
+  echo " - Removing build directory: $BUILD_DIR"
+  rm -rf "$BUILD_DIR"
+fi
+
+# Remove common CMake artifacts at repo root (if any)
+for f in CMakeCache.txt CMakeFiles Makefile cmake_install.cmake; do
+  if [[ -e "$REPO_ROOT/$f" ]]; then
+    echo " - Removing $f"
+    if [[ -d "$REPO_ROOT/$f" ]]; then
+      rm -rf "$REPO_ROOT/$f"
+    else
+      rm -f "$REPO_ROOT/$f"
+    fi
+  fi
+done
+
+# Remove generated libraries, object files, and executables inside repo
+echo " - Removing binary/object/library files (*.o, *.so, *.a, *.dll, *.exe)"
+find "$REPO_ROOT" -type f \( -name '*.o' -o -name '*.so' -o -name '*.a' -o -name '*.dll' -o -name '*.exe' \) -print -delete
+
+# Remove C/C++ intermediate files and IDE artifacts
+echo " - Removing build intermediates and IDE files (*.obj, *.lib, .vscode/*)"
+find "$REPO_ROOT" -type f \( -name '*.obj' -o -name '*.lib' \) -print -delete
+if [[ -d "$REPO_ROOT/.vscode" ]]; then
+  echo " - Removing .vscode directory"
+  rm -rf "$REPO_ROOT/.vscode"
+fi
+
+# Remove Python caches and virtualenv artifacts (but do not remove user venvs outside repo)
+echo " - Removing Python caches (*.pyc, __pycache__)"
+find "$REPO_ROOT" -type f -name '*.pyc' -print -delete
+find "$REPO_ROOT" -type d -name '__pycache__' -print -exec rm -rf {} +
+
+# Remove generated images/animation outputs
+echo " - Removing generated images and gifs"
+find "$REPO_ROOT" -type f \( -iname 'rrt_animation.*' -o -iname 'rrt_plot.*' -o -iname '*.gif' -o -iname '*.jpeg' -o -iname '*.jpg' \) -print -delete
+
+# Remove any leftover temporary or swap files
+echo " - Removing temporary/swap files (*~ , *.swp, *.swo, .DS_Store)"
+find "$REPO_ROOT" -type f \( -name '*~' -o -name '*.swp' -o -name '*.swo' -o -name '.DS_Store' \) -print -delete
+
+echo "Clean complete."
