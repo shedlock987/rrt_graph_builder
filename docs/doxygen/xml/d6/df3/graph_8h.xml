@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="d6/df3/graph_8h" kind="file" language="C++">
+    <compoundname>graph.h</compoundname>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">cstdint</includes>
+    <includes local="no">iostream</includes>
+    <includes local="no">vector</includes>
+    <includes local="no">algorithm</includes>
+    <includes local="no">tuple</includes>
+    <includedby refid="d2/dc6/rrt_8h" local="yes">graphLib/include/rrt.h</includedby>
+    <includedby refid="d7/d75/graph_8cpp" local="yes">graphLib/src/graph.cpp</includedby>
+    <incdepgraph>
+      <node id="1">
+        <label>graphLib/include/graph.h</label>
+        <link refid="d6/df3/graph_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>algorithm</label>
+      </node>
+      <node id="4">
+        <label>cstdint</label>
+      </node>
+      <node id="5">
+        <label>iostream</label>
+      </node>
+      <node id="2">
+        <label>stddef.h</label>
+      </node>
+      <node id="3">
+        <label>string.h</label>
+      </node>
+      <node id="8">
+        <label>tuple</label>
+      </node>
+      <node id="6">
+        <label>vector</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1">
+        <label>graphLib/include/graph.h</label>
+        <link refid="d6/df3/graph_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>graphLib/include/rrt.h</label>
+        <link refid="d2/dc6/rrt_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>graphLib/src/graph.cpp</label>
+        <link refid="d7/d75/graph_8cpp"/>
+      </node>
+      <node id="3">
+        <label>graphLib/src/rrt.cpp</label>
+        <link refid="d5/d5a/rrt_8cpp"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="df/d9f/classrrt_1_1_node" prot="public">rrt::Node</innerclass>
+    <innerclass refid="dc/d58/classrrt_1_1_graph" prot="public">rrt::Graph</innerclass>
+    <innernamespace refid="d3/dad/namespacerrt">rrt</innernamespace>
+    <briefdescription>
+<para>Graph in the form of an Adjacency List. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>RRT builder using adjacency list graph.</para>
+<para>MIT License</para>
+<para>Copyright (c) 2025 Ryan Shedlock</para>
+<para>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</para>
+<para>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</para>
+<para>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</para>
+<para><simplesect kind="author"><para>Ryan Shedlock <ulink url="mailto:rmshedlock@gmail.com">rmshedlock@gmail.com</ulink> </para>
+</simplesect>
+<simplesect kind="version"><para>1.0 </para>
+</simplesect>
+</para>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>Graph_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>Graph_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;cstdint&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;algorithm&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;tuple&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="d3/dad/namespacerrt" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="d3/dad/namespacerrt" kindref="compound">rrt</ref></highlight></codeline>
+<codeline lineno="43"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="45" refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::tuple&lt;double,<sp/>double,<sp/>double,<sp/>double&gt;<sp/><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref>;</highlight></codeline>
+<codeline lineno="46" refid="df/d9f/classrrt_1_1_node" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:<sp/></highlight></codeline>
+<codeline lineno="49" refid="df/d9f/classrrt_1_1_node_1adbadca77d7ccb914828857572a24f1d5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;Node<sp/>*&gt;<sp/><ref refid="df/d9f/classrrt_1_1_node_1adbadca77d7ccb914828857572a24f1d5" kindref="member">fwd_node_</ref>;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>();</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>(<ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/>_pose);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>(<ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/>_pose,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_back_edge_weight);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref><sp/>&amp;_copy);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_y,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_time,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_back_edge_weight);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_y,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_back_edge_weight);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a42a4fd3fa1e9643a8765178db02c4784" kindref="member">~Node</ref>();</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1ac1bd643a77273bb437fd13b63ce46ca5" kindref="member">addFwdNode</ref>(<ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref><sp/>*<sp/>_cnnctn);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1aed548150b553e88a86fa93a9e276ff56" kindref="member">debugPrintNode</ref>();</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a93c1ddc492ab154834fa183af70dce8c" kindref="member">xCrdnt</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1ad71a3e9cd853f7b84b067b46c77eb2fc" kindref="member">yCrdnt</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1aefc723ad4389376e5c4f162ced02f297" kindref="member">time</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1ae5273fdae114b51b8a39465a60354e89" kindref="member">heading</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a3c40c22143eee4ce4cd9085e2a2068b2" kindref="member">setPose</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_x,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_y,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_tm,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_hdng);</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a3c40c22143eee4ce4cd9085e2a2068b2" kindref="member">setPose</ref>(<ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/>_pose);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/><ref refid="df/d9f/classrrt_1_1_node_1aff72713be3a1b8268f10ba1551de9f2c" kindref="member">Pose</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>*<sp/><ref refid="df/d9f/classrrt_1_1_node_1ac6697d8cd4b602ddb6346266b2850ccf" kindref="member">BackCnnctn</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a9d9577b839bd006c98f1ef068d26fb29" kindref="member">setBackCnnctn</ref>(<ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>*<sp/>_cnnctn);</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a06c6b2c0b139d9446708e2273b89a4eb" kindref="member">backEdgeWeight</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a0c0a051936ab19506b6364e74d48a210" kindref="member">setBackEdgeWeight</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_back_edge_weight);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="196" refid="df/d9f/classrrt_1_1_node_1a024fa297fcf3704b0a21d23b61dc4969" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref>*<sp/><ref refid="df/d9f/classrrt_1_1_node_1a024fa297fcf3704b0a21d23b61dc4969" kindref="member">back_node_</ref>;</highlight></codeline>
+<codeline lineno="197" refid="df/d9f/classrrt_1_1_node_1ac291e61e931f3ba5893b28e02e61f2d8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/><ref refid="df/d9f/classrrt_1_1_node_1ac291e61e931f3ba5893b28e02e61f2d8" kindref="member">pose_</ref>;</highlight></codeline>
+<codeline lineno="198" refid="df/d9f/classrrt_1_1_node_1a5076b06eeefb404aef1e93f0f0f4c478" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/><ref refid="df/d9f/classrrt_1_1_node_1a5076b06eeefb404aef1e93f0f0f4c478" kindref="member">back_edge_weight_</ref>;</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight></codeline>
+<codeline lineno="201" refid="dc/d58/classrrt_1_1_graph" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="dc/d58/classrrt_1_1_graph_1a9f25b5a85afb42a7fd2413a7e6ca421b" kindref="member">Graph</ref><sp/>{</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="203" refid="dc/d58/classrrt_1_1_graph_1a48e9e6bcbb33ad94c8b94162fab22899" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a48e9e6bcbb33ad94c8b94162fab22899" kindref="member">initCmplt_</ref><sp/>=<sp/></highlight><highlight class="keyword">false</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a9f25b5a85afb42a7fd2413a7e6ca421b" kindref="member">Graph</ref>();</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a9f25b5a85afb42a7fd2413a7e6ca421b" kindref="member">Graph</ref>(</highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_xHead,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_yHead);</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a7370191beb102fe3037464a5b53775c5" kindref="member">~Graph</ref>();</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/><ref refid="dc/d58/classrrt_1_1_graph_1ae639070f94c67c3fe0aabdfbfe7cfa27" kindref="member">getCoordinate</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_handle)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a7b950bec1be1b0dc4816ade827f632dc" kindref="member">printGraph</ref>()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a03d9a5a3c90c964d94d75d7f7ff80e0e" kindref="member">addNode</ref>(<ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/>_point,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_back_edge_weight);</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a03d9a5a3c90c964d94d75d7f7ff80e0e" kindref="member">addNode</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_link,<sp/><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref><sp/>_point,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>_back_edge_weight);</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a25018d708d8f1b375183e017688a24c9" kindref="member">pushNode</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_copy);</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a0d812580f6188f24d201282d8d03b0d9" kindref="member">deleteNode</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_handle);</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a04328b5b01537b62ae5377419248ff06" kindref="member">getIndex</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_handle)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1af2be83d4e26eea7b054f3c3975d967d7" kindref="member">addEdge</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_src,<sp/><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_dest);</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/></highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1ab250c0dd5ae966f77b9aabd546b4f2ef" kindref="member">deleteEdge</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_src,<sp/><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_dest);</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="dc/d58/classrrt_1_1_graph_1a5910a0fc6dacdb9fb722d6c90730587f" kindref="member">updateEdge</ref>(<ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_src,<sp/><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref>*<sp/>_fwd);</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="299" refid="dc/d58/classrrt_1_1_graph_1a9df50083ad484ed6641ef7bfd5684419" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;Node<sp/>*&gt;<sp/><ref refid="dc/d58/classrrt_1_1_graph_1a9df50083ad484ed6641ef7bfd5684419" kindref="member">adjacencyList_</ref>;</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
+<codeline lineno="301"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"></highlight></codeline>
+<codeline lineno="303"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>Graph_H_<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
+    </programlisting>
+    <location file="graphLib/include/graph.h"/>
+  </compounddef>
+</doxygen>

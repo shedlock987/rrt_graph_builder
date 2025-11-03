@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="d3/dad/namespacerrt" kind="namespace" language="C++">
+    <compoundname>rrt</compoundname>
+    <innerclass refid="df/d9f/classrrt_1_1_node" prot="public">rrt::Node</innerclass>
+    <innerclass refid="dc/d58/classrrt_1_1_graph" prot="public">rrt::Graph</innerclass>
+    <innerclass refid="d8/d87/classrrt_1_1_r_r_t" prot="public">rrt::RRT</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" prot="public" static="no">
+        <type>std::tuple&lt; double, double, double, double &gt;</type>
+        <definition>typedef std::tuple&lt;double, double, double, double&gt; rrt::pose_t</definition>
+        <argsstring></argsstring>
+        <name>pose_t</name>
+        <qualifiedname>rrt::pose_t</qualifiedname>
+        <briefdescription>
+<para>x,y,time,heading </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="45" column="24" bodyfile="graphLib/include/graph.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="graphLib/include/graph.h" line="42" column="1"/>
+  </compounddef>
+</doxygen>

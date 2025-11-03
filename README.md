@@ -42,6 +42,8 @@ The follwing dependencies are required, and can be installed accordingly.
 
 sudo apt install doxygen
 
+sudo apt install graphviz
+
 sudo apt install cmake
 
 sudo apt install libgtest-dev
