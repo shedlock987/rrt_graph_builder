@@ -38,6 +38,13 @@
 #include <random>
 #include <iomanip>
 #include <optional>
+#include <memory>
+
+#ifdef DEBUG
+  #define DEBUG_PRINT(x) do { x; } while(0)
+#else
+  #define DEBUG_PRINT(x) do { } while(0)
+#endif
 
 namespace rrt
 {
@@ -56,7 +63,7 @@ namespace rrt
         bool cmplt = false; /**< Flag to indicate the RRT is complete */
         bool admissible_ = false; /**< An Admissible solution exists to the destination node */
         int iteration_limit_; /**< Maximum number of of iterations, protect against infinite loops when no admissability */
-        static constexpr int sequential_check_limit_ = 15; /**< After this many sequential nodes in occupied space, we stop and assume a non-admissible trajectory*/
+        static constexpr int sequential_check_limit_ = 40; /**< After this many sequential nodes in occupied space, we stop and assume a non-admissible trajectory*/
         double initial_heading_ = 0.0F; /**< Initial heading of the RRT at the origin node */
         int max_admissible_; /**< Maximum number of admissible trajectories */
         std::vector<Node *> destNodes; /**< list of admissible end/destination nodes */
@@ -225,7 +232,7 @@ namespace rrt
          *          present in the list implies occupied space/time. Space is assumed to be free if 
          *          not present in the list. 
          */
-        std::optional<std::vector<occupancy_t>> occupancy_map_; 
+        std::optional<std::vector<occupancy_t>> occupancy_map_{std::nullopt};
 
         /**
         * @brief    Constructs/Initializes a new RRT Graph in the form of an Adjacency List
@@ -308,8 +315,7 @@ namespace rrt
         RRT(pose_t _range_a, pose_t _range_b,
             pose_t _origin, pose_t _dest,
             double _max_angle_rad, double _max_dist, double _min_dist,
-            double _max_interval, double _max_time, 
-            bool _dim, int _iteration_limit,
+            double _max_interval, double _max_time, bool _dim, int _iteration_limit,
             int _max_admissible);
 
         /**

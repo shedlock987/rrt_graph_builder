@@ -49,6 +49,10 @@
         max_long_accel_ = 3.0F;
         max_long_jerk_ = 1.0F;
         max_kappa_rad_ = 1.0F;
+
+        if (!occupancy_map_.has_value()) {
+            occupancy_map_.emplace(); // create an empty occupancy vector
+        }
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
@@ -75,6 +79,10 @@
         Node *end = new Node(_dest_x, _dest_y, 0.0F, 0.0F);
         initial_heading_ = calcAngle(adjacencyList_.front(), end);
         adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
+
+        if (!occupancy_map_.has_value()) {
+            occupancy_map_.emplace();
+        }
     }
 
     RRT::RRT(std::vector<occupancy_t> _occupancy_map,
@@ -95,6 +103,10 @@
         max_kappa_rad_ = calcMengerCurvature(max_dist_, max_dist_, std::sqrt(2 * max_dist_ * max_dist_ * (1-std::cos(max_angle_rad_)))); // Approximate max curvature based on max distance
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
+
+        if (!occupancy_map_.has_value()) {
+            occupancy_map_.emplace();
+        }
     }
 
     RRT::RRT(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y,
@@ -118,6 +130,10 @@
         Node *end = new Node(_dest_x, _dest_y, 0.0F, 0.0F);
         initial_heading_ = calcAngle(adjacencyList_.front(), end);
         adjacencyList_.front()->setPose(_range_a_x, _range_a_y, 0.0F, initial_heading_);
+
+        if (!occupancy_map_.has_value()) {
+            occupancy_map_.emplace();
+        }
     }
 
     RRT::RRT(pose_t _range_a, pose_t _range_b,
@@ -136,6 +152,10 @@
         max_kappa_rad_ = calcMengerCurvature(max_dist_, max_dist_, std::sqrt(2 * max_dist_ * max_dist_ * (1-std::cos(max_angle_rad_)))); // Approximate max curvature based on max distance
         setOrigin(_origin);
         setBoundaries(_range_a, _range_b);
+
+        if (!occupancy_map_.has_value()) {
+            occupancy_map_.emplace();
+        }
     }
 
 
@@ -260,7 +280,7 @@
 
     void RRT::setOccupancyMap(std::vector<occupancy_t> &_occupancy_map)
     {
-        occupancy_map_ = _occupancy_map;
+        occupancy_map_ = _occupancy_map; // optional will be engaged with the provided vector
     }
 
     Node* RRT::findNearest(Node *_handle, bool _temporal)
@@ -762,7 +782,7 @@
         /// Check if the back connection exists; if not, assume not occupied
         if (!_handle->BackCnnctn())
         {
-            std::cerr << "Warning: Node has no back connection; cannot check edge occupancy. Terminating RRT" << std::endl;
+            DEBUG_PRINT(std::cerr << "Warning: Node has no back connection; cannot check edge occupancy. Terminating RRT" << std::endl;);
             cmplt = true; // Terminate RRT build
             return true;
         }
@@ -785,7 +805,7 @@
                 _handle->time() >= time_min && _handle->time() <= time_max)
             {
                 occupied = true;
-                std::cout << "Node in occupied space" << std::endl;
+                DEBUG_PRINT(std::cout << "Node in occupied space" << std::endl;);
                 break;
             }
 
@@ -848,9 +868,7 @@
         /// Return true if the node or its connecting edge is in occupied space
         if (sequential_check > sequential_check_limit_)
         {
-            std::cout << "Greater than " << sequential_check_limit_ << " Sequential Nodes in Occupied Space: possible non-admissible trajectory." << std::endl;
-
-            /// Exit RRT build if too many sequential occupied nodes
+            DEBUG_PRINT(std::cout << "Greater than " << sequential_check_limit_ << " Sequential Nodes in Occupied Space: possible non-admissible trajectory." << std::endl;);
             cmplt = true;
         }
         return occupied;
@@ -889,7 +907,7 @@
 
         if(cmplt)
         {
-            std::cout << "RRT is already complete, no need to step." << std::endl;
+            DEBUG_PRINT(std::cout << "RRT is already complete, no need to step." << std::endl;);
             return cmplt;
         }
 
@@ -945,16 +963,16 @@
         /// Check to see if the new node is within range of the destination 
         checkDone();
 
-        if(i > iteration_limit_)
+        if(i > iteration_limit_ && !destNodes.empty())
         {
-            std::cout << "Iteration Limit of " << i-1 << " Reached, Stopping RRT. " << std::endl;
-            std::cout << "ITS POSSIBLE THERE IS NOT AN ADMISSIBLE SOLUTION" << std::endl;
+            DEBUG_PRINT(std::cout << "Iteration Limit of " << i-1 << " Reached, Stopping RRT. " << std::endl;);
+            DEBUG_PRINT(std::cout << "ITS POSSIBLE THERE IS NOT AN ADMISSIBLE SOLUTION" << std::endl;);
             cmplt = true;
         }
 
         if(cmplt && i <= iteration_limit_)
         {
-            std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes and " << i << " Iterations." << std::endl;
+            DEBUG_PRINT(std::cout << "RRT Completed with: " << adjacencyList_.size() << " Nodes and " << i << " Iterations." << std::endl;);
         }
 
         return cmplt;

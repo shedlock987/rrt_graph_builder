@@ -12,7 +12,7 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
+# keep .so tracked, do not ignore *.so
 *.dylib
 *.dll
 
@@ -30,3 +30,30 @@
 *.exe
 *.out
 *.app
+
+# CMake / build
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+
+# Prebuilt artifacts (optional)
+prebuilt/
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# build outputs
+*.o
+*.dylib
+*.a
+*.exe

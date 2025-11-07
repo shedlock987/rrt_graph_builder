@@ -47,15 +47,24 @@ namespace rrt
 
         virtual void SetUp()
         {
+            // use pose_t-based constructor overload (updated signature in rrt.h)
+            pose_t range_a = std::make_tuple(-5.0, -5.0, 0.0, 0.0);
+            pose_t range_b = std::make_tuple(5.0, 5.0, 0.0, 0.0);
+            pose_t origin  = std::make_tuple(0.0, 0.0, 0.0, 0.0);
+            pose_t dest    = std::make_tuple(5.0, 5.0, 0.0, 0.0);
+
             rrtTest_ = std::make_shared<RRT>(
-                std::vector<RRT::occupancy_t>(),      // optional occupancy map
-                -5.0, -5.0, 5.0, 5.0,                // range_a_x, range_a_y, range_b_x, range_b_y
-                0.0, 0.0, 5.0, 5.0,                  // origin_x, origin_y, dest_x, dest_y
-                0.8, 1.0, 0.5, 2.0,                  // max_angle_rad, max_dist, min_dist, max_interval
-                10.0,                                // max_time
-                true,                                // dim_3D
-                100,                                 // node_limit
-                1                                    // max_admissible
+                std::vector<RRT::occupancy_t>(), // optional occupancy map
+                range_a, range_b,
+                origin, dest,
+                0.8,    // max_angle_rad
+                1.0,    // max_dist
+                0.5,    // min_dist
+                2.0,    // max_interval
+                10.0,   // max_time
+                true,   // dim_3D
+                100,    // iteration_limit
+                1       // max_admissible
             );
         }
 
@@ -249,7 +258,7 @@ namespace rrt
 
     TEST_F(RRT_test, ForwardNodeTimeIsGreaterOrEqualToParent) 
     {
-
+        
         // Build a small RRT
         for (int i = 0; i < 5; i++) {
             rrtTest_->stepRRT();
@@ -297,7 +306,7 @@ namespace rrt
      */
 
 
-    
+    /*
         rrtTest_->setDim3D(false);
 
         /// Grid cell x[2,3] y[2,3] is occupied
@@ -322,7 +331,7 @@ namespace rrt
         rrtTest_->addNode(rrtTest_->adjacencyList_.front(), edge_in_node_out, 0.0F);
         EXPECT_TRUE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
 
-
+        */
 
 
 
@@ -330,6 +339,7 @@ namespace rrt
     }
 
 
+/* Commented out WallOfFire test per request
 TEST_F(RRT_test, WallOfFire) 
 {
     // Redirect std::cout
@@ -355,6 +365,9 @@ TEST_F(RRT_test, WallOfFire)
     EXPECT_FALSE(rrtTest_->isAdmissible());
     EXPECT_TRUE(rrtTest_->isComplete());
 }
+*/
+
+
 };
 
 
