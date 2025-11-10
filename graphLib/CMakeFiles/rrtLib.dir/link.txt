@@ -1,2 +1,1 @@
-/usr/bin/ar qc librrtLib.a CMakeFiles/rrtLib.dir/src/rrt.cpp.o
-/usr/bin/ranlib librrtLib.a
+/usr/bin/c++  -arch arm64 -dynamiclib -Wl,-headerpad_max_install_names -o ../prebuilt/macOS/librrtLib.dylib -install_name @rpath/librrtLib.dylib CMakeFiles/rrtLib.dir/src/rrt.cpp.o  -Wl,-rpath,/Users/shedlock/projects/rrt_graph_builder/prebuilt/macOS ../prebuilt/macOS/libgraphLib.dylib

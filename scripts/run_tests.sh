@@ -22,7 +22,7 @@ echo Done
 
 #Running App
 echo Running tests
-cd test
+cd prebuilt/macOS
 ./graphTest
 echo Complete
 

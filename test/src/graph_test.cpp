@@ -140,65 +140,61 @@ namespace rrt
     {
         /* Delete Node (Delete Node #4 which has back-edge weight of 2.0F)
            Test Graph Strucure BEFORE
-                            0________
-                           / \       |
-                     1.0F /   \ 2.0F |
-                         /     \     |
-                        0   ____0    |5.0F
-                  3.0F /   |     \   |
-                      /    | 4.0F \  | 
-                     0     |       \ |
-                      6.0F |        \|
+                            0
+                           / \       
+                     1.0F /   \ 2.0F 
+                         /     \     
+                        0   ____0   
+                  3.0F /   |     \   
+                      /    |      \ 4.0F
+                     0     |       \ 
+                      6.0F |        \
                            0         0
 
             Test Graph Strucure AFTER
-                            0________
-                           //\       |
-                     1.0F /|  \ 2.0F |
-                         / |   \     |
-                        0  |    \    |5.0F
-                  3.0F /   |     \   |
-                      /    | 4.0F \  | 
-                     0     |       \ |
-                      6.0F |        \|
+                            0
+                           //\       
+                     1.0F /|  \ 4.0F 
+                         / |   \    
+                        0  |    \    
+                  3.0F /   |     \   
+                      /    |      \  
+                     0     |       \ 
+                      6.0F |        \
                            0         0
         */
 
         /* Build Test Graph */
-        Node *handle, *prev, *next;
-        underTest_->addNode(std::make_tuple(1.1, 2.1, 0, 0), 1.0F);
-        handle = underTest_->adjacencyList_.back();
-        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0, 0), 3.0F); //Left Tree Complete
-        handle = underTest_->adjacencyList_.front(); //Go back to the head
-        underTest_->addNode(handle, std::make_tuple(2.1, 1.1, 0, 0), 2.0F);
-        underTest_->addNode(std::make_tuple(2.2, 1.2, 0, 0), 4.0F);
-        underTest_->addNode(handle, std::make_tuple(3.1F, 3.2F, 0, 0), 5.0F);
-        handle = underTest_->adjacencyList_.at(3);
-        underTest_->addNode(handle, std::make_tuple(2.3F, 1.3F, 0, 0), 6.0F);
+        Node *head = underTest_->adjacencyList_.front();
+        underTest_->addNode(head, std::make_tuple(1.1, 2.1, 0, 0), 1.0F);
+        Node *handle = underTest_->adjacencyList_.back();
+        underTest_->addNode(handle, std::make_tuple(1.2, 2.2, 0, 0), 3.0F);
+        /// left side completed
+
+        underTest_->addNode(head, std::make_tuple(2.1, 1.1, 0, 0), 2.0F);
+        Node *to_be_deleted = underTest_->adjacencyList_.back();
+        underTest_->addNode(to_be_deleted, std::make_tuple(2.2, 1.2, 0, 0), 4.0F);
+        Node *child1 = underTest_->adjacencyList_.back();
+        underTest_->addNode(to_be_deleted, std::make_tuple(3.1F, 3.2F, 0, 0), 6.0F);
+        Node *child2 = underTest_->adjacencyList_.back();
+        ///right side completed
 
         /* Sanity Check Test Graph */
-        EXPECT_EQ(underTest_->adjacencyList_.size(), 7);
-        EXPECT_EQ(handle->backEdgeWeight(), 2.0);
-        auto upstream = handle->BackCnnctn();
-        EXPECT_EQ(upstream->fwd_node_.size(), 3);
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
+        EXPECT_EQ(head->fwd_node_.size(), 2);
 
-        Node *parent = handle->BackCnnctn();
-        std::vector<Node *> propagated_cnnctns = parent->fwd_node_;
-        
-        /* Delete Interior Node */
-        underTest_->deleteNode(handle);
+        /* Delete the Node */
+        underTest_->deleteNode(to_be_deleted);
 
         /* Verify Deletion */
-        handle = underTest_->adjacencyList_.at(3);
-        EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
-        EXPECT_EQ(handle->backEdgeWeight(), 4.0);
+        EXPECT_EQ(head->fwd_node_.size(), 3); //with propogation heads should now have 3 fwd connections (increased from 2)
+        EXPECT_EQ(underTest_->adjacencyList_.size(), 5);
+        // check that child1 and child2 are included in head's fwd_node_ list
+        EXPECT_NE(std::find(head->fwd_node_.begin(), head->fwd_node_.end(), child1), head->fwd_node_.end());
+        EXPECT_NE(std::find(head->fwd_node_.begin(), head->fwd_node_.end(), child2), head->fwd_node_.end());
 
-        /* Verify forward connection Propagation */
-        for (Node* node : propagated_cnnctns) {
-            // Check if node exists in handle->fwd_node_
-            auto it = std::find(handle->fwd_node_.begin(), handle->fwd_node_.end(), node);
-            EXPECT_NE(it, handle->fwd_node_.end()) << "Node not found in propagated forward connections after deletion.";
-        }
+
+        
     }
 
     TEST_F(Graph_test, GRAPH_DELETE_HEAD_NODE)
@@ -298,7 +294,7 @@ namespace rrt
             |    //    |
             |___//_____|     
                //
-              //0
+              //0 
              ///
             ///
            ///
@@ -306,7 +302,7 @@ namespace rrt
      */
 
 
-    /*
+    
         rrtTest_->setDim3D(false);
 
         /// Grid cell x[2,3] y[2,3] is occupied
@@ -314,28 +310,36 @@ namespace rrt
         RRT::occupancy_t occupied_space;
         occupied_space.first = occupied_coord;
         occupied_space.second = 1.0F;
+
+        // Make occupancy_map_ contain exactly this single occupancy element
+        rrtTest_->occupancy_map_ = std::vector<RRT::occupancy_t>{ occupied_space };
+
+        // sanity checks
+        ASSERT_FALSE(rrtTest_->adjacencyList_.empty());
+        Node *head = rrtTest_->adjacencyList_.front();
+        ASSERT_NE(head, nullptr);
+
+        rrtTest_->addNode(head, std::make_tuple(0.5, 0.5, 0, 0), 1.0F);
+        EXPECT_EQ(rrtTest_->adjacencyList_.size(), 2);
+        Node *inbetween = rrtTest_->adjacencyList_.back();
+  //      EXPECT_FALSE(rrtTest_->isOccupied(inbetween));
+/*
+        rrtTest_->addNode(head, std::make_tuple(2.5, 2.5, 0, 0), 1.0F);
+        EXPECT_EQ(rrtTest_->adjacencyList_.size(), 3);
+        Node *inside = rrtTest_->adjacencyList_.back();
+        EXPECT_TRUE(rrtTest_->isOccupied(inside));
+
+        rrtTest_->addNode(head, std::make_tuple(5.5, 5.5, 0, 0), 1.0F);
+        EXPECT_EQ(rrtTest_->adjacencyList_.size(), 4);
+        Node *edge_in_abs_out = rrtTest_->adjacencyList_.back();
+        EXPECT_TRUE(rrtTest_->isOccupied(edge_in_abs_out));
         
-        rrtTest_->occupancy_map_->push_back(occupied_space);
+        rrtTest_->addNode(head, std::make_tuple(2.5, 2.5, 0, 0), 1.0F);
+        EXPECT_TRUE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
 
-        /// Build Test Graph and test iteratively 
-        pose_t outside = std::make_tuple(0.5F, 0.5F, 0, 0.0F);
-        pose_t inside = std::make_tuple(2.5F, 2.5F, 0, 0.0F);
-        pose_t edge_in_node_out = std::make_tuple(5.5F, 5.5F, 0, 0.0F);
-
-        rrtTest_->addNode(rrtTest_->adjacencyList_.front(), outside, 0.0F);
+        rrtTest_->addNode(head, std::make_tuple(5.5, 5.5, 0, 0), 1.0F);
         EXPECT_FALSE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
-
-        rrtTest_->addNode(rrtTest_->adjacencyList_.front(), inside, 0.0F);
-        EXPECT_TRUE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
-
-        rrtTest_->addNode(rrtTest_->adjacencyList_.front(), edge_in_node_out, 0.0F);
-        EXPECT_TRUE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
-
         */
-
-
-
-    
     }
 
 

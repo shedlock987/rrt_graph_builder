@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
+  "../prebuilt/macOS/libgraphLib.dylib"
+  "../prebuilt/macOS/libgraphLib.pdb"
   "CMakeFiles/graphLib.dir/src/graph.cpp.o"
   "CMakeFiles/graphLib.dir/src/graph.cpp.o.d"
-  "libgraphLib.a"
-  "libgraphLib.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

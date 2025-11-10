@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
+  "../prebuilt/macOS/librrtLib.dylib"
+  "../prebuilt/macOS/librrtLib.pdb"
   "CMakeFiles/rrtLib.dir/src/rrt.cpp.o"
   "CMakeFiles/rrtLib.dir/src/rrt.cpp.o.d"
-  "librrtLib.a"
-  "librrtLib.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

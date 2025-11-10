@@ -1,2 +1,1 @@
-/usr/bin/ar qc libgraphLib.a CMakeFiles/graphLib.dir/src/graph.cpp.o
-/usr/bin/ranlib libgraphLib.a
+/usr/bin/c++  -arch arm64 -dynamiclib -Wl,-headerpad_max_install_names -o ../prebuilt/macOS/libgraphLib.dylib -install_name @rpath/libgraphLib.dylib CMakeFiles/graphLib.dir/src/graph.cpp.o
