@@ -1,0 +1,851 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="df/d9f/classrrt_1_1_node" kind="class" language="C++" prot="public">
+    <compoundname>rrt::Node</compoundname>
+    <includes refid="d6/df3/graph_8h" local="no">graph.h</includes>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="df/d9f/classrrt_1_1_node_1adbadca77d7ccb914828857572a24f1d5" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> * &gt;</type>
+        <definition>std::vector&lt;Node *&gt; rrt::Node::fwd_node_</definition>
+        <argsstring></argsstring>
+        <name>fwd_node_</name>
+        <qualifiedname>rrt::Node::fwd_node_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="234" column="29" bodyfile="graphLib/include/graph.h" bodystart="234" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="df/d9f/classrrt_1_1_node_1a024fa297fcf3704b0a21d23b61dc4969" prot="private" static="no" mutable="no">
+        <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+        <definition>Node* rrt::Node::back_node_</definition>
+        <argsstring></argsstring>
+        <name>back_node_</name>
+        <qualifiedname>rrt::Node::back_node_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="235" column="22" bodyfile="graphLib/include/graph.h" bodystart="235" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="df/d9f/classrrt_1_1_node_1ac291e61e931f3ba5893b28e02e61f2d8" prot="private" static="no" mutable="no">
+        <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+        <definition>pose_t rrt::Node::pose_</definition>
+        <argsstring></argsstring>
+        <name>pose_</name>
+        <qualifiedname>rrt::Node::pose_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="236" column="24" bodyfile="graphLib/include/graph.h" bodystart="236" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="df/d9f/classrrt_1_1_node_1a5076b06eeefb404aef1e93f0f0f4c478" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::Node::back_edge_weight_</definition>
+        <argsstring></argsstring>
+        <name>back_edge_weight_</name>
+        <qualifiedname>rrt::Node::back_edge_weight_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="237" column="24" bodyfile="graphLib/include/graph.h" bodystart="237" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::Node</definition>
+        <argsstring>()</argsstring>
+        <name>Node</name>
+        <qualifiedname>rrt::Node::Node</qualifiedname>
+        <briefdescription>
+<para>Constructs a new Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="49" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="62" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ac5866909d644c973e294731ee07b965c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::Node</definition>
+        <argsstring>(pose_t _pose)</argsstring>
+        <name>Node</name>
+        <qualifiedname>rrt::Node::Node</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_pose</declname>
+        </param>
+        <briefdescription>
+<para>Constructs a new Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Cordinates of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Ensure real value</para>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="56" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="68" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a3e493c420be1b52a01b38e694f4b5ecc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::Node</definition>
+        <argsstring>(pose_t _pose, double _back_edge_weight)</argsstring>
+        <name>Node</name>
+        <qualifiedname>rrt::Node::Node</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_pose</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_back_edge_weight</declname>
+        </param>
+        <briefdescription>
+<para>Constructs a new Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Coordinates of the Node/Vertex<itemizedlist>
+<listitem></listitem></itemizedlist>
+</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_back_edge_weight</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The weight of the back-connected edge </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="64" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="76" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1abff11116913c94b16d76fb165e098252" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::Node</definition>
+        <argsstring>(const Node &amp;_copy)</argsstring>
+        <name>Node</name>
+        <qualifiedname>rrt::Node::Node</qualifiedname>
+        <param>
+          <type>const Node &amp;</type>
+          <declname>_copy</declname>
+        </param>
+        <briefdescription>
+<para>Node/Vertex Copy Constructor. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_copy</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Node/Vertex to be copied </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_back_edge_weight</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The weight of the back-connected edge </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="72" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="94" bodyend="97"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a5cc19b9678c0b68b0b5d65db0faa0201" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::Node</definition>
+        <argsstring>(double _x, double _y, double _time, double _back_edge_weight)</argsstring>
+        <name>Node</name>
+        <qualifiedname>rrt::Node::Node</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_time</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_back_edge_weight</declname>
+        </param>
+        <briefdescription>
+<para>Constructs a new 3D Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x-axis cordinate of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y-axis cordinate of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The time/temporal component of the Node/Vertex (assumes 3D) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_back_edge_weight</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The weight of the back-connected edge </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="82" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="82" bodyend="86"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a441be124886c20add0a447e44c35cd78" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::Node</definition>
+        <argsstring>(double _x, double _y, double _back_edge_weight)</argsstring>
+        <name>Node</name>
+        <qualifiedname>rrt::Node::Node</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_back_edge_weight</declname>
+        </param>
+        <briefdescription>
+<para>Constructs a new 2D Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x-axis cordinate of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y-axis cordinate of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_back_edge_weight</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The weight of the back-connected edge </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="91" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="88" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a42a4fd3fa1e9643a8765178db02c4784" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::Node::~Node</definition>
+        <argsstring>()</argsstring>
+        <name>~Node</name>
+        <qualifiedname>rrt::Node::~Node</qualifiedname>
+        <briefdescription>
+<para>Destroys the Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="96" column="17" bodyfile="graphLib/src/graph.cpp" bodystart="99" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ac1bd643a77273bb437fd13b63ce46ca5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::addFwdNode</definition>
+        <argsstring>(Node *_cnnctn)</argsstring>
+        <name>addFwdNode</name>
+        <qualifiedname>rrt::Node::addFwdNode</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+          <declname>_cnnctn</declname>
+        </param>
+        <briefdescription>
+<para>Dynamically adds a connection to another Node/vertex in the forward direction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_cnnctn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the forward node we will connect to </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="103" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="105" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ad34faeb5a12fc7ad2c40c3889ae8bf39" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::removeFwdNode</definition>
+        <argsstring>(Node *_cnnctn)</argsstring>
+        <name>removeFwdNode</name>
+        <qualifiedname>rrt::Node::removeFwdNode</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+          <declname>_cnnctn</declname>
+        </param>
+        <briefdescription>
+<para>Dynamically removes a connection to another Node/vertex in the forward direction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_cnnctn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the forward node we will disconnect from </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="110" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="110" bodyend="116"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1aed548150b553e88a86fa93a9e276ff56" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::debugPrintNode</definition>
+        <argsstring>()</argsstring>
+        <name>debugPrintNode</name>
+        <qualifiedname>rrt::Node::debugPrintNode</qualifiedname>
+        <briefdescription>
+<para>Console prints Node/Vertex Parameters, used for debugging. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="115" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="118" bodyend="165"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a93c1ddc492ab154834fa183af70dce8c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::Node::xCrdnt</definition>
+        <argsstring>() const</argsstring>
+        <name>xCrdnt</name>
+        <qualifiedname>rrt::Node::xCrdnt</qualifiedname>
+        <briefdescription>
+<para>Returns the x-axis coordinate of the node/vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>x-axis coordinate </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="122" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="167" bodyend="170"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ad71a3e9cd853f7b84b067b46c77eb2fc" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::Node::yCrdnt</definition>
+        <argsstring>() const</argsstring>
+        <name>yCrdnt</name>
+        <qualifiedname>rrt::Node::yCrdnt</qualifiedname>
+        <briefdescription>
+<para>Returns the x-axis coordinate of the node/vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>y-axis coordinate </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="129" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="172" bodyend="175"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1aefc723ad4389376e5c4f162ced02f297" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::Node::time</definition>
+        <argsstring>() const</argsstring>
+        <name>time</name>
+        <qualifiedname>rrt::Node::time</qualifiedname>
+        <briefdescription>
+<para>Returns the time/temporal component of the node/vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>timestamp </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="136" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="177" bodyend="180"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ae5273fdae114b51b8a39465a60354e89" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::Node::heading</definition>
+        <argsstring>() const</argsstring>
+        <name>heading</name>
+        <qualifiedname>rrt::Node::heading</qualifiedname>
+        <briefdescription>
+<para>Returns the time/temporal component of the node/vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>timestamp </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="143" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="182" bodyend="185"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a3c40c22143eee4ce4cd9085e2a2068b2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::setPose</definition>
+        <argsstring>(double _x, double _y, double _tm, double _hdng)</argsstring>
+        <name>setPose</name>
+        <qualifiedname>rrt::Node::setPose</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_tm</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_hdng</declname>
+        </param>
+        <briefdescription>
+<para>Sets/updates the coordinates for the Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x-axis cordinate of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y-axis cordinate of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_tm</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The time/temporal component of the Node/Vertex (assumes 3D) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_hdng</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The heading component of the Node/Vertex </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="153" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="187" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1acbcd8753ea2e222f62af9682ab684e92" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::setPose</definition>
+        <argsstring>(pose_t _pose)</argsstring>
+        <name>setPose</name>
+        <qualifiedname>rrt::Node::setPose</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_pose</declname>
+        </param>
+        <briefdescription>
+<para>Sets/updates the coordinates for the Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_pose</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The desired Values for the coordinates </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="160" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="192" bodyend="195"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1aff72713be3a1b8268f10ba1551de9f2c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+        <definition>pose_t rrt::Node::Pose</definition>
+        <argsstring>() const</argsstring>
+        <name>Pose</name>
+        <qualifiedname>rrt::Node::Pose</qualifiedname>
+        <briefdescription>
+<para>Gets the coordinates for the Node/Vertex. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>The Coordinates of type <ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="167" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="197" bodyend="200"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ac6697d8cd4b602ddb6346266b2850ccf" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+        <definition>Node * rrt::Node::BackCnnctn</definition>
+        <argsstring>() const</argsstring>
+        <name>BackCnnctn</name>
+        <qualifiedname>rrt::Node::BackCnnctn</qualifiedname>
+        <briefdescription>
+<para>Gets the Pointer to the Backward-connected Node/Vertex aka Back-Edge. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Pointer to Backward-connected Node/Vertex aka Back-Edge </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="174" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="202" bodyend="205"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a9d9577b839bd006c98f1ef068d26fb29" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::setBackCnnctn</definition>
+        <argsstring>(Node *_cnnctn)</argsstring>
+        <name>setBackCnnctn</name>
+        <qualifiedname>rrt::Node::setBackCnnctn</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+          <declname>_cnnctn</declname>
+        </param>
+        <briefdescription>
+<para>Sets/Updates the Pointer to the Backward-connected Node/Vertex aka Back-Edge. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_cnnctn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backward node we will connect to </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="181" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="207" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a06c6b2c0b139d9446708e2273b89a4eb" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::Node::backEdgeWeight</definition>
+        <argsstring>() const</argsstring>
+        <name>backEdgeWeight</name>
+        <qualifiedname>rrt::Node::backEdgeWeight</qualifiedname>
+        <briefdescription>
+<para>Gets the weight of the Backward-connected Node/Vertex aka Back-Edge. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Weight of the Node/Vertex&apos;s Back Connection </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="188" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="212" bodyend="215"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a0c0a051936ab19506b6364e74d48a210" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::Node::setBackEdgeWeight</definition>
+        <argsstring>(double _back_edge_weight)</argsstring>
+        <name>setBackEdgeWeight</name>
+        <qualifiedname>rrt::Node::setBackEdgeWeight</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_back_edge_weight</declname>
+        </param>
+        <briefdescription>
+<para>Sets/Updates the weight of the Backward-connected Node/Vertex aka Back-Edge. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_back_edge_weight</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The desired/new weight of the back-connected edge </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="195" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="217" bodyend="220"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1adfa79c025b53b12b553e352f791379a7" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const std::vector&lt; <ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> * &gt; &amp;</type>
+        <definition>const std::vector&lt; Node * &gt; &amp; rrt::Node::getFwdNodes</definition>
+        <argsstring>() const</argsstring>
+        <name>getFwdNodes</name>
+        <qualifiedname>rrt::Node::getFwdNodes</qualifiedname>
+        <briefdescription>
+<para>Returns a const reference to forward connections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Prefer this for tests/inspection. Use addFwdNode/remove via public API when mutating. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="201" column="35" bodyfile="graphLib/src/graph.cpp" bodystart="37" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a69e4557f28713ca8daf62dbcdb5cae35" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>size_t</type>
+        <definition>size_t rrt::Node::fwdNodeCount</definition>
+        <argsstring>() const</argsstring>
+        <name>fwdNodeCount</name>
+        <qualifiedname>rrt::Node::fwdNodeCount</qualifiedname>
+        <briefdescription>
+<para>Returns the number of forward connections. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Prefer this for tests/inspection. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="207" column="24" bodyfile="graphLib/src/graph.cpp" bodystart="42" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a37839c3c4c7ff14e407d8174ae715225" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool rrt::Node::hasFwdNode</definition>
+        <argsstring>(Node *n) const</argsstring>
+        <name>hasFwdNode</name>
+        <qualifiedname>rrt::Node::hasFwdNode</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+<para>Checks if a given node is a forward connection. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">n</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the node to check </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if the node is a forward connection, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="215" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="47" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1ae349dd80a81f983c92c69f3d71a206ca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+        <definition>Node * rrt::Node::fwdNodeAt</definition>
+        <argsstring>(size_t i)</argsstring>
+        <name>fwdNodeAt</name>
+        <qualifiedname>rrt::Node::fwdNodeAt</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>Returns the forward connection at a given index. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">i</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Index of the forward connection to retrieve </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to the forward connection at the given index </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="223" column="22" bodyfile="graphLib/src/graph.cpp" bodystart="52" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="df/d9f/classrrt_1_1_node_1a54895d2025f7d312f5570fff71b37b15" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>const <ref refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" kindref="member">Node</ref> *</type>
+        <definition>const Node * rrt::Node::fwdNodeAt</definition>
+        <argsstring>(size_t i) const</argsstring>
+        <name>fwdNodeAt</name>
+        <qualifiedname>rrt::Node::fwdNodeAt</qualifiedname>
+        <param>
+          <type>size_t</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>Returns the forward connection at a given index (const version). </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">i</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Index of the forward connection to retrieve </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to the forward connection at the given index </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/graph.h" line="231" column="28" bodyfile="graphLib/src/graph.cpp" bodystart="57" bodyend="60"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>rrt::Node</label>
+        <link refid="df/d9f/classrrt_1_1_node"/>
+        <childnode refid="1" relation="usage">
+          <edgelabel>back_node_</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="graphLib/include/graph.h" line="43" column="5" bodyfile="graphLib/include/graph.h" bodystart="44" bodyend="238"/>
+    <listofallmembers>
+      <member refid="df/d9f/classrrt_1_1_node_1ac1bd643a77273bb437fd13b63ce46ca5" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>addFwdNode</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a5076b06eeefb404aef1e93f0f0f4c478" prot="private" virt="non-virtual"><scope>rrt::Node</scope><name>back_edge_weight_</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a024fa297fcf3704b0a21d23b61dc4969" prot="private" virt="non-virtual"><scope>rrt::Node</scope><name>back_node_</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ac6697d8cd4b602ddb6346266b2850ccf" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>BackCnnctn</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a06c6b2c0b139d9446708e2273b89a4eb" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>backEdgeWeight</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1aed548150b553e88a86fa93a9e276ff56" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>debugPrintNode</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1adbadca77d7ccb914828857572a24f1d5" prot="private" virt="non-virtual"><scope>rrt::Node</scope><name>fwd_node_</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ae349dd80a81f983c92c69f3d71a206ca" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>fwdNodeAt</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a54895d2025f7d312f5570fff71b37b15" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>fwdNodeAt</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a69e4557f28713ca8daf62dbcdb5cae35" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>fwdNodeCount</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1adfa79c025b53b12b553e352f791379a7" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>getFwdNodes</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a37839c3c4c7ff14e407d8174ae715225" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>hasFwdNode</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ae5273fdae114b51b8a39465a60354e89" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>heading</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a73e1c0c72ec4142e82c9837550964552" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Node</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ac5866909d644c973e294731ee07b965c" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Node</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a3e493c420be1b52a01b38e694f4b5ecc" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Node</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1abff11116913c94b16d76fb165e098252" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Node</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a5cc19b9678c0b68b0b5d65db0faa0201" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Node</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a441be124886c20add0a447e44c35cd78" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Node</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1aff72713be3a1b8268f10ba1551de9f2c" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>Pose</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ac291e61e931f3ba5893b28e02e61f2d8" prot="private" virt="non-virtual"><scope>rrt::Node</scope><name>pose_</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ad34faeb5a12fc7ad2c40c3889ae8bf39" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>removeFwdNode</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a9d9577b839bd006c98f1ef068d26fb29" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>setBackCnnctn</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a0c0a051936ab19506b6364e74d48a210" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>setBackEdgeWeight</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a3c40c22143eee4ce4cd9085e2a2068b2" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>setPose</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1acbcd8753ea2e222f62af9682ab684e92" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>setPose</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1aefc723ad4389376e5c4f162ced02f297" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>time</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a93c1ddc492ab154834fa183af70dce8c" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>xCrdnt</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1ad71a3e9cd853f7b84b067b46c77eb2fc" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>yCrdnt</name></member>
+      <member refid="df/d9f/classrrt_1_1_node_1a42a4fd3fa1e9643a8765178db02c4784" prot="public" virt="non-virtual"><scope>rrt::Node</scope><name>~Node</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

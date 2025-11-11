@@ -54,3 +54,11 @@ __pycache__/
 *.dylib
 *.a
 *.exe
+
+# keep ignoring dylibs generally
+*.dylib
+
+# but allow specific prebuilt entries (must come after the matching rule)
+!/prebuilt/
+!/prebuilt/macOS/
+!/prebuilt/macOS/libgraphLib.dylib
