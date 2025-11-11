@@ -327,15 +327,20 @@
             i++;
         }
 
-        // If no valid nearest node found, return nullptr
-        if (idx == -1)
+        // If no valid nearest node found, return head (if present) as a safe fallback
+        if (idx == -1) {
+            if (!adjacencyList_.empty()) return adjacencyList_.front();
             return nullptr;
+        }
 
         return adjacencyList_.at(idx);
     }
 
     double RRT::calcDist(Node *_handle, Node *_ref, bool _temporal)
     {
+        // guard null pointers
+        if (!_handle || !_ref) return DBL_MAX;
+
         if(_temporal && dim_3D_)
         {
             return std::sqrt(std::pow(_handle->xCrdnt() - _ref->xCrdnt(), 2) + 
@@ -351,6 +356,8 @@
 
     double RRT::calcAngle(Node *_handle, Node *_ref)
     {
+        if (!_handle || !_ref) return 0.0;
+
         double delta_x = _handle->xCrdnt() - _ref->xCrdnt();
         double delta_y = _handle->yCrdnt() - _ref->yCrdnt();
         double angle = std::atan2(delta_y, delta_x);
@@ -376,6 +383,11 @@
     bool RRT::checkConstraints(Node *_handle)
     {
         Node *nearest = findNearest(_handle, true);
+        if (!nearest) {
+            // no valid nearest found -> cannot validate constraints
+            return false;
+        }
+
         double dist = calcDist(_handle, nearest, true);
         double angle = calcAngle(_handle, nearest);
         double tm = _handle->time();
@@ -399,6 +411,13 @@
     void RRT::applyConstraints(Node *_handle)
     {
         Node *nearest = findNearest(_handle, true);
+
+        if (!nearest) {
+            // cannot apply constraints without nearest; remove the node to avoid leaving invalid state
+            deleteNode(_handle);
+            DEBUG_PRINT("No valid nearest node found; removing the newly added node to maintain graph integrity.\n");
+            return;
+        }
 
         /// connects our new node to the nearest while also destroying the fwd 
         /// connection in the old back link to prevent loop-back in RRT
@@ -892,9 +911,7 @@
 
     void RRT::buildRRT()
     {
-        pose_t output;
-
-        while(!cmplt)
+        while(!isComplete())
         {
             stepRRT();
         }
@@ -963,11 +980,19 @@
         /// Check to see if the new node is within range of the destination 
         checkDone();
 
-        if(i > iteration_limit_ && !destNodes.empty())
+        if(i > iteration_limit_)
         {
-            DEBUG_PRINT(std::cout << "Iteration Limit of " << i-1 << " Reached, Stopping RRT. " << std::endl;);
-            DEBUG_PRINT(std::cout << "ITS POSSIBLE THERE IS NOT AN ADMISSIBLE SOLUTION" << std::endl;);
+            DEBUG_PRINT(std::cout << "Iteration limit reached: stopping RRT\n";);
             cmplt = true;
+            if(destNodes.empty())
+            {
+                DEBUG_PRINT(std::cout << "No admissible paths found.\n";);
+            }
+            else 
+            {
+                DEBUG_PRINT(std::cout << destNodes.size() << " Admissible paths found\n";);
+                admissible_ = true;
+            }
         }
 
         if(cmplt && i <= iteration_limit_)

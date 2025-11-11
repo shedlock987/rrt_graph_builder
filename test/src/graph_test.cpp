@@ -316,60 +316,70 @@ namespace rrt
 
         // sanity checks
         ASSERT_FALSE(rrtTest_->adjacencyList_.empty());
-        Node *head = rrtTest_->adjacencyList_.front();
+        auto *head = rrtTest_->adjacencyList_.front();
         ASSERT_NE(head, nullptr);
 
         rrtTest_->addNode(head, std::make_tuple(0.5, 0.5, 0, 0), 1.0F);
         EXPECT_EQ(rrtTest_->adjacencyList_.size(), 2);
-        Node *inbetween = rrtTest_->adjacencyList_.back();
-  //      EXPECT_FALSE(rrtTest_->isOccupied(inbetween));
-/*
+        auto inbetween = rrtTest_->adjacencyList_.back();
+        EXPECT_FALSE(rrtTest_->isOccupied(inbetween));
+
+        /// Test that a node/vertex inside occupied space is properly flagged
         rrtTest_->addNode(head, std::make_tuple(2.5, 2.5, 0, 0), 1.0F);
         EXPECT_EQ(rrtTest_->adjacencyList_.size(), 3);
-        Node *inside = rrtTest_->adjacencyList_.back();
+        auto inside = rrtTest_->adjacencyList_.back();
         EXPECT_TRUE(rrtTest_->isOccupied(inside));
 
+        /// Test that an edge passing through occupied space is properly flagged 
         rrtTest_->addNode(head, std::make_tuple(5.5, 5.5, 0, 0), 1.0F);
         EXPECT_EQ(rrtTest_->adjacencyList_.size(), 4);
-        Node *edge_in_abs_out = rrtTest_->adjacencyList_.back();
+        auto edge_in_abs_out = rrtTest_->adjacencyList_.back();
         EXPECT_TRUE(rrtTest_->isOccupied(edge_in_abs_out));
-        
-        rrtTest_->addNode(head, std::make_tuple(2.5, 2.5, 0, 0), 1.0F);
-        EXPECT_TRUE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
-
-        rrtTest_->addNode(head, std::make_tuple(5.5, 5.5, 0, 0), 1.0F);
-        EXPECT_FALSE(rrtTest_->isOccupied(rrtTest_->adjacencyList_.back()));
-        */
     }
 
 
-/* Commented out WallOfFire test per request
+
 TEST_F(RRT_test, WallOfFire) 
 {
-    // Redirect std::cout
-    std::streambuf* orig_buf = std::cout.rdbuf();
-    std::ostringstream capture;
-    std::cout.rdbuf(capture.rdbuf());
+    /*
+    Large occupied space immediately to the right of origin, precluding any graph/path
+    _______________________________
+    |                              |
+    |                              |
+    |                              |
+    |                              |
+    |______________________________|           
+                    0 (Origin)
 
+     */
+
+
+    
     rrtTest_->setDim3D(false);
 
-    pose_t occupied_coord = std::make_tuple(3.1F, 0.0F, 0, 0.0F);
+    /// Grid cell x[2,3] y[2,3] is occupied
+    pose_t occupied_coord = std::make_tuple(0.0F, 5.1F, 0, 0.0F);
     RRT::occupancy_t occupied_space;
+    
     occupied_space.first = occupied_coord;
-    occupied_space.second = 3.0F;
-    rrtTest_->occupancy_map_->push_back(occupied_space);
+    occupied_space.second = 1.0F;
+
+    // Make occupancy_map_ contain exactly this single occupancy element
+    rrtTest_->occupancy_map_ = std::vector<RRT::occupancy_t>{ occupied_space };
+
+    // sanity checks
+    ASSERT_FALSE(rrtTest_->adjacencyList_.empty());
+    auto *head = rrtTest_->adjacencyList_.front();
+    ASSERT_NE(head, nullptr);
 
     // Build Test Graph
     rrtTest_->buildRRT();
 
-    // Restore std::cout
-    std::cout.rdbuf(orig_buf);
-
-    std::string output = capture.str();
+    // Verify that no path to goal was found
     EXPECT_FALSE(rrtTest_->isAdmissible());
     EXPECT_TRUE(rrtTest_->isComplete());
+
 }
-*/
 
 
 };
