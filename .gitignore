@@ -38,9 +38,6 @@
 /cmake_install.cmake
 /Makefile
 
-# Prebuilt artifacts (optional)
-prebuilt/
-
 # IDEs and editors
 .vscode/
 .idea/
