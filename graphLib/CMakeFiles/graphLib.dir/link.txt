@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG -arch arm64 -dynamiclib -Wl,-headerpad_max_install_names -o ../prebuilt/macOS/libgraphLib.dylib -install_name @rpath/libgraphLib.dylib CMakeFiles/graphLib.dir/src/graph.cpp.o

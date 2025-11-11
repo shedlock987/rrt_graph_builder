@@ -12,102 +12,40 @@ if [[ -d "$BUILD_DIR" ]]; then
   rm -rf "$BUILD_DIR"
 fi
 
-# Remove common CMake artifacts at repo root (if any)
-for f in CMakeCache.txt CMakeFiles Makefile cmake_install.cmake; do
+# Remove all CMakeFiles directories (generated build dirs in source trees like graphLib/, test/)
+echo " - Removing all CMakeFiles directories"
+find "$REPO_ROOT" -type d -name 'CMakeFiles' -print -exec rm -rf {} + 2>/dev/null || true
+
+# Remove common CMake artifacts at repo root and generated Makefiles/cmake_install.cmake everywhere
+for f in CMakeCache.txt Makefile cmake_install.cmake; do
   if [[ -e "$REPO_ROOT/$f" ]]; then
-    echo " - Removing $f"
-    if [[ -d "$REPO_ROOT/$f" ]]; then
-      rm -rf "$REPO_ROOT/$f"
-    else
-      rm -f "$REPO_ROOT/$f"
-    fi
+    echo " - Removing root $f"
+    rm -f "$REPO_ROOT/$f"
   fi
 done
+echo " - Removing all generated cmake_install.cmake files"
+find "$REPO_ROOT" -type f -name 'cmake_install.cmake' -delete 2>/dev/null || true
 
-# Remove all generated cmake_install.cmake files anywhere under the repo
-echo " - Removing all cmake_install.cmake files"
-find "$REPO_ROOT" -type f -name 'cmake_install.cmake' -print -delete
-
-# Remove generated libraries, object files, and executables inside repo
-echo " - Removing binary/object/library files (*.o, *.so, *.a, *.dll, *.exe)"
-find "$REPO_ROOT" -type f \( -name '*.o' -o -name '*.so' -o -name '*.a' -o -name '*.dll' -o -name '*.exe' \) -print -delete
+# Remove generated libraries, object files, and executables (*.o, *.obj, *.so, *.a, *.lib, *.dll, *.exe)
+echo " - Removing binary/object/library files"
+find "$REPO_ROOT" -type f \( -name '*.o' -o -name '*.obj' -o -name '*.so' -o -name '*.a' -o -name '*.lib' -o -name '*.dll' -o -name '*.exe' \) -delete 2>/dev/null || true
 
 # Remove graphTest binary from prebuilt platform dirs (macOS and linux)
 echo " - Removing graphTest from prebuilt/macOS and prebuilt/linux if present"
 for d in "$REPO_ROOT/prebuilt/macOS" "$REPO_ROOT/prebuilt/linux"; do
   if [[ -d "$d" ]]; then
-    # remove any files starting with graphTest (binary, extensions, copies)
-    find "$d" -maxdepth 1 -type f -name 'graphTest*' -print -delete || true
+    find "$d" -maxdepth 1 -type f -name 'graphTest*' -delete 2>/dev/null || true
   fi
 done
 
-# Remove C/C++ intermediate files and IDE artifacts
-echo " - Removing build intermediates and IDE files (*.obj, *.lib, .vscode/*)"
-find "$REPO_ROOT" -type f \( -name '*.obj' -o -name '*.lib' \) -print -delete
+# Remove IDE artifacts (.vscode/)
 if [[ -d "$REPO_ROOT/.vscode" ]]; then
   echo " - Removing .vscode directory"
   rm -rf "$REPO_ROOT/.vscode"
 fi
 
-# Remove any leftover temporary or swap files
-echo " - Removing temporary/swap files (*~ , *.swp, *.swo, .DS_Store)"
-find "$REPO_ROOT" -type f \( -name '*~' -o -name '*.swp' -o -name '*.swo' -o -name '.DS_Store' \) -print -delete
-
-echo "Clean complete."
-```// filepath: /Users/shedlock/projects/rrt_graph_builder/scripts/clean.sh
-#!/usr/bin/env bash
-set -euo pipefail
-
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null && pwd)"
-BUILD_DIR="$REPO_ROOT/build"
-
-echo "Cleaning build artifacts under: $REPO_ROOT"
-
-# Remove top-level build directory created by cmake
-if [[ -d "$BUILD_DIR" ]]; then
-  echo " - Removing build directory: $BUILD_DIR"
-  rm -rf "$BUILD_DIR"
-fi
-
-# Remove common CMake artifacts at repo root (if any)
-for f in CMakeCache.txt CMakeFiles Makefile cmake_install.cmake; do
-  if [[ -e "$REPO_ROOT/$f" ]]; then
-    echo " - Removing $f"
-    if [[ -d "$REPO_ROOT/$f" ]]; then
-      rm -rf "$REPO_ROOT/$f"
-    else
-      rm -f "$REPO_ROOT/$f"
-    fi
-  fi
-done
-
-# Remove all generated cmake_install.cmake files anywhere under the repo
-echo " - Removing all cmake_install.cmake files"
-find "$REPO_ROOT" -type f -name 'cmake_install.cmake' -print -delete
-
-# Remove generated libraries, object files, and executables inside repo
-echo " - Removing binary/object/library files (*.o, *.so, *.a, *.dll, *.exe)"
-find "$REPO_ROOT" -type f \( -name '*.o' -o -name '*.so' -o -name '*.a' -o -name '*.dll' -o -name '*.exe' \) -print -delete
-
-# Remove graphTest binary from prebuilt platform dirs (macOS and linux)
-echo " - Removing graphTest from prebuilt/macOS and prebuilt/linux if present"
-for d in "$REPO_ROOT/prebuilt/macOS" "$REPO_ROOT/prebuilt/linux"; do
-  if [[ -d "$d" ]]; then
-    # remove any files starting with graphTest (binary, extensions, copies)
-    find "$d" -maxdepth 1 -type f -name 'graphTest*' -print -delete || true
-  fi
-done
-
-# Remove C/C++ intermediate files and IDE artifacts
-echo " - Removing build intermediates and IDE files (*.obj, *.lib, .vscode/*)"
-find "$REPO_ROOT" -type f \( -name '*.obj' -o -name '*.lib' \) -print -delete
-if [[ -d "$REPO_ROOT/.vscode" ]]; then
-  echo " - Removing .vscode directory"
-  rm -rf "$REPO_ROOT/.vscode"
-fi
-
-# Remove any leftover temporary or swap files
-echo " - Removing temporary/swap files (*~ , *.swp, *.swo, .DS_Store)"
-find "$REPO_ROOT" -type f \( -name '*~' -o -name '*.swp' -o -name '*.swo' -o -name '.DS_Store' \) -print -delete
+# Remove temporary/swap files (*~, *.swp, *.swo, .DS_Store)
+echo " - Removing temporary/swap files"
+find "$REPO_ROOT" -type f \( -name '*~' -o -name '*.swp' -o -name '*.swo' -o -name '.DS_Store' \) -delete 2>/dev/null || true
 
 echo "Clean complete."
