@@ -28,26 +28,21 @@
  * @author Ryan Shedlock <rmshedlock@gmail.com>
  * @version 1.0
  */
-#ifndef Graph_H_
-#define Graph_H_
+#ifndef GRAPH_H_
+#define GRAPH_H_
 
-#include <stddef.h>
-#include <string.h>
-#include <cstdint>
-#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <tuple>
+#include <iostream>
 
 namespace rrt
 {
     /// @brief x,y,time,heading
     typedef std::tuple<double, double, double, double> pose_t;
     class Node
-        {
-            public: 
-                std::vector<Node *> fwd_node_;
-
+    {
+        public:
                 /**
                  * @brief   Constructs a new Node/Vertex
                  */   
@@ -106,6 +101,13 @@ namespace rrt
                  * @param[in]  _cnnctn  Pointer to the forward node we will connect to
                  */
                 void addFwdNode(Node * _cnnctn);
+
+                /**
+                 * @brief   Dynamically removes a connection to another Node/vertex in the forward direction
+                 *
+                 * @param[in]  _cnnctn  Pointer to the forward node we will disconnect from
+                 */
+                void removeFwdNode(Node * _cnnctn);
 
                 /**
                  * @brief Console prints Node/Vertex Parameters, used for debugging
@@ -192,13 +194,50 @@ namespace rrt
                  */
                 void setBackEdgeWeight(double _back_edge_weight);
 
+                /**
+                 * @brief   Returns a const reference to forward connections
+                 * @note    Prefer this for tests/inspection. Use addFwdNode/remove via public API when mutating.
+                 */
+                const std::vector<Node*>& getFwdNodes() const;
+
+                 /**
+                 * @brief   Returns the number of forward connections
+                 * @note    Prefer this for tests/inspection. 
+                 */
+                size_t fwdNodeCount() const;
+
+                /**
+                 * @brief   Checks if a given node is a forward connection
+                 * 
+                 * @param[in]    n  Pointer to the node to check
+                 * @return   True if the node is a forward connection, false otherwise
+                 */
+                bool hasFwdNode(Node* n) const;
+
+                /**
+                 * @brief   Returns the forward connection at a given index
+                 * 
+                 * @param[in]    i  Index of the forward connection to retrieve
+                 * @return   Pointer to the forward connection at the given index
+                 */
+                Node* fwdNodeAt(size_t i);
+
+                /**
+                 * @brief   Returns the forward connection at a given index (const version)
+                 * 
+                 * @param[in]    i  Index of the forward connection to retrieve
+                 * @return   Pointer to the forward connection at the given index
+                 */
+                const Node* fwdNodeAt(size_t i) const;
+
             private:
+                std::vector<Node *> fwd_node_;
                 Node* back_node_;
                 pose_t pose_;
                 double back_edge_weight_;
-        };
+    };
 
-class Graph {
+    class Graph {
     private:
         bool initCmplt_ = false;
     public:
@@ -298,6 +337,7 @@ class Graph {
     
         std::vector<Node *> adjacencyList_;
     };
-}
 
-#endif /* Graph_H_ */
+} // namespace rrt
+
+#endif /* GRAPH_H_ */

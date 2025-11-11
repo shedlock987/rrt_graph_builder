@@ -100,8 +100,8 @@ namespace rrt
         EXPECT_NEAR(underTest_->adjacencyList_.back()->backEdgeWeight(),4.4F,0.00001F);
 
         //Ensure proper adjacency list conections
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front(), 
-                    underTest_->adjacencyList_.back()->BackCnnctn());
+        EXPECT_EQ(underTest_->adjacencyList_.front()->getFwdNodes().front(),
+                  underTest_->adjacencyList_.back()->BackCnnctn());
     }
 
     TEST_F(Graph_test, GRAPH_BASICS)
@@ -130,7 +130,7 @@ namespace rrt
         underTest_->addNode(handle, std::make_tuple(3.1F, 3.2F, 0, 0), 5.0F);
 
         /* Test Head-to-Tail */
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwdNodeCount(), 3);
         EXPECT_EQ(underTest_->adjacencyList_.back()->BackCnnctn(), 
                   underTest_->adjacencyList_.front());
         EXPECT_NEAR(underTest_->adjacencyList_.back()->backEdgeWeight(),5.0F, 0.00001F);
@@ -181,20 +181,17 @@ namespace rrt
 
         /* Sanity Check Test Graph */
         EXPECT_EQ(underTest_->adjacencyList_.size(), 6);
-        EXPECT_EQ(head->fwd_node_.size(), 2);
+        EXPECT_EQ(head->fwdNodeCount(), 2);
 
         /* Delete the Node */
         underTest_->deleteNode(to_be_deleted);
 
         /* Verify Deletion */
-        EXPECT_EQ(head->fwd_node_.size(), 3); //with propogation heads should now have 3 fwd connections (increased from 2)
+        EXPECT_EQ(head->fwdNodeCount(), 3); //with propogation heads should now have 3 fwd connections (increased from 2)
         EXPECT_EQ(underTest_->adjacencyList_.size(), 5);
         // check that child1 and child2 are included in head's fwd_node_ list
-        EXPECT_NE(std::find(head->fwd_node_.begin(), head->fwd_node_.end(), child1), head->fwd_node_.end());
-        EXPECT_NE(std::find(head->fwd_node_.begin(), head->fwd_node_.end(), child2), head->fwd_node_.end());
-
-
-        
+        EXPECT_NE(std::find(head->getFwdNodes().begin(), head->getFwdNodes().end(), child1), head->getFwdNodes().end());
+        EXPECT_NE(std::find(head->getFwdNodes().begin(), head->getFwdNodes().end(), child2), head->getFwdNodes().end());
     }
 
     TEST_F(Graph_test, GRAPH_DELETE_HEAD_NODE)
@@ -246,10 +243,10 @@ namespace rrt
 
         /* Verify Proper Node was selected as New Head */
         /* New Head should be the node with <previously> the smallest edge*/
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.size(), 3);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.front()->backEdgeWeight(), 3.0);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.back()->backEdgeWeight(), 5.0);
-        EXPECT_EQ(underTest_->adjacencyList_.front()->fwd_node_.at(1)->backEdgeWeight(), 2.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->fwdNodeCount(), 3);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->getFwdNodes().front()->backEdgeWeight(), 3.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->getFwdNodes().back()->backEdgeWeight(), 5.0);
+        EXPECT_EQ(underTest_->adjacencyList_.front()->getFwdNodes().at(1)->backEdgeWeight(), 2.0);
     }
 
     TEST_F(RRT_test, ForwardNodeTimeIsGreaterOrEqualToParent) 
@@ -264,7 +261,7 @@ namespace rrt
         for (size_t parent_idx = 0; parent_idx < rrtTest_->adjacencyList_.size(); ++parent_idx) {
             const Node* parent = rrtTest_->adjacencyList_[parent_idx];
             double parent_time = parent->time();
-            for (const Node* child : parent->fwd_node_) {
+            for (const Node* child : parent->getFwdNodes()) {
                 // Find the index of the child in the adjacency list (if present)
                 auto it = std::find(rrtTest_->adjacencyList_.begin(), rrtTest_->adjacencyList_.end(), child);
                 size_t child_idx = (it != rrtTest_->adjacencyList_.end()) ? std::distance(rrtTest_->adjacencyList_.begin(), it) : static_cast<size_t>(-1);

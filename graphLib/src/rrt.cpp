@@ -302,7 +302,7 @@
 
             /// Check if this node has any forward connections to destination nodes
             bool has_fwd_to_dest = false;
-            for (const auto& fwd : iter->fwd_node_)
+            for (const auto& fwd : iter->getFwdNodes())
             {
                 if (std::find(destNodes.begin(), destNodes.end(), fwd) != destNodes.end())
                 {

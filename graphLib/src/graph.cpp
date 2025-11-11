@@ -30,11 +30,35 @@
  */
 
 #include "graph.h"
-#define WARN 0
 
 namespace rrt
 {
-    
+
+const std::vector<Node*>& Node::getFwdNodes() const
+{
+    return fwd_node_;
+}
+
+size_t Node::fwdNodeCount() const
+{
+    return fwd_node_.size();
+}
+
+bool Node::hasFwdNode(Node* n) const
+{
+    return std::find(fwd_node_.begin(), fwd_node_.end(), n) != fwd_node_.end();
+}
+
+Node* Node::fwdNodeAt(size_t i)
+{
+    return fwd_node_.at(i);
+}
+
+const Node* Node::fwdNodeAt(size_t i) const
+{
+    return fwd_node_.at(i);
+}
+
     Node::Node() 
     {
         setBackEdgeWeight(0.0F);
@@ -83,6 +107,14 @@ namespace rrt
         fwd_node_.push_back(_cnnctn);
     }
 
+    void Node::removeFwdNode(Node* _cnnctn)
+    {
+        auto it = std::remove(fwd_node_.begin(), fwd_node_.end(), _cnnctn);
+        if (it != fwd_node_.end()) {
+            fwd_node_.erase(it, fwd_node_.end());
+        }
+    }
+
     void Node::debugPrintNode()
     {
         bool init = false;
@@ -93,27 +125,31 @@ namespace rrt
                   << " Back Weight:" << backEdgeWeight() << std::endl;
         std::cout << "Connections:" << std::endl << std::endl;
 
+        const auto &fwd = getFwdNodes();
         if(BackCnnctn() == nullptr)
         {
             std::cout << "        Back Connection ID:";
             std::cout << BackCnnctn();
             std::cout << " <--- O";
-            std::cout << " ---> Fwd Connection ID:" << fwd_node_.front() << std::endl;
+            if (!fwd.empty()) {
+                std::cout << " ---> Fwd Connection ID:" << fwd.front() << std::endl;
+            }
         }
         else
         {
             std::cout << "Back Connection ID:";
             std::cout << BackCnnctn();
             std::cout << " <--- O";
-            if(fwd_node_.size() > 0)
+            if(!fwd.empty())
             {
-                std::cout << " ---> Fwd Connection ID:" << fwd_node_.front() << std::endl;
+                std::cout << " ---> Fwd Connection ID:" << fwd.front() << std::endl;
             }
         }
 
 
-        for(const auto &iter : fwd_node_)
+        for(size_t idx = 0; idx < fwd.size(); ++idx)
         {
+            auto iter = fwd[idx];
             if(init == false)
             {
                 init = true;
@@ -231,10 +267,16 @@ namespace rrt
         }
     }
 
+    void Graph::addEdge(Node* _src, Node* _dest)
+    {
+        _src->addFwdNode(_dest);
+        _dest->setBackCnnctn(_src);
+    }
+
     void Graph::deleteEdge(Node* _src, Node* _dest)
     {
-        auto fwd_link = std::remove(_src->fwd_node_.begin(), _src->fwd_node_.end(), _dest);
-        _src->fwd_node_.erase(fwd_link);
+        // remove forward connection via Node helper
+        _src->removeFwdNode(_dest);
         _dest->setBackCnnctn(nullptr);
     }
 
@@ -252,21 +294,21 @@ namespace rrt
                 /// This will be the new Head 
 
                 std::vector<double> list;
-                for (const auto& i : adjacencyList_.at(idx)->fwd_node_)
+                for (const auto& i : adjacencyList_.at(idx)->getFwdNodes())
                 {
                     list.push_back(i->backEdgeWeight());
                 }
 
                 auto temp = std::min_element(list.begin(), list.end());
                 auto min_idx = std::distance(list.begin(), temp);
-                auto new_head = adjacencyList_.at(idx)->fwd_node_.at(min_idx);
+                auto new_head = adjacencyList_.at(idx)->getFwdNodes().at(min_idx);
 
                 /// Add Old-HEAD's Fwd Connections to New-HEAD 
-                for(const auto &iter : adjacencyList_.at(idx)->fwd_node_)
+                for(const auto &iter : adjacencyList_.at(idx)->getFwdNodes())
                 {
                     if(iter != new_head)
                     {
-                        new_head->fwd_node_.push_back(iter);
+                        new_head->addFwdNode(iter);
                     }
                 }
                 new_head->setBackCnnctn(nullptr);
@@ -292,28 +334,26 @@ namespace rrt
                 auto upstream_idx = getIndex(upstream);
 
                 /// Migrate Deleted Node's Forward Links to the new back link 
- 
-                for(const auto &iter_b : adjacencyList_.at(idx)->fwd_node_)
+                for(const auto &iter_b : adjacencyList_.at(idx)->getFwdNodes())
                 {
                     if(iter_b != nullptr) 
                     {
-                        adjacencyList_.at(upstream_idx)->fwd_node_.push_back(iter_b);
+                        adjacencyList_.at(upstream_idx)->addFwdNode(iter_b);
                     }
                 }
 
                 /// Update Back Links for all the forward connections
                 /// aka do double linked list house keeping 
-                for(const auto &iter_f : adjacencyList_.at(idx)->fwd_node_)
+                for(const auto &iter_f : adjacencyList_.at(idx)->getFwdNodes())
                 {
-                    iter_f->setBackCnnctn(adjacencyList_.at(idx));
+                    iter_f->setBackCnnctn(upstream); // point to upstream (parent) after migration
                 }
                 
                 /// Break the forward connection to the deleted node
                 if(upstream != nullptr)
                 {
                     /// Remove the deleted node from the upstream node's forward connections
-                    auto fwd_link = std::remove(upstream->fwd_node_.begin(), upstream->fwd_node_.end(), _handle);
-                    upstream->fwd_node_.erase(fwd_link);
+                    upstream->removeFwdNode(_handle);
                 }
 
                 /// Finally, Delete the node from adjacency list 
@@ -349,25 +389,14 @@ namespace rrt
         adjacencyList_.clear();
     }
 
-    /// Method to add an edge to the graph
-    /// Parameters: src - source vertex
-    /// dest - destination vertex
-    void Graph::addEdge(Node* _src, Node* _dest)
-    {
-        _src->fwd_node_.push_back(_dest);
-        _dest->setBackCnnctn(_src);
-    }
-
     void Graph::updateEdge(Node* _src, Node* _fwd)
     {
-        // Remove _fwd from its current back connection's fwd_node_ list
         Node* old_back = _fwd->BackCnnctn();
-        if (old_back) {
-            auto& fwd_list = old_back->fwd_node_;
-            auto it = std::remove(fwd_list.begin(), fwd_list.end(), _fwd);
-            fwd_list.erase(it, fwd_list.end());
+        if (old_back) 
+        {
+            old_back->removeFwdNode(_fwd);
         }
-        _src->fwd_node_.push_back(_fwd);
+        _src->addFwdNode(_fwd);
         _fwd->setBackCnnctn(_src);
     }
 
@@ -380,4 +409,4 @@ namespace rrt
         }
     }
 
-}
+} // namespace rrt
