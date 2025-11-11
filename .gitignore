@@ -62,3 +62,10 @@ __pycache__/
 !/prebuilt/
 !/prebuilt/macOS/
 !/prebuilt/macOS/libgraphLib.dylib
+!/prebuilt/macOS/librrtLib.dylib
+!/prebuilt/linux/
+!/prebuilt/macOS/graphLib.so
+!/prebuilt/macOS/rrtLib.so
+!/prebuilt/linux/
+!/prebuilt/macOS/graphLib.so
+!/prebuilt/macOS/rrtLib.so
