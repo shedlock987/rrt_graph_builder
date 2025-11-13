@@ -281,86 +281,93 @@ const Node* Node::fwdNodeAt(size_t i) const
     }
 
     void Graph::deleteNode(Node* _handle)
+{
+    int idx = getIndex(_handle);
+
+    /// Check that this is an actual graph 
+    if(adjacencyList_.size() > 1)
     {
-        int idx = getIndex(_handle);
-
-        /// Check that this is an actual graph 
-        if(adjacencyList_.size() > 1)
+        /// Check if youre deleting the HEAD 
+        if(adjacencyList_.at(idx)->BackCnnctn() == nullptr)
         {
-            /// Check if youre deleting the HEAD 
-            if(adjacencyList_.at(idx)->BackCnnctn() == nullptr)
+            /// Find the Foward Edge with the smallest Weight
+            /// This will be the new Head 
+
+            std::vector<double> list;
+            for (const auto& i : adjacencyList_.at(idx)->getFwdNodes())
             {
-                /// Find the Foward Edge with the smallest Weight
-                /// This will be the new Head 
-
-                std::vector<double> list;
-                for (const auto& i : adjacencyList_.at(idx)->getFwdNodes())
-                {
-                    list.push_back(i->backEdgeWeight());
-                }
-
-                auto temp = std::min_element(list.begin(), list.end());
-                auto min_idx = std::distance(list.begin(), temp);
-                auto new_head = adjacencyList_.at(idx)->getFwdNodes().at(min_idx);
-
-                /// Add Old-HEAD's Fwd Connections to New-HEAD 
-                for(const auto &iter : adjacencyList_.at(idx)->getFwdNodes())
-                {
-                    if(iter != new_head)
-                    {
-                        new_head->addFwdNode(iter);
-                    }
-                }
-                new_head->setBackCnnctn(nullptr);
-                new_head->setBackEdgeWeight(0.0F);
-
-                /// Delete Old-HEAD node from adjacency list 
-                adjacencyList_.erase(adjacencyList_.begin());
-                
-                /// Housekeeping: Make sure New-HEAD is index 0 
-                int temp_head_idx = getIndex(new_head);
-                Node* cpy = adjacencyList_.at(temp_head_idx);
-                adjacencyList_.erase(adjacencyList_.begin() + temp_head_idx);
-                adjacencyList_.insert(adjacencyList_.begin(), cpy);
-
-                /// Delete Old-HEAD 
-                temp_head_idx = getIndex(_handle);
-
-                //adjacencyList_.erase(adjacencyList_.begin() + temp_head_idx + 1); 
+                list.push_back(i->backEdgeWeight());
             }
-            else 
+
+            auto temp = std::min_element(list.begin(), list.end());
+            auto min_idx = std::distance(list.begin(), temp);
+            auto new_head = adjacencyList_.at(idx)->getFwdNodes().at(min_idx);
+
+            /// Add Old-HEAD's Fwd Connections to New-HEAD 
+            for(const auto &iter : adjacencyList_.at(idx)->getFwdNodes())
             {
-                auto upstream = adjacencyList_.at(idx)->BackCnnctn();
-                auto upstream_idx = getIndex(upstream);
-
-                /// Migrate Deleted Node's Forward Links to the new back link 
-                for(const auto &iter_b : adjacencyList_.at(idx)->getFwdNodes())
+                if(iter != new_head)
                 {
-                    if(iter_b != nullptr) 
-                    {
-                        adjacencyList_.at(upstream_idx)->addFwdNode(iter_b);
-                    }
+                    new_head->addFwdNode(iter);
                 }
-
-                /// Update Back Links for all the forward connections
-                /// aka do double linked list house keeping 
-                for(const auto &iter_f : adjacencyList_.at(idx)->getFwdNodes())
-                {
-                    iter_f->setBackCnnctn(upstream); // point to upstream (parent) after migration
-                }
-                
-                /// Break the forward connection to the deleted node
-                if(upstream != nullptr)
-                {
-                    /// Remove the deleted node from the upstream node's forward connections
-                    upstream->removeFwdNode(_handle);
-                }
-
-                /// Finally, Delete the node from adjacency list 
-                adjacencyList_.erase(adjacencyList_.begin() + idx);
             }
+            new_head->setBackCnnctn(nullptr);
+            new_head->setBackEdgeWeight(0.0F);
+
+            /// Save pointer to old head for deletion
+            Node* to_delete = adjacencyList_.at(0);
+
+            /// Delete Old-HEAD node from adjacency list 
+            adjacencyList_.erase(adjacencyList_.begin());
+            
+            /// Housekeeping: Make sure New-HEAD is index 0 
+            int temp_head_idx = getIndex(new_head);
+            Node* cpy = adjacencyList_.at(temp_head_idx);
+            adjacencyList_.erase(adjacencyList_.begin() + temp_head_idx);
+            adjacencyList_.insert(adjacencyList_.begin(), cpy);
+
+            /// Delete the old head object to prevent leak
+            delete to_delete;
+        }
+        else 
+        {
+            auto upstream = adjacencyList_.at(idx)->BackCnnctn();
+            auto upstream_idx = getIndex(upstream);
+
+            /// Migrate Deleted Node's Forward Links to the new back link 
+            for(const auto &iter_b : adjacencyList_.at(idx)->getFwdNodes())
+            {
+                if(iter_b != nullptr) 
+                {
+                    adjacencyList_.at(upstream_idx)->addFwdNode(iter_b);
+                }
+            }
+
+            /// Update Back Links for all the forward connections
+            /// aka do double linked list house keeping 
+            for(const auto &iter_f : adjacencyList_.at(idx)->getFwdNodes())
+            {
+                iter_f->setBackCnnctn(upstream); // point to upstream (parent) after migration
+            }
+            
+            /// Break the forward connection to the deleted node
+            if(upstream != nullptr)
+            {
+                /// Remove the deleted node from the upstream node's forward connections
+                upstream->removeFwdNode(_handle);
+            }
+
+            /// Save pointer for deletion
+            Node* to_delete = adjacencyList_.at(idx);
+
+            /// Finally, Delete the node from adjacency list 
+            adjacencyList_.erase(adjacencyList_.begin() + idx);
+
+            /// Delete the object to prevent leak
+            delete to_delete;
         }
     }
+}
 
     int Graph::getIndex(Node* _handle) const
     {
