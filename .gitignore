@@ -1,0 +1,69 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+# keep .so tracked, do not ignore *.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# CMake / build
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# build outputs
+*.o
+*.dylib
+*.a
+*.exe
+
+# keep ignoring dylibs generally
+*.dylib
+
+# but allow specific prebuilt entries (must come after the matching rule)
+!/prebuilt/
+!/prebuilt/macOS/
+!/prebuilt/macOS/libgraphLib.dylib
+!/prebuilt/macOS/librrtLib.dylib
+!/prebuilt/linux/
+!/prebuilt/linux/libgraphLib.so
+!/prebuilt/linux/librrtLib.so
+

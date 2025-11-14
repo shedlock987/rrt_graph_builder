@@ -1,0 +1,2807 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="d8/d87/classrrt_1_1_r_r_t" kind="class" language="C++" prot="public">
+    <compoundname>rrt::RRT</compoundname>
+    <basecompoundref refid="dc/d58/classrrt_1_1_graph" prot="public" virt="non-virtual">rrt::Graph</basecompoundref>
+    <includes refid="d2/dc6/rrt_8h" local="no">rrt.h</includes>
+    <sectiondef kind="private-type">
+      <memberdef kind="typedef" id="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" prot="private" static="no">
+        <type>std::pair&lt; <ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref>, double &gt;</type>
+        <definition>typedef std::pair&lt;pose_t, double&gt; rrt::RRT::occupancy_t</definition>
+        <argsstring></argsstring>
+        <name>occupancy_t</name>
+        <qualifiedname>rrt::RRT::occupancy_t</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="54" column="27" bodyfile="graphLib/include/rrt.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a4fabfb8f1e87a54fce5c2a2f71941dd8" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_angle_rad_</definition>
+        <argsstring></argsstring>
+        <name>max_angle_rad_</name>
+        <qualifiedname>rrt::RRT::max_angle_rad_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum permitted angle between 2 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="55" column="16" bodyfile="graphLib/include/rrt.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a3576a5c85085f4ecd57b05156717f8d7" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_kappa_rad_</definition>
+        <argsstring></argsstring>
+        <name>max_kappa_rad_</name>
+        <qualifiedname>rrt::RRT::max_kappa_rad_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum permitted curvature between 3 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="56" column="16" bodyfile="graphLib/include/rrt.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a7014dfb8405ecb42ebeac9bbdbceb1a5" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_long_accel_</definition>
+        <argsstring></argsstring>
+        <name>max_long_accel_</name>
+        <qualifiedname>rrt::RRT::max_long_accel_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum permitted longitudinal acceleration between 2 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="57" column="16" bodyfile="graphLib/include/rrt.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a598417bc88bc5491f98a74f33d7ed15d" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_long_jerk_</definition>
+        <argsstring></argsstring>
+        <name>max_long_jerk_</name>
+        <qualifiedname>rrt::RRT::max_long_jerk_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum permitted longitudinal jerk between 3 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="58" column="16" bodyfile="graphLib/include/rrt.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1af7d5cca48eb927546b68eeed22520b70" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_dist_</definition>
+        <argsstring></argsstring>
+        <name>max_dist_</name>
+        <qualifiedname>rrt::RRT::max_dist_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum permitted distance between 2 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="59" column="16" bodyfile="graphLib/include/rrt.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1ae864e6fe2974f36e8abb6aba7ceec11f" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::min_dist_</definition>
+        <argsstring></argsstring>
+        <name>min_dist_</name>
+        <qualifiedname>rrt::RRT::min_dist_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: minimum permitted distance between 2 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="60" column="16" bodyfile="graphLib/include/rrt.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a95c1c10f8a1732c4ed605ccc8675be88" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_interval_</definition>
+        <argsstring></argsstring>
+        <name>max_interval_</name>
+        <qualifiedname>rrt::RRT::max_interval_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum time interval between 2 Nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="61" column="16" bodyfile="graphLib/include/rrt.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a1cddd9b1f32f083696f90213a587bbd2" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::max_time_</definition>
+        <argsstring></argsstring>
+        <name>max_time_</name>
+        <qualifiedname>rrt::RRT::max_time_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constraint: maximum time </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="62" column="16" bodyfile="graphLib/include/rrt.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1aac20886a5397442953b2560371ef1cd3" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool rrt::RRT::dim_3D_</definition>
+        <argsstring></argsstring>
+        <name>dim_3D_</name>
+        <qualifiedname>rrt::RRT::dim_3D_</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Specifies if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is 2D or 3D, initialized to 2D, no temporal </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="63" column="14" bodyfile="graphLib/include/rrt.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a11254000d32630d5dae35f4587f8eed5" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool rrt::RRT::cmplt</definition>
+        <argsstring></argsstring>
+        <name>cmplt</name>
+        <qualifiedname>rrt::RRT::cmplt</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Flag to indicate the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is complete </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="64" column="14" bodyfile="graphLib/include/rrt.h" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1ae73aa25cc5ec88d9856c4d8abce01c87" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool rrt::RRT::admissible_</definition>
+        <argsstring></argsstring>
+        <name>admissible_</name>
+        <qualifiedname>rrt::RRT::admissible_</qualifiedname>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>An Admissible solution exists to the destination node </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="65" column="14" bodyfile="graphLib/include/rrt.h" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a8b5f7a64fbc5d75d33a40a654c6412a9" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int rrt::RRT::iteration_limit_</definition>
+        <argsstring></argsstring>
+        <name>iteration_limit_</name>
+        <qualifiedname>rrt::RRT::iteration_limit_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Maximum number of of iterations, protect against infinite loops when no admissability </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="66" column="13" bodyfile="graphLib/include/rrt.h" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1af0452cfd26b7e68f0770470944bbcd13" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double rrt::RRT::initial_heading_</definition>
+        <argsstring></argsstring>
+        <name>initial_heading_</name>
+        <qualifiedname>rrt::RRT::initial_heading_</qualifiedname>
+        <initializer>= 0.0F</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Initial heading of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> at the origin node </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="68" column="16" bodyfile="graphLib/include/rrt.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a76fb30c7e45bb44513884fa788283071" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int rrt::RRT::max_admissible_</definition>
+        <argsstring></argsstring>
+        <name>max_admissible_</name>
+        <qualifiedname>rrt::RRT::max_admissible_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Maximum number of admissible trajectories </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="69" column="13" bodyfile="graphLib/include/rrt.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a0110778a91af29b55bee420e3cde1934" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> * &gt;</type>
+        <definition>std::vector&lt;Node *&gt; rrt::RRT::destNodes</definition>
+        <argsstring></argsstring>
+        <name>destNodes</name>
+        <qualifiedname>rrt::RRT::destNodes</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>list of admissible end/destination nodes </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="70" column="21" bodyfile="graphLib/include/rrt.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1ae1e8d15692ee92fd53b083f17ddc1ddb" prot="private" static="no" mutable="no">
+        <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+        <definition>pose_t rrt::RRT::range_a_</definition>
+        <argsstring></argsstring>
+        <name>range_a_</name>
+        <qualifiedname>rrt::RRT::range_a_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Lower Left Corner of the Operating Region </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="72" column="16" bodyfile="graphLib/include/rrt.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a5a5a4d511999d872a0437116ed31f981" prot="private" static="no" mutable="no">
+        <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+        <definition>pose_t rrt::RRT::range_b_</definition>
+        <argsstring></argsstring>
+        <name>range_b_</name>
+        <qualifiedname>rrt::RRT::range_b_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Upper Right Corner of the Operating Region </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="73" column="16" bodyfile="graphLib/include/rrt.h" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a834761fb593eb2f488872223a26df9b9" prot="private" static="no" mutable="no">
+        <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+        <definition>pose_t rrt::RRT::origin_</definition>
+        <argsstring></argsstring>
+        <name>origin_</name>
+        <qualifiedname>rrt::RRT::origin_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Origin of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="74" column="16" bodyfile="graphLib/include/rrt.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a753b57650e1e18b9e3b8214d538f7098" prot="private" static="no" mutable="no">
+        <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+        <definition>pose_t rrt::RRT::dest_</definition>
+        <argsstring></argsstring>
+        <name>dest_</name>
+        <qualifiedname>rrt::RRT::dest_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Destination of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="75" column="16" bodyfile="graphLib/include/rrt.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a550f5f502ef57b87bb46a6de6b4d68d5" prot="private" static="no" mutable="no">
+        <type>std::optional&lt; std::vector&lt; <ref refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" kindref="member">occupancy_t</ref> &gt; &gt;</type>
+        <definition>std::optional&lt;std::vector&lt;occupancy_t&gt; &gt; rrt::RRT::occupancy_map_</definition>
+        <argsstring></argsstring>
+        <name>occupancy_map_</name>
+        <qualifiedname>rrt::RRT::occupancy_map_</qualifiedname>
+        <initializer>{std::nullopt}</initializer>
+        <briefdescription>
+<para>An Occupancy Map (Grid) represented as a simple list of occupied voxels. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is represented as a vector of <ref refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" kindref="member">occupancy_t</ref>, where each element (<ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref>) present in the list implies occupied space/time. Space is assumed to be free if not present in the list. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="84" column="23" bodyfile="graphLib/include/rrt.h" bodystart="84" bodyend="84"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-static-attrib">
+      <memberdef kind="variable" id="d8/d87/classrrt_1_1_r_r_t_1a9e5baa1593adccc52578b08c498b9f69" prot="private" static="yes" constexpr="yes" mutable="no">
+        <type>int</type>
+        <definition>int rrt::RRT::sequential_check_limit_</definition>
+        <argsstring></argsstring>
+        <name>sequential_check_limit_</name>
+        <qualifiedname>rrt::RRT::sequential_check_limit_</qualifiedname>
+        <initializer>= 40</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>After this many sequential nodes in occupied space, we stop and assume a non-admissible trajectory </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="67" column="30" bodyfile="graphLib/include/rrt.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aedd3d28472981a32447073315d36f441" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+        <definition>Node * rrt::RRT::findNearest</definition>
+        <argsstring>(Node *_handle, bool _temporal)</argsstring>
+        <name>findNearest</name>
+        <qualifiedname>rrt::RRT::findNearest</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>_temporal</declname>
+        </param>
+        <briefdescription>
+<para>Searches the adjacency list for the nearest node to the given node. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The given node we want to reference the search against </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_temporal</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if true will return 3D nearest (z-plane beiing time). otherwise only cares about x,y </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Excludes/omits destination node from search </para>
+</simplesect>
+<simplesect kind="return"><para>Pointer to the Graph-Node which is nearest to the handle </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Need to optimize</para>
+<para>Ignore/do not consider any destination nodes or nodes with forward connections to destination nodes</para>
+<para>Check if this node has any forward connections to destination nodes</para>
+<para>Make sure we&apos;re not comparing the handle to itself</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="94" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="277" bodyend="328"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a8f87b38e69431c38b1048640d4ca6eb5" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcDist</definition>
+        <argsstring>(Node *_handle, Node *_ref, bool _temporal)</argsstring>
+        <name>calcDist</name>
+        <qualifiedname>rrt::RRT::calcDist</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>_temporal</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the 2D eculidian distance between two nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_temporal</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if true will return 3D distance. Otherwise only cares about x,y </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Eculidian distance between the two nodes </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="104" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="330" bodyend="346"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a09b6dd8b59367a4a14c2c55e6070237e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcAngle</definition>
+        <argsstring>(Node *_handle, Node *_ref)</argsstring>
+        <name>calcAngle</name>
+        <qualifiedname>rrt::RRT::calcAngle</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the angle (in radians) between two nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Angle between the two nodes </para>
+</simplesect>
+<simplesect kind="note"><para>The angle is calculated as the delta between the pose of the reference node and the eculidean position of the handle </para>
+</simplesect>
+<simplesect kind="note"><para>It is assumed that setting of the pose of the handle will be done after/elsewhere </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="115" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="348" bodyend="366"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a0acce6e7161c6246c15049cceb64087c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcKinematicEdge</definition>
+        <argsstring>(Node *_handle, Node *_ref)</argsstring>
+        <name>calcKinematicEdge</name>
+        <qualifiedname>rrt::RRT::calcKinematicEdge</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref</declname>
+        </param>
+        <briefdescription>
+<para>Calculates an edge weight based upon kinematic cost constraints. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Edge weight based upon kinematic cost constraints </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Calculate a composite back-edge weight based on kinematic cost</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="124" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="368" bodyend="372"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aa7ba5c903079f0c4b1536203dd41efe2" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool rrt::RRT::checkConstraints</definition>
+        <argsstring>(Node *_handle)</argsstring>
+        <name>checkConstraints</name>
+        <qualifiedname>rrt::RRT::checkConstraints</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <briefdescription>
+<para>Checks if the constraints (distance, angle, interval) are satisfied between a given node and its nearest neighbor. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>This is only intended to be used by the Build function since it only checks against the nearest neighbor </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The given node we want to check constraints for </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Returns true if the constraints are satisfied, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="133" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="374" bodyend="400"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aa0acc5ec661d90c5cf578651022937f4" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::applyConstraints</definition>
+        <argsstring>(Node *_handle)</argsstring>
+        <name>applyConstraints</name>
+        <qualifiedname>rrt::RRT::applyConstraints</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <briefdescription>
+<para>Applies/Updates node parameters to ensure the constraints are satisfied. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Also ensures the node is within the operating region </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The given node we want to force constraints upon </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>connects our new node to the nearest while also destroying the fwd connection in the old back link to prevent loop-back in <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref></para>
+<para>Impose Spatial Absolute constraints (Angle and Distance)</para>
+<para>Impose Dynamic constraints (Curvature)</para>
+<para>Impose Dynamic Temporal Constraints (Longitudinal Acceleration/Jerk) - Not implemented yet</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="141" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="402" bodyend="429"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a35045f98469d1f4581eb2f7295521559" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::checkDone</definition>
+        <argsstring>()</argsstring>
+        <name>checkDone</name>
+        <qualifiedname>rrt::RRT::checkDone</qualifiedname>
+        <briefdescription>
+<para>Checks if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> gaph has a <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> near the desired destination and said node is within the constraints relative to the destination. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Sets this-&gt;cmplt = true if the destination is reached within constraints </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Make sure this graph isn&apos;t already complete `</para>
+<para>Create Dummy end-node with time of zero</para>
+<para>Find the nearest <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> to end</para>
+<para>Update the destination time to be equal to the nearest node&apos;s time</para>
+<para>Grab the preceeding node to nearest</para>
+<para>Stash these in case the heuristic fails and we need to revert</para>
+<para>Calculate parameters between end and end/second_nearest</para>
+<para>Check if the node meets the spatial constraints (intentionally ignoring angle, just seeing if its close enough)</para>
+<para>Heuristic: lets smooth out the end and make a nice &quot;landing path&quot; to the destination</para>
+<para>Check constraints against second nearest (doubling the constraints values (Assuming time is fine, if it werrent we wouldnt be in this method))</para>
+<para>Reposition nearest to be at the midpoint between the preceeding and the end node</para>
+<para>Double check that the second nearest node is still within constraints</para>
+<para>Formally add the dummy destination node to the graph</para>
+<para>list this node as an admissible destination node</para>
+<para>Put humpty dumpty back together again</para>
+<para>Put humpty dumpty back together again</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="148" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="431" bodyend="508"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1ae7705e0511d1e694505c51e43c7fefa2" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcMengerCurvature</definition>
+        <argsstring>(Node *_ref0, Node *_ref1, Node *_ref2)</argsstring>
+        <name>calcMengerCurvature</name>
+        <qualifiedname>rrt::RRT::calcMengerCurvature</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref0</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref1</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref2</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the 2D (x,y) curvature between 3 Nodes using the Menger Curvature formula. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Returns 0.0F if the points are collinear or any pointer is null </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The second node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The third node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Null-pointer guard: if any input is null, return 0</para>
+<para>Calculate the Menger Curature given three nodes</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="158" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="510" bodyend="534"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a8e6abdb2a494cbc88df1fa028025b701" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcMengerCurvature</definition>
+        <argsstring>(double _ab, double _bc, double _ac)</argsstring>
+        <name>calcMengerCurvature</name>
+        <qualifiedname>rrt::RRT::calcMengerCurvature</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_ab</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_bc</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_ac</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the 2D (x,y) curvature between 3 Points using the Menger Curvature formula. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Returns 0.0F if the points are collinear or any pointer is null </para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_ab</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>distance between first and second node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_bc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>distance between second and third node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_ac</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>distance between first and third node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="168" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="538" bodyend="557"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aa33736f7ff502bfdc76d95102847cc89" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::constrainCurvature</definition>
+        <argsstring>(Node *_handle)</argsstring>
+        <name>constrainCurvature</name>
+        <qualifiedname>rrt::RRT::constrainCurvature</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <briefdescription>
+<para>Adjusts spataial parameters of the current node to ensure curvature constraints are satisfied. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current node we want to constrain </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Check that the handle has two sequential back connections via checking nullptr If we do not have 2 back connections, we&apos;re by the origin and only the max angle constraint applies</para>
+<para>Determine the sign of the curvature</para>
+<para>Get coordinates</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="175" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="559" bodyend="638"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1ab73954e564400376a0e5b2ee06e41ad8" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::applyAbsoluteConstraints</definition>
+        <argsstring>(Node *_handle, Node *_nearest)</argsstring>
+        <name>applyAbsoluteConstraints</name>
+        <qualifiedname>rrt::RRT::applyAbsoluteConstraints</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_nearest</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the maximum permitted spatial constraints based on absolute limit params and applies it to the current node. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current node we want to constrain </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_nearest</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The nearest node to the current node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Apply Absolute Scaling Constraints Ensure angle change is within limits relative to the previous node&apos;s heading/pose</para>
+<para>Need to ensure time never runs backwards</para>
+<para>Update the <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> with the new coordinates which meet absolute constraints</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="183" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="640" bodyend="679"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aa92dba46553d549e8da7e71b5f8b0fff" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::alignHeadingToTangent</definition>
+        <argsstring>(Node *_handle, double _center_x, double _center_y)</argsstring>
+        <name>alignHeadingToTangent</name>
+        <qualifiedname>rrt::RRT::alignHeadingToTangent</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_center_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_center_y</declname>
+        </param>
+        <briefdescription>
+<para>Aligns the heading of the current node to be tangent to the menger curvature from the previous 2 nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current node we want to align </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_center_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the center of curvature </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_center_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the center of curvature </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Calculate the tangent heading at the node given the center of curvature</para>
+<para>Tangent is perpendicular to radius vector</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="192" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="681" bodyend="691"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a967b7672b7d6265b707aada6f999770f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcLongAccel</definition>
+        <argsstring>(Node *_handle, Node *_ref)</argsstring>
+        <name>calcLongAccel</name>
+        <qualifiedname>rrt::RRT::calcLongAccel</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the longitudinal acceleration between two nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The reference node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The longitudinal acceleration between the two nodes (units per time^2) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Calculate the longitudinal acceleration based on back connection nodes</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="201" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="693" bodyend="716"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a8460ab768223c16147ec9331d696c1fe" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>double</type>
+        <definition>double rrt::RRT::calcLongJerk</definition>
+        <argsstring>(Node *_handle, Node *_ref)</argsstring>
+        <name>calcLongJerk</name>
+        <qualifiedname>rrt::RRT::calcLongJerk</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_ref</declname>
+        </param>
+        <briefdescription>
+<para>Calculates the longitudinal jerk between two nodes. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current node </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_ref0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The first reference node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>The longitudinal jerk between the two nodes (units per time per time^3) </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Calculate the longitudinal jerk based on back connection nodes</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="210" column="16" bodyfile="graphLib/src/rrt.cpp" bodystart="718" bodyend="733"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a1b297aabe410b6d640ce3d8cf094ec1a" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::constrainLongitudinal</definition>
+        <argsstring>(Node *_handle)</argsstring>
+        <name>constrainLongitudinal</name>
+        <qualifiedname>rrt::RRT::constrainLongitudinal</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <briefdescription>
+<para>Adjusts spataial and temporal parameters of the current node to ensure longitudinal dynamic constraints are satisfied. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The current node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Recompute time to satisfy Acceleration constraint Δt = [v - sqrt(v² - 2as)] / a</para>
+<para>Recompute jerk after adjusting time</para>
+<para>Recompute time to satisfy Jerk constraint Δt = [sqrt(3j² + 12a₀²) - 3a₀]/j for given jerk j, initial acceleration a₀, displacement s</para>
+<para>Recompute time to satisfy Acceleration constraint Δt = [v - sqrt(v² - 2as] / a</para>
+<para>Recompute time to satisfy Jerk constraint Δt = [sqrt(3j² + 12a₀²) - 3a₀]/j for given jerk j, initial acceleration a₀, displacement s</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="217" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="735" bodyend="780"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a45dcef49503b5b55faadf295a993f58a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool rrt::RRT::isOccupied</definition>
+        <argsstring>(Node *_handle)</argsstring>
+        <name>isOccupied</name>
+        <qualifiedname>rrt::RRT::isOccupied</qualifiedname>
+        <param>
+          <type><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> *</type>
+          <declname>_handle</declname>
+        </param>
+        <briefdescription>
+<para>Compares a node (coordinates) against the occupancy map to determine if it is occupied. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The node (coordinates) we want </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Returns true if the node is occupied, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>No occupancy map provided, assume not occupied</para>
+<para>Check if the back connection exists; if not, assume not occupied</para>
+<para>Iterate through the occupied cubes (voxels)</para>
+<para>Occupied bounding corner locations</para>
+<para>Check that the node itself is not in occupied space</para>
+<para>Check that the line segment (edge) between the node and the back link is not passing through occupied space</para>
+<para>Line segment intersection check</para>
+<para>Check each axis (x, y, z/time)</para>
+<para>Line parallel to axis</para>
+<para>Line is outside cube bounds on this axis</para>
+<para>No intersection on this axis</para>
+<para>Check if the valid t range overlaps with [0, 1]</para>
+<para>Return true if the node or its connecting edge is in occupied space</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="226" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="782" bodyend="885"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a766000abdb3e9193ee7689c44f929c76" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::RRT::RRT</definition>
+        <argsstring>(const std::optional&lt; std::vector&lt; occupancy_t &gt; &gt; _occupancy_map)</argsstring>
+        <name>RRT</name>
+        <qualifiedname>rrt::RRT::RRT</qualifiedname>
+        <param>
+          <type>const std::optional&lt; std::vector&lt; <ref refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" kindref="member">occupancy_t</ref> &gt; &gt;</type>
+          <declname>_occupancy_map</declname>
+        </param>
+        <briefdescription>
+<para>Constructs/Initializes a new <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> in the form of an Adjacency List. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>ADefault constructor, Freespaceboundaries are set to reserved values</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_occupancy_map</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional occupancy map, if provided, will be used to check for freespace </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="234" column="9" bodyfile="graphLib/src/rrt.cpp" bodystart="38" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a7175dec7796f3e4ca0a435247a928659" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::RRT::RRT</definition>
+        <argsstring>(std::vector&lt; occupancy_t &gt; _occupancy_map, double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y, double _origin_x, double _origin_y, double _dest_x, double _dest_y, double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval, double _max_time, bool _dim, int _iteration_limit, int _max_admissible, double _max_long_accel, double _max_long_jerk, double _max_kappa_rad)</argsstring>
+        <name>RRT</name>
+        <qualifiedname>rrt::RRT::RRT</qualifiedname>
+        <param>
+          <type>std::vector&lt; <ref refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" kindref="member">occupancy_t</ref> &gt;</type>
+          <declname>_occupancy_map</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_a_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_a_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_b_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_b_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_angle_rad</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_min_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_interval</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_time</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>_dim</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_iteration_limit</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_max_admissible</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_accel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_jerk</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_kappa_rad</declname>
+        </param>
+        <briefdescription>
+<para>Constructs/Initializes a new <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> in the form of an Adjacency List. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>DConstuctor where boundaries are explicitly defined by x and y coordinates, includes occupancy map</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_occupancy_map</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional occupancy map, if provided, will be used to check for freespace </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>X Coordinate Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Y Coordinate Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>X Coordinate Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Y Coordinate Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the origin <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_angle_rad</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted angle between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_min_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: minimum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_interval</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum time interval between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Absolute temporal boundary/limit for the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specifies if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is 2D or 3D </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_iteration_limit</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of nodes permittedin the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_admissible</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of admissible trajectories permitted in the graph </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="258" column="9" bodyfile="graphLib/src/rrt.cpp" bodystart="58" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a87d8feefa826aea054886c4ee597d117" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::RRT::RRT</definition>
+        <argsstring>(std::vector&lt; occupancy_t &gt; _occupancy_map, pose_t _range_a, pose_t _range_b, pose_t _origin, pose_t _dest, double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval, double _max_time, bool _dim, int _iteration_limit, int _max_admissible, double _max_long_accel, double _max_long_jerk, double _max_kappa_rad)</argsstring>
+        <name>RRT</name>
+        <qualifiedname>rrt::RRT::RRT</qualifiedname>
+        <param>
+          <type>std::vector&lt; <ref refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" kindref="member">occupancy_t</ref> &gt;</type>
+          <declname>_occupancy_map</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_range_a</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_range_b</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_origin</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_dest</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_angle_rad</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_min_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_interval</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_time</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>_dim</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_iteration_limit</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_max_admissible</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_accel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_jerk</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_kappa_rad</declname>
+        </param>
+        <briefdescription>
+<para>Constructs/Initializes a new <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> in the form of an Adjacency List. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Constuctor where boundaries are of the type <ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref>, incluides occupancy map</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_occupancy_map</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional occupancy map, if provided, will be used to check for freespace </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Origin of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Destination of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_angle_rad</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted angle between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_min_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: minimum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_interval</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum time interval between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Absolute temporal boundary/limit for the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specifies if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is 2D or 3D </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_iteration_limit</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of nodes permittedin the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_admissible</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of admissible trajectories permitted in the graph </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="283" column="9" bodyfile="graphLib/src/rrt.cpp" bodystart="85" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a05faa1472f9e4ef4b0dc2ebc63f6951f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::RRT::RRT</definition>
+        <argsstring>(pose_t _range_a, pose_t _range_b, pose_t _origin, pose_t _dest, double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval, double _max_time, bool _dim, int _iteration_limit, int _max_admissible, double _max_long_accel, double _max_long_jerk, double _max_kappa_rad)</argsstring>
+        <name>RRT</name>
+        <qualifiedname>rrt::RRT::RRT</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_range_a</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_range_b</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_origin</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_dest</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_angle_rad</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_min_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_interval</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_time</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>_dim</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_iteration_limit</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_max_admissible</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_accel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_jerk</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_kappa_rad</declname>
+        </param>
+        <briefdescription>
+<para>Constructs/Initializes a new <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> in the form of an Adjacency List. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Constuctor where boundaries are of the type <ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Origin of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Destination of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_angle_rad</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted angle between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_min_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: minimum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_interval</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum time interval between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Absolute temporal boundary/limit for the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specifies if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is 2D or 3D </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_iteration_limit</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of nodes permittedin the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_admissible</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of admissible trajectories permitted in the graph </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="307" column="9" bodyfile="graphLib/src/rrt.cpp" bodystart="132" bodyend="150"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a480cd89e943a8bac41c195ae9ade0c7f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::RRT::RRT</definition>
+        <argsstring>(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y, double _origin_x, double _origin_y, double _dest_x, double _dest_y, double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval, double _max_time, bool _dim, int _iteration_limit, int _max_admissible, double _max_long_accel, double _max_long_jerk, double _max_kappa_rad)</argsstring>
+        <name>RRT</name>
+        <qualifiedname>rrt::RRT::RRT</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_range_a_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_a_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_b_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_b_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_angle_rad</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_min_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_interval</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_time</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>_dim</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_iteration_limit</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>_max_admissible</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_accel</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_long_jerk</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_kappa_rad</declname>
+        </param>
+        <briefdescription>
+<para>Constructs/Initializes a new <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> in the form of an Adjacency List. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Constuctor where boundaries are explicitly defined by x and y coordinates</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>X Coordinate Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Y Coordinate Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>X Coordinate Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Y Coordinate Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the origin <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_angle_rad</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted angle between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_min_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: minimum permitted distance between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_interval</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Constraint: maximum time interval between 2 Nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Absolute temporal boundary/limit for the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Specifies if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is 2D or 3D </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_iteration_limit</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of nodes permittedin the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_admissible</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum number of admissible trajectories permitted in the graph </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="334" column="9" bodyfile="graphLib/src/rrt.cpp" bodystart="107" bodyend="130"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1ac6aea44051f5f43e3a5e084eeb0418ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rrt::RRT::~RRT</definition>
+        <argsstring>()</argsstring>
+        <name>~RRT</name>
+        <qualifiedname>rrt::RRT::~RRT</qualifiedname>
+        <briefdescription>
+<para>Destroys the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="343" column="9"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a9ecdd6a35dfae784915cf0a5cce52501" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::buildRRT</definition>
+        <argsstring>()</argsstring>
+        <name>buildRRT</name>
+        <qualifiedname>rrt::RRT::buildRRT</qualifiedname>
+        <briefdescription>
+<para>Builds the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> through completion. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="348" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="903" bodyend="909"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1ad85796fa6a840e4d6192482e81233cdb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool rrt::RRT::stepRRT</definition>
+        <argsstring>()</argsstring>
+        <name>stepRRT</name>
+        <qualifiedname>rrt::RRT::stepRRT</qualifiedname>
+        <briefdescription>
+<para>Builds the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref> One node at a time. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>It is intended to use this function in a loop to build the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> incrementally This will allow ther user to dynamically scale/change the constraints or update the destination <simplesect kind="return"><para>Returns true if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is complete, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+<para>Ensure Random <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> is within permissible range / operating region</para>
+<para>Generate random points within the bounded space</para>
+<para>Looping to ensure step call results in a new node in non-occupied space</para>
+<para>increment iteration count</para>
+<para>Generate Random <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> within permissible range</para>
+<para>Add the <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> to the <ref refid="dc/d58/classrrt_1_1_graph" kindref="compound">Graph</ref></para>
+<para>Apply Constraints, This effectively implements the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> and also implements kinematic constraints <linebreak/>
+</para>
+<para>Check if the new node is in occupied space</para>
+<para>If the node is occupied, delete it and try again</para>
+<para>This iteration doesn&apos;t count because we didnt emplace a <ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref></para>
+<para><ref refid="df/d9f/classrrt_1_1_node" kindref="compound">Node</ref> is not occupied, placement is good</para>
+<para>Check to see if the new node is within range of the destination</para>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="358" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="911" bodyend="995"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a153e85c6a610dddca443a0d2013798af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setBoundaries</definition>
+        <argsstring>(pose_t _range_a, pose_t _range_b)</argsstring>
+        <name>setBoundaries</name>
+        <qualifiedname>rrt::RRT::setBoundaries</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_range_a</declname>
+        </param>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_range_b</declname>
+        </param>
+        <briefdescription>
+<para>Sets the boundaries of where the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> will build. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="366" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="155" bodyend="169"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1af00bf9947c49dee3692b3fa24f54bc28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setBoundaries</definition>
+        <argsstring>(double _range_a_x, double _range_a_y, double _range_b_x, double _range_b_y, double _time_horizon)</argsstring>
+        <name>setBoundaries</name>
+        <qualifiedname>rrt::RRT::setBoundaries</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_range_a_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_a_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_b_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_range_b_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_time_horizon</declname>
+        </param>
+        <briefdescription>
+<para>Sets the boundaries of where the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> will build. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>X Coordinate Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_a_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Y Coordinate Lower Left Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>X Coordinate Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_range_b_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Y Coordinate Upper Right Corner of the Operating Region </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_time_horizon</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Maximum time horizon for the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="377" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="171" bodyend="185"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aba06eaf3b679777174f456924e832a21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setOrigin</definition>
+        <argsstring>(pose_t _origin)</argsstring>
+        <name>setOrigin</name>
+        <qualifiedname>rrt::RRT::setOrigin</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_origin</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the origin node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="385" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="188" bodyend="197"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a6b7113c5d2ab8b2b70a67d3801374199" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setOrigin</definition>
+        <argsstring>(double _origin_x, double _origin_y)</argsstring>
+        <name>setOrigin</name>
+        <qualifiedname>rrt::RRT::setOrigin</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_origin_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_y</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the origin node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the origin <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="393" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="199" bodyend="208"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a2d76785b6340d3fd6b7b1762c44eac68" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setOrigin</definition>
+        <argsstring>(double _origin_x, double _origin_y, double _origin_time)</argsstring>
+        <name>setOrigin</name>
+        <qualifiedname>rrt::RRT::setOrigin</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_origin_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_time</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the origin node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the origin <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The time coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="402" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="210" bodyend="219"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1ac6bb147c9588b13b985a205e13f616e9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setOrigin</definition>
+        <argsstring>(double _origin_x, double _origin_y, double _origin_time, double _initial_heading)</argsstring>
+        <name>setOrigin</name>
+        <qualifiedname>rrt::RRT::setOrigin</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_origin_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_origin_time</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_initial_heading</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the origin node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the origin <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_origin_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The time coordinate of the origin </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_initial_heading</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The initial heading of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> at the origin node </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="412" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="221" bodyend="230"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a8158a838402494d93fa774d4e536f298" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::updateDestination</definition>
+        <argsstring>(pose_t _dest)</argsstring>
+        <name>updateDestination</name>
+        <qualifiedname>rrt::RRT::updateDestination</qualifiedname>
+        <param>
+          <type><ref refid="d3/dad/namespacerrt_1a5ee3dfc82380085a8b213a4bd5949663" kindref="member">pose_t</ref></type>
+          <declname>_dest</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the destination node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="419" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="232" bodyend="235"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a0ca2c1e688638e66f6ee7606fb1f5602" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::updateDestination</definition>
+        <argsstring>(double _dest_x, double _dest_y)</argsstring>
+        <name>updateDestination</name>
+        <qualifiedname>rrt::RRT::updateDestination</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_dest_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_y</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the destination node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the destination <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="427" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="237" bodyend="240"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a14fb77ff236e06ab75e86807c6914c04" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::updateDestination</definition>
+        <argsstring>(double _dest_x, double _dest_y, double _dest_time)</argsstring>
+        <name>updateDestination</name>
+        <qualifiedname>rrt::RRT::updateDestination</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_dest_x</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_y</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_dest_time</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric location of the destination node of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The x coordinate of the destination <linebreak/>
+ </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_dest_y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The y coordinate of the destination </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="435" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="242" bodyend="252"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1ae94c508097a997df8007bd0301e88eba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::updateConstraints</definition>
+        <argsstring>(double _max_angle_rad, double _max_dist, double _min_dist, double _max_interval_)</argsstring>
+        <name>updateConstraints</name>
+        <qualifiedname>rrt::RRT::updateConstraints</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_max_angle_rad</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_min_dist</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>_max_interval_</declname>
+        </param>
+        <briefdescription>
+<para>Updates/sets the geometric constraints for next-node placement. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_angle_rad</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>maximum angle allowed between two nodes in radians </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>maximum distance allowed between two nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_min_dist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>minimum distance allowed between two nodes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_time</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>maximum &lt;positive&gt; time interval allowed between two nodes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="445" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="254" bodyend="260"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1af6f67a5c198c3c5f6c529d237b8daee0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setDim3D</definition>
+        <argsstring>(bool _dim_3D)</argsstring>
+        <name>setDim3D</name>
+        <qualifiedname>rrt::RRT::setDim3D</qualifiedname>
+        <param>
+          <type>bool</type>
+          <declname>_dim_3D</declname>
+        </param>
+        <briefdescription>
+<para>Sets the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> to be 2D or 3D. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_dim_3D</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If true, the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> will be 3D, otherwise it will be 2D </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="452" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="262" bodyend="265"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a3c1ca2dc1b2bd8ab99c66dc5d0fa36eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setIterationLimit</definition>
+        <argsstring>(int _iteration_limit)</argsstring>
+        <name>setIterationLimit</name>
+        <qualifiedname>rrt::RRT::setIterationLimit</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>_iteration_limit</declname>
+        </param>
+        <briefdescription>
+<para>Inj the event of an non-admissible solution this limit protects against infinite loops. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_iteration_limit</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The maximum number of iterations permitted in the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="458" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="267" bodyend="270"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1af2adf8aaf2ead271ece08c10c428c836" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setOccupancyMap</definition>
+        <argsstring>(std::vector&lt; occupancy_t &gt; &amp;_occupancy_map)</argsstring>
+        <name>setOccupancyMap</name>
+        <qualifiedname>rrt::RRT::setOccupancyMap</qualifiedname>
+        <param>
+          <type>std::vector&lt; <ref refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" kindref="member">occupancy_t</ref> &gt; &amp;</type>
+          <declname>_occupancy_map</declname>
+        </param>
+        <briefdescription>
+<para>Sets the occupancy map for the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>if using the stepRRT function, the occupancy map must be set before the first call</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_occupancy_map</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional occupancy map, if prov </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="466" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="272" bodyend="275"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a55c0fc361bffe6f20665885f11edcd0a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool rrt::RRT::isComplete</definition>
+        <argsstring>()</argsstring>
+        <name>isComplete</name>
+        <qualifiedname>rrt::RRT::isComplete</qualifiedname>
+        <briefdescription>
+<para>Returns the completion state of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Returns true if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> is complete, false otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="472" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="887" bodyend="890"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a7fe15c0245b6fba43633a03da38c1066" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool rrt::RRT::isAdmissible</definition>
+        <argsstring>()</argsstring>
+        <name>isAdmissible</name>
+        <qualifiedname>rrt::RRT::isAdmissible</qualifiedname>
+        <briefdescription>
+<para>Returns the admissability state of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Returns true if the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref> has an admissible solution to the destination node with the set constraints </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="478" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="892" bodyend="895"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1acb4f4645480542bfcad74e25ab3d923f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::updateInitialHeading</definition>
+        <argsstring>(double _initial_heading)</argsstring>
+        <name>updateInitialHeading</name>
+        <qualifiedname>rrt::RRT::updateInitialHeading</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_initial_heading</declname>
+        </param>
+        <briefdescription>
+<para>Overrides the initial heading of the <ref refid="d8/d87/classrrt_1_1_r_r_t" kindref="compound">RRT</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="483" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="897" bodyend="901"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a7e988908130a292874889dc38a455460" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setMaxLongAccel</definition>
+        <argsstring>(double _max_long_accel)</argsstring>
+        <name>setMaxLongAccel</name>
+        <qualifiedname>rrt::RRT::setMaxLongAccel</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_max_long_accel</declname>
+        </param>
+        <briefdescription>
+<para>Sets the maximum longitudinal acceleration constraint. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_long_accel</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The maximum longitudinal acceleration </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="490" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="997" bodyend="999"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1aa0c5871a9cc65b6065bbcb691125392f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setMaxLongJerk</definition>
+        <argsstring>(double _max_long_jerk)</argsstring>
+        <name>setMaxLongJerk</name>
+        <qualifiedname>rrt::RRT::setMaxLongJerk</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_max_long_jerk</declname>
+        </param>
+        <briefdescription>
+<para>Sets the maximum longitudinal jerk constraint. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_long_jerk</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The maximum longitudinal jerk </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="497" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="1001" bodyend="1003"/>
+      </memberdef>
+      <memberdef kind="function" id="d8/d87/classrrt_1_1_r_r_t_1a453589f07a0ce069df1a2164e67822b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void rrt::RRT::setMaxKappaRad</definition>
+        <argsstring>(double _max_kappa_rad)</argsstring>
+        <name>setMaxKappaRad</name>
+        <qualifiedname>rrt::RRT::setMaxKappaRad</qualifiedname>
+        <param>
+          <type>double</type>
+          <declname>_max_kappa_rad</declname>
+        </param>
+        <briefdescription>
+<para>Sets the maximum curvature radius constraint. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">_max_kappa_rad</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The maximum curvature radius </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="graphLib/include/rrt.h" line="504" column="14" bodyfile="graphLib/src/rrt.cpp" bodystart="1005" bodyend="1007"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>rrt::Graph</label>
+        <link refid="dc/d58/classrrt_1_1_graph"/>
+      </node>
+      <node id="1">
+        <label>rrt::RRT</label>
+        <link refid="d8/d87/classrrt_1_1_r_r_t"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>rrt::Graph</label>
+        <link refid="dc/d58/classrrt_1_1_graph"/>
+      </node>
+      <node id="1">
+        <label>rrt::RRT</label>
+        <link refid="d8/d87/classrrt_1_1_r_r_t"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="graphLib/include/rrt.h" line="51" column="5" bodyfile="graphLib/include/rrt.h" bodystart="52" bodyend="505"/>
+    <listofallmembers>
+      <member refid="dc/d58/classrrt_1_1_graph_1af2be83d4e26eea7b054f3c3975d967d7" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>addEdge</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a03d9a5a3c90c964d94d75d7f7ff80e0e" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>addNode</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a30c5e5b83b25d01b639199f81d6eb2f2" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>addNode</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a9df50083ad484ed6641ef7bfd5684419" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>adjacencyList_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ae73aa25cc5ec88d9856c4d8abce01c87" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>admissible_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aa92dba46553d549e8da7e71b5f8b0fff" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>alignHeadingToTangent</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ab73954e564400376a0e5b2ee06e41ad8" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>applyAbsoluteConstraints</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aa0acc5ec661d90c5cf578651022937f4" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>applyConstraints</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a9ecdd6a35dfae784915cf0a5cce52501" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>buildRRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a09b6dd8b59367a4a14c2c55e6070237e" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcAngle</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a8f87b38e69431c38b1048640d4ca6eb5" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcDist</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a0acce6e7161c6246c15049cceb64087c" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcKinematicEdge</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a967b7672b7d6265b707aada6f999770f" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcLongAccel</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a8460ab768223c16147ec9331d696c1fe" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcLongJerk</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ae7705e0511d1e694505c51e43c7fefa2" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcMengerCurvature</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a8e6abdb2a494cbc88df1fa028025b701" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>calcMengerCurvature</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aa7ba5c903079f0c4b1536203dd41efe2" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>checkConstraints</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a35045f98469d1f4581eb2f7295521559" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>checkDone</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a11254000d32630d5dae35f4587f8eed5" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>cmplt</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aa33736f7ff502bfdc76d95102847cc89" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>constrainCurvature</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a1b297aabe410b6d640ce3d8cf094ec1a" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>constrainLongitudinal</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1ab250c0dd5ae966f77b9aabd546b4f2ef" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>deleteEdge</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a0d812580f6188f24d201282d8d03b0d9" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>deleteNode</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a753b57650e1e18b9e3b8214d538f7098" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>dest_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a0110778a91af29b55bee420e3cde1934" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>destNodes</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aac20886a5397442953b2560371ef1cd3" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>dim_3D_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aedd3d28472981a32447073315d36f441" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>findNearest</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1ae639070f94c67c3fe0aabdfbfe7cfa27" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>getCoordinate</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a04328b5b01537b62ae5377419248ff06" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>getIndex</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a9f25b5a85afb42a7fd2413a7e6ca421b" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>Graph</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a9d6f5949d3c34300b1e7892716a06c3b" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>Graph</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a48e9e6bcbb33ad94c8b94162fab22899" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>initCmplt_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1af0452cfd26b7e68f0770470944bbcd13" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>initial_heading_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a7fe15c0245b6fba43633a03da38c1066" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>isAdmissible</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a55c0fc361bffe6f20665885f11edcd0a" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>isComplete</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a45dcef49503b5b55faadf295a993f58a" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>isOccupied</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a8b5f7a64fbc5d75d33a40a654c6412a9" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>iteration_limit_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a76fb30c7e45bb44513884fa788283071" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_admissible_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a4fabfb8f1e87a54fce5c2a2f71941dd8" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_angle_rad_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1af7d5cca48eb927546b68eeed22520b70" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_dist_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a95c1c10f8a1732c4ed605ccc8675be88" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_interval_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a3576a5c85085f4ecd57b05156717f8d7" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_kappa_rad_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a7014dfb8405ecb42ebeac9bbdbceb1a5" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_long_accel_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a598417bc88bc5491f98a74f33d7ed15d" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_long_jerk_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a1cddd9b1f32f083696f90213a587bbd2" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>max_time_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ae864e6fe2974f36e8abb6aba7ceec11f" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>min_dist_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a550f5f502ef57b87bb46a6de6b4d68d5" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>occupancy_map_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a572680390f5620d01868c11dd638d751" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>occupancy_t</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a834761fb593eb2f488872223a26df9b9" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>origin_</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a7b950bec1be1b0dc4816ade827f632dc" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>printGraph</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a25018d708d8f1b375183e017688a24c9" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>pushNode</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ae1e8d15692ee92fd53b083f17ddc1ddb" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>range_a_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a5a5a4d511999d872a0437116ed31f981" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>range_b_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a766000abdb3e9193ee7689c44f929c76" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>RRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a7175dec7796f3e4ca0a435247a928659" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>RRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a87d8feefa826aea054886c4ee597d117" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>RRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a05faa1472f9e4ef4b0dc2ebc63f6951f" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>RRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a480cd89e943a8bac41c195ae9ade0c7f" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>RRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a9e5baa1593adccc52578b08c498b9f69" prot="private" virt="non-virtual"><scope>rrt::RRT</scope><name>sequential_check_limit_</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a153e85c6a610dddca443a0d2013798af" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setBoundaries</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1af00bf9947c49dee3692b3fa24f54bc28" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setBoundaries</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1af6f67a5c198c3c5f6c529d237b8daee0" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setDim3D</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a3c1ca2dc1b2bd8ab99c66dc5d0fa36eb" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setIterationLimit</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a453589f07a0ce069df1a2164e67822b1" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setMaxKappaRad</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a7e988908130a292874889dc38a455460" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setMaxLongAccel</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aa0c5871a9cc65b6065bbcb691125392f" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setMaxLongJerk</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1af2adf8aaf2ead271ece08c10c428c836" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setOccupancyMap</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1aba06eaf3b679777174f456924e832a21" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setOrigin</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a6b7113c5d2ab8b2b70a67d3801374199" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setOrigin</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a2d76785b6340d3fd6b7b1762c44eac68" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setOrigin</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ac6bb147c9588b13b985a205e13f616e9" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>setOrigin</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ad85796fa6a840e4d6192482e81233cdb" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>stepRRT</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ae94c508097a997df8007bd0301e88eba" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>updateConstraints</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a8158a838402494d93fa774d4e536f298" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>updateDestination</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a0ca2c1e688638e66f6ee7606fb1f5602" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>updateDestination</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1a14fb77ff236e06ab75e86807c6914c04" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>updateDestination</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a5910a0fc6dacdb9fb722d6c90730587f" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>updateEdge</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1acb4f4645480542bfcad74e25ab3d923f" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>updateInitialHeading</name></member>
+      <member refid="dc/d58/classrrt_1_1_graph_1a7370191beb102fe3037464a5b53775c5" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>~Graph</name></member>
+      <member refid="d8/d87/classrrt_1_1_r_r_t_1ac6aea44051f5f43e3a5e084eeb0418ff" prot="public" virt="non-virtual"><scope>rrt::RRT</scope><name>~RRT</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
