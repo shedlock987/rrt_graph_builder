@@ -19,7 +19,7 @@ The Graph is represented as an adjacency list, effectively a doubly connected li
 ![Node](figures/Node.jpg)
 
 **The RRT:**
-The RRT is an inherited class from the more generalized graph-class in this project. The RRT generation is pretty straightforward and matches the academic definition. Because this is intended to be used for robotics, the RRT is built with several user-configured constraints. When growing an RRT Graph, constraints are applied to random node insertion. (SEE BELOW FOR DETAILS)
+The RRT is an inherited class from the more generalized graph-class in this project. The RRT generation is pretty straightforward and matches the academic definition. Because this is intended to be used for robotics, the RRT is built with several user-configured constraints. When growing an RRT Graph, constraints are applied to random node insertion. (SEE ABOVE FOR DETAILS)
 ![RRT](figures/RRT.jpg)
 
 **A 3-Dimensional RRT**
